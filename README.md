@@ -1,45 +1,52 @@
-# Astro Starter Kit: Minimal
+# EthCoordinate 🌐
+
+Marketing site for EthCoordinate. Astro 7 + Tailwind 4, deployed as a static
+site on Cloudflare Workers.
+
+## 🚀 Setup
 
 ```sh
-npm create astro@latest -- --template minimal
+bun install
+bun run dev   # http://localhost:4321
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The package manager is bun. Node 22.12 or later.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 📁 Layout
 
 ```text
 /
-├── public/
+├── public/             static assets
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/     .astro components, kebab-case file names
+│   ├── icons/          svg sources for the sprite
+│   ├── pages/          one file per route
+│   ├── styles/         global.css, the only source of truth for color
+│   └── site.ts         the only source of truth for copy
+├── docs/
+│   ├── plans/          one plan per task
+│   ├── solutions/      one file per solved problem
+│   └── tokens.md       color and font tokens
+├── astro.config.mjs
+└── wrangler.jsonc      Cloudflare Workers config
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
+Copy lives in `src/site.ts`. Color lives in `src/styles/global.css`. Do not
+write literal text or hex values in a component.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
+| Command            | Action                                        |
+| :----------------- | :-------------------------------------------- |
+| `bun install`      | Install dependencies                          |
+| `bun run dev`      | Start the dev server at `localhost:4321`      |
+| `bun run build`    | Build the site to `./dist/`                   |
+| `bun run preview`  | Build, then serve on the Workers runtime      |
+| `bun run deploy`   | Build and deploy to Cloudflare Workers        |
+| `bun run lint`     | oxlint and Tailwind class order check         |
+| `bun run lint:fix` | Autofix lint issues and sort Tailwind classes |
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun run dev`             | Starts local dev server at `localhost:4321`      |
-| `bun run build`           | Build your production site to `./dist/`          |
-| `bun run preview`         | Build, then preview on the Workers runtime       |
-| `bun run deploy`          | Build and deploy to Cloudflare Workers           |
-| `bun run lint`            | oxlint + Tailwind class-order check              |
-| `bun run lint:fix`        | Autofix lint issues and sort Tailwind classes    |
-| `bun run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+## 🤖 Agents
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+`AGENTS.md` holds the rules for this repo. `CLAUDE.md` is a symlink to it.
+Skills live in `.agents/skills/`, tracked through `skills-lock.json`.
