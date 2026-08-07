@@ -34,6 +34,11 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
   frame and the desktop frame. The desktop heading needs about 900px of line
   width, so a smaller breakpoint would overflow.
 - **The dots and the mark hide below `lg`.** The mobile Figma frame has neither.
+- **The dots are DOM, not artwork.** Figma draws them as separate nodes, so
+  they are eight spans, not part of `hero-glow.svg`. Each one drifts on its own
+  clock. Size drives the drift: a small dot travels further and faster, which
+  reads as depth. Tailwind holds the `translate` and the `rotate` of a dot, so
+  the drift uses `transform`, which the browser applies last.
 
 ## Open items
 

@@ -20,6 +20,21 @@ const dots = [
 
 const percent = (value: number, total: number) =>
 	`${((value / total) * 100).toFixed(2)}%`;
+
+/* Each dot drifts. A small dot travels further and faster than a large one,
+   which reads as depth. The negative delay starts every dot at a different
+   point of its cycle, so the group never moves as one. */
+const dotStyle = (dot: (typeof dots)[number], index: number) =>
+	[
+		`left:${percent(dot.x, frame.width)}`,
+		`top:${percent(dot.y, frame.height)}`,
+		`width:${percent(dot.size, frame.width)}`,
+		`filter:blur(${(dot.size * 0.15).toFixed(1)}px)`,
+		`--dx:${((index % 2 ? -1 : 1) * (10 - dot.size / 12)).toFixed(1)}px`,
+		`--dy:${(-(12 - dot.size / 10)).toFixed(1)}px`,
+		`--dur:${(7 + dot.size / 8).toFixed(1)}s`,
+		`--delay:${(-index * 1.9).toFixed(1)}s`,
+	].join(";");
 ---
 
 <section
@@ -83,18 +98,13 @@ const percent = (value: number, total: number) =>
 	</div>
 
 	{
-		dots.map((dot) => (
+		dots.map((dot, index) => (
 			<span
 				class:list={[
-					"pointer-events-none absolute hidden aspect-square -translate-x-1/2 -translate-y-1/2 rotate-25 rounded-[8%] lg:block",
+					"dot pointer-events-none absolute hidden aspect-square -translate-x-1/2 -translate-y-1/2 rotate-25 rounded-[8%] lg:block",
 					dot.tone,
 				]}
-				style={{
-					left: percent(dot.x, frame.width),
-					top: percent(dot.y, frame.height),
-					width: percent(dot.size, frame.width),
-					filter: `blur(${dot.size * 0.15}px)`,
-				}}
+				style={dotStyle(dot, index)}
 				aria-hidden="true"
 			/>
 		))
@@ -121,11 +131,28 @@ const percent = (value: number, total: number) =>
 		}
 	}
 
+	/* Tailwind holds the `translate` and `rotate` of a dot, so the drift uses
+	   `transform`. The browser applies it last, so the two do not collide. */
+	.dot {
+		animation: drift var(--dur) ease-in-out var(--delay) infinite alternate;
+		will-change: transform;
+	}
+
+	@keyframes drift {
+		to {
+			transform: translate(var(--dx), var(--dy));
+		}
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.piece {
 			opacity: 1;
 			translate: 0 0;
 			filter: none;
+			animation: none;
+		}
+
+		.dot {
 			animation: none;
 		}
 	}
