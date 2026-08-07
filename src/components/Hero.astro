@@ -1,0 +1,99 @@
+---
+import { site } from "../site";
+
+/* The Figma hero frame. Every decoration below is a position in this box.
+   Percentages keep the layout at any width. */
+const frame = { width: 1440, height: 726 };
+
+/* The floating dots. `x` and `y` are the center. `size` is the side of the
+   square. All values are pixels in the frame above. */
+const dots = [
+	{ x: 195.9, y: 288.9, size: 36, tone: "bg-dot-blue" },
+	{ x: 401.9, y: 494.9, size: 20, tone: "bg-dot-light" },
+	{ x: 1070.1, y: 444.7, size: 40.7, tone: "bg-dot-light" },
+	{ x: 286.9, y: 423.9, size: 20, tone: "bg-dot-blue" },
+	{ x: 1132.3, y: 343.9, size: 20, tone: "bg-dot-blue" },
+	{ x: 1165.9, y: 548.9, size: 70, tone: "bg-dot-blue" },
+	{ x: 73.9, y: 439.9, size: 30, tone: "bg-dot-blue" },
+	{ x: 1363.9, y: 399.9, size: 30, tone: "bg-dot-blue" },
+];
+
+const percent = (value: number, total: number) =>
+	`${((value / total) * 100).toFixed(2)}%`;
+---
+
+<section
+	class="relative flex min-h-[554px] items-center overflow-hidden px-4 pt-10 pb-5 lg:min-h-[726px] lg:px-16 lg:pt-[90px] lg:pb-[100px]"
+>
+	{/* The glow is twice as tall as the section. Only its top band shows. */}
+	<div
+		class="pointer-events-none absolute inset-0 bg-[url(/hero-glow.svg)] bg-[length:auto_198%] bg-top bg-no-repeat"
+		aria-hidden="true"
+	>
+	</div>
+	<div
+		class="pointer-events-none absolute hidden aspect-square w-[27.56%] bg-[url(/hero-mark.svg)] bg-contain bg-no-repeat lg:block"
+		style={{ left: "35.39%", top: "0.3%" }}
+		aria-hidden="true"
+	>
+	</div>
+
+	<div
+		class="relative mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
+	>
+		<p
+			class="self-start text-[8px] font-bold tracking-[1px] whitespace-pre-line lg:text-[12px]"
+		>
+			{site.hero.eyebrow}
+		</p>
+		<h1
+			class="flex flex-col items-center text-center font-bold tracking-[-2px] uppercase"
+		>
+			<span
+				class="text-gradient text-[52px] leading-[0.96] font-extrabold lg:text-[76px]"
+			>
+				{site.hero.titleTop}
+			</span>
+			<span class="text-[39px] leading-[1.02] lg:text-[55px]">
+				{site.hero.titleBottom}
+			</span>
+		</h1>
+		<p
+			class="max-w-[462px] text-center text-[14px] leading-[1.5] lg:text-[17px]"
+		>
+			{site.hero.body}
+		</p>
+		<div class="flex flex-col items-center gap-7">
+			<a
+				href={site.hero.ctaHref}
+				class="bg-cta text-cta-body focus-visible:outline-accent rounded-full px-6 py-4 text-[14px] font-bold uppercase transition-opacity duration-200 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
+			>
+				{site.hero.ctaLabel}
+			</a>
+			<a
+				href={site.hero.emailHref}
+				class="hover:text-accent focus-visible:outline-accent rounded-sm text-[14px] font-bold underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4"
+			>
+				{site.hero.emailLabel}
+			</a>
+		</div>
+	</div>
+
+	{
+		dots.map((dot) => (
+			<span
+				class:list={[
+					"pointer-events-none absolute hidden aspect-square -translate-x-1/2 -translate-y-1/2 rotate-25 rounded-[8%] lg:block",
+					dot.tone,
+				]}
+				style={{
+					left: percent(dot.x, frame.width),
+					top: percent(dot.y, frame.height),
+					width: percent(dot.size, frame.width),
+					filter: `blur(${dot.size * 0.15}px)`,
+				}}
+				aria-hidden="true"
+			/>
+		))
+	}
+</section>
