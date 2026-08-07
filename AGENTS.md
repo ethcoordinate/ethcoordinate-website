@@ -3,6 +3,8 @@
 - Write all copy, comments, and docs in Simplified Technical English. Use short
   sentences, active voice, and one idea per sentence. Use the same word for the
   same thing every time.
+- Do not comment what the code already says. Write a comment only where the
+  reason is not in the code. Keep it to one or two short lines.
 - Follow YAGNI. Do not add code, dependencies, config, or abstractions for a need
   that does not exist yet. Delete before you add.
 - Keep all copy text in `src/site.ts`. It is the only source of truth for copy.
