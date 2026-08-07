@@ -44,13 +44,15 @@ const members = site.team.members.map((member, index) => ({
 		   is a stop. The left padding gives the marker and the glow room to sit
 		   outside the card without the scroll box cutting them, and
 		   `scroll-pl-15` takes that padding back off the stop, so a card still
-		   lands on the margin of the page. The row bleeds off the right edge, so
+		   lands on the margin of the page. The top padding does the same for the
+		   markers above the cards: Firefox clips a scroll box at its top edge,
+		   the other engines do not. The row bleeds off the right edge, so
 		   the next card shows that there is more. The rule below the row belongs
 		   to the wrapper, because a scrolling box would carry its own border
 		   away. */}
 		<div class="border-subtle border-b pb-10 lg:border-b-0 lg:pb-0">
 			<ul
-				class="-mr-5 -ml-15 flex snap-x snap-mandatory scroll-pl-15 gap-5 overflow-x-auto pr-5 pl-15 lg:mr-0 lg:ml-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-0 lg:overflow-visible lg:pr-0 lg:pl-0"
+				class="-mt-4 -mr-5 -ml-15 flex snap-x snap-mandatory scroll-pl-15 gap-5 overflow-x-auto pt-4 pr-5 pl-15 lg:mt-0 lg:mr-0 lg:ml-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-0 lg:overflow-visible lg:pt-0 lg:pr-0 lg:pl-0"
 			>
 				{
 					members.map(({ number, name, role, bio, photo }) => (
