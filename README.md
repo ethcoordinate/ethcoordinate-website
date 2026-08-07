@@ -49,4 +49,5 @@ write literal text or hex values in a component.
 ## 🤖 Agents
 
 `AGENTS.md` holds the rules for this repo. `CLAUDE.md` is a symlink to it.
-Skills live in `.agents/skills/`, tracked through `skills-lock.json`.
+Skills live in `.agents/skills/` and are committed. `skills-lock.json` records
+their source.

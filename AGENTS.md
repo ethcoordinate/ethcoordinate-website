@@ -30,8 +30,8 @@
 
 Skills live in `.agents/skills/`. `.claude/skills` is a symlink to that folder.
 The `skills` CLI writes to `.claude/skills`, so new skills land in
-`.agents/skills/` through the symlink. Git tracks `skills-lock.json`, not the
-skill files.
+`.agents/skills/` through the symlink. Git tracks the skill files and
+`skills-lock.json`. Commit both.
 
 ```sh
 bunx skills@latest add <owner>/<repo> -a claude-code -s '*' -y
