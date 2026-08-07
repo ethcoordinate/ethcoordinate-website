@@ -6,11 +6,18 @@ import { site } from "../site";
 <footer
 	class="border-subtle bg-surface border-t transition-colors duration-200"
 >
+	{/* The DOM keeps the Figma phone order. `order` restores the row order. */}
 	<div
-		class="flex flex-col items-center gap-6 px-6 py-8 text-center sm:flex-row sm:justify-between sm:gap-8 sm:px-10 sm:text-left lg:px-16"
+		class="flex flex-col items-center gap-[30px] px-6 py-8 text-center sm:flex-row sm:justify-between sm:gap-8 sm:px-10 sm:text-left lg:px-16"
 	>
-		<Logo class="h-9 w-auto sm:h-11" />
-		<p class="text-sm">{site.footer.tagline}</p>
-		<p class="text-[13px]">{site.footer.copyright}</p>
+		<p class="text-sm sm:order-2">{site.footer.tagline}</p>
+		<a
+			href="#"
+			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 sm:order-1"
+		>
+			<span class="sr-only">{site.home}</span>
+			<Logo class="h-9 w-auto sm:h-11" />
+		</a>
+		<p class="text-[13px] sm:order-3">{site.footer.copyright}</p>
 	</div>
 </footer>
