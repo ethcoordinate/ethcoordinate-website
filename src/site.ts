@@ -25,6 +25,31 @@ export const site = {
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com ↗",
 	},
+	about: {
+		number: "01.",
+		/* Figma breaks the heading after each word. The newlines keep that shape. */
+		heading: "What’s\nEth\nCoordinate?",
+		/* The `<b>` tag marks the name. The component renders these as HTML. */
+		body: [
+			"<b>EthCoordinate</b> is the natural evolution of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum’s consensus mechanism.",
+			"As the ecosystem shifted in 2026, new organizational gaps opened up, and that same team launched <b>EthCoordinate</b> to close them, broadening their scope with new mission-aligned members along the way.",
+		],
+		/* Three cards below the copy. `about.astro` pairs each one with an icon. */
+		purpose: {
+			mission: {
+				title: "Mission",
+				body: "Facilitate the interaction between the stakeholders of the ecosystem to accelerate the adoption of the <b>Ethereum</b> network.",
+			},
+			vision: {
+				title: "Vision",
+				body: "<b>Ethereum mainnet</b> is the bedrock for scaling humanity’s productivity, and <b>ETH</b> is the asset that aligns the incentives of everyone building on it.",
+			},
+			value: {
+				title: "Value",
+				body: "Technical rigor combined with pragmatism, so <b>Ethereum</b> stays the most accessible and credibly neutral global blockchain.",
+			},
+		},
+	},
 	/* The ticker repeats these phrases in one endless line. CSS makes them
 	   uppercase. */
 	ticker: [

@@ -1,0 +1,67 @@
+---
+import MissionIcon from "../icons/mission.svg";
+import ValueIcon from "../icons/value.svg";
+import VisionIcon from "../icons/vision.svg";
+import { site } from "../site";
+
+/* Each icon is artwork, so it stays out of `site.ts`. The copy comes from
+   there. */
+const cards = [
+	{ Icon: MissionIcon, ...site.about.purpose.mission },
+	{ Icon: VisionIcon, ...site.about.purpose.vision },
+	{ Icon: ValueIcon, ...site.about.purpose.value },
+];
+---
+
+<section id="about" class="scroll-mt-32">
+	<div class="px-5 py-5 lg:px-16 lg:pt-[110px]">
+		<div
+			class="mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row lg:items-center"
+		>
+			<div class="pt-4 pb-[30px] lg:w-[480px] lg:shrink-0">
+				<p class="text-[27.625px] font-bold tracking-[1.06px]">
+					{site.about.number}
+				</p>
+				<h2
+					class="text-[32px] leading-[32px] font-extrabold tracking-[2.1px] whitespace-pre-line uppercase lg:text-[56px] lg:leading-[56px]"
+				>
+					{site.about.heading}
+				</h2>
+			</div>
+			<div class="flex flex-col gap-6 lg:flex-1 lg:flex-row lg:pt-9">
+				{
+					site.about.body.map((paragraph) => (
+						<p
+							class="text-[16px] leading-[1.45] lg:flex-1"
+							set:html={paragraph}
+						/>
+					))
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-about-glow px-5 pt-5 pb-10 lg:px-16 lg:pt-20 lg:pb-[110px]">
+		<ul class="mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row">
+			{
+				cards.map(({ Icon, title, body }) => (
+					<li class="flex gap-5 lg:flex-1">
+						<Icon
+							class="size-[80px] shrink-0 lg:size-[116px]"
+							aria-hidden="true"
+						/>
+						<div class="flex max-w-[244px] flex-col gap-2 pt-10 lg:gap-5 lg:pt-12">
+							<h3 class="text-[30px] leading-[1.22] font-bold uppercase">
+								{title}
+							</h3>
+							<p
+								class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px]"
+								set:html={body}
+							/>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>

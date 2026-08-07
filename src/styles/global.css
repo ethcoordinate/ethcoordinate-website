@@ -27,6 +27,15 @@
 	--dot-blue: var(--blue-500);
 	--dot-light: var(--white);
 
+	/* The three stops of the halo inside a super icon. The line art of the icon
+	   holds one blue in both themes, so only the halo flips. */
+	--icon-glow-from: var(--blue-200);
+	--icon-glow-mid: var(--blue-400);
+	--icon-glow-to: var(--blue-200);
+
+	/* The blob that bleeds in from both side edges of the about band. */
+	--about-glow: var(--blue-400);
+
 	/* The ticker holds one look in both themes, so these tokens never flip. */
 	--ticker-from: var(--ink-900);
 	--ticker-to: var(--indigo-800);
@@ -66,6 +75,10 @@
 		--cta-from: var(--white);
 		--cta-to: var(--blue-400);
 		--cta-body: var(--ink-900);
+		--icon-glow-from: var(--ink-950);
+		--icon-glow-mid: var(--indigo-800);
+		--icon-glow-to: var(--blue-900);
+		--about-glow: var(--indigo-800);
 	}
 }
 
@@ -76,6 +89,10 @@
 	--accent: var(--blue-200);
 	--logo-ink: var(--blue-200);
 	--logo-glow: var(--ink-950);
+	--icon-glow-from: var(--ink-950);
+	--icon-glow-mid: var(--indigo-800);
+	--icon-glow-to: var(--blue-900);
+	--about-glow: var(--indigo-800);
 }
 
 /* Layer 3: Tailwind map. `inline` keeps each utility pointing at the live
@@ -114,6 +131,16 @@
 		var(--cta-from) 0%,
 		var(--cta-to) 100%
 	);
+}
+
+/* Paints the two blobs that bleed in from the side edges of the about band.
+   Figma draws one blurred ellipse per edge. A radial gradient carries the same
+   soft falloff, so the band needs no artwork. The centers sit off the box, so
+   only the tail of each blob reaches the text. */
+@utility bg-about-glow {
+	background-image:
+		radial-gradient(46% 62% at -22% 44%, var(--about-glow), transparent 70%),
+		radial-gradient(46% 62% at 122% 44%, var(--about-glow), transparent 70%);
 }
 
 /* Paints the gradient on the ticker bar. */

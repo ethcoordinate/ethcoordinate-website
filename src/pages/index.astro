@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import "../styles/global.css";
+import About from "../components/about.astro";
 import Footer from "../components/footer.astro";
 import Hero from "../components/hero.astro";
 import LogoSprite from "../components/logo-sprite.astro";
@@ -28,15 +29,20 @@ import { site } from "../site";
 		<main>
 			<Hero />
 			<Ticker />
+			<About />
 			{
-				site.nav.map((link) => (
-					<section
-						id={link.href.slice(1)}
-						class="border-subtle scroll-mt-32 border-b px-6 py-24 sm:px-10 lg:px-16"
-					>
-						<h2 class="text-3xl font-semibold tracking-tight">{link.label}</h2>
-					</section>
-				))
+				site.nav
+					.filter((link) => link.href !== "#about")
+					.map((link) => (
+						<section
+							id={link.href.slice(1)}
+							class="border-subtle scroll-mt-32 border-b px-6 py-24 sm:px-10 lg:px-16"
+						>
+							<h2 class="text-3xl font-semibold tracking-tight">
+								{link.label}
+							</h2>
+						</section>
+					))
 			}
 		</main>
 		<Footer />

@@ -41,6 +41,10 @@ Use the utility in a component. Never write a hex value in a component.
 | `--cta-body`   | `text-cta-body`   | CTA pill label             | `--white`      | `--ink-900`     |
 | `--dot-blue`   | `bg-dot-blue`     | Blue hero dot              | `--blue-500`   | `--blue-500`    |
 | `--dot-light`  | `bg-dot-light`    | Light hero dot             | `--white`      | `--white`       |
+| `--icon-glow-from` | used by the super icons | Halo, near stop    | `--blue-200`   | `--ink-950`     |
+| `--icon-glow-mid`  | used by the super icons | Halo, middle stop  | `--blue-400`   | `--indigo-800`  |
+| `--icon-glow-to`   | used by the super icons | Halo, far stop     | `--blue-200`   | `--blue-900`    |
+| `--about-glow` | used by `bg-about-glow` | Blob at the side edges | `--blue-400` | `--indigo-800` |
 
 `logo-sprite.astro` reads `--logo-ink` and `--logo-glow` inside the SVG, so the
 logo follows the theme without a second asset.
@@ -54,6 +58,7 @@ utilities read the tokens above.
 | --------------- | ------------------------------------------- |
 | `text-gradient` | Paints the gradient on the heading glyphs.   |
 | `bg-cta`        | Paints the gradient on the CTA pill.         |
+| `bg-about-glow` | Paints the blob at each side of the about band. |
 
 `--heading-angle` tilts the heading gradient. It is `-35deg` on the one column
 layout and `-14deg` from `64rem` up.
@@ -61,6 +66,14 @@ layout and `-14deg` from `64rem` up.
 `public/hero-glow.svg` and `public/hero-mark.svg` are pure gradient artwork.
 Both serve the light theme and the dark theme. The page background behind them
 supplies the theme. See `docs/plans/hero.md`.
+
+`src/icons/*.svg` is artwork too, so it may hold a hex value. Astro writes each
+file into the page, so the halo stops read `--icon-glow-*` and follow the
+theme. Everything else in an icon is one blue in both themes.
+
+Every token inside an SVG carries the light hex as a fallback, so the file also
+reads on its own. See
+`docs/solutions/svg-var-without-fallback-paints-black.md`.
 
 ## Figma source
 
