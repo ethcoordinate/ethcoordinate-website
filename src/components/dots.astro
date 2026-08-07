@@ -3,8 +3,15 @@ interface Props {
 	/* The Figma frame the positions below are measured in. */
 	frame: { width: number; height: number };
 	/* `x` and `y` are the center of a dot. `size` is the side of the square.
-	   All values are pixels in the frame above. */
-	dots: { x: number; y: number; size: number; tone?: string }[];
+	   All values are pixels in the frame above. `diamond` stands the square on
+	   its corner. */
+	dots: {
+		x: number;
+		y: number;
+		size: number;
+		tone?: string;
+		diamond?: boolean;
+	}[];
 }
 
 const { frame, dots } = Astro.props;
@@ -39,7 +46,8 @@ const dotStyle = (dot: Props["dots"][number], index: number) =>
 		>
 			<span
 				class:list={[
-					"dot-body block aspect-square w-full rotate-25 rounded-[8%]",
+					"dot-body block aspect-square w-full",
+					dot.diamond ? "rotate-45 rounded-[18%]" : "rotate-25 rounded-[8%]",
 					dot.tone ?? "bg-dot-blue",
 				]}
 			/>
