@@ -29,6 +29,17 @@
 
 	/* The hero heading tilts its gradient to match the line count. */
 	--heading-angle: -35deg;
+
+	/* The height of the nav bar. The menu opens below it, and the hero fills
+	   the screen that is left. Figma draws the bar at 89.5px. This is
+	   tighter, because that bar takes too much of a laptop screen. */
+	--nav-height: 64px;
+}
+
+@media (width >= 40rem) {
+	:root {
+		--nav-height: 72px;
+	}
 }
 
 @media (width >= 64rem) {

@@ -28,8 +28,11 @@ Build the site shell from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
   nodes arrive.
 - The nav opens a menu below `640px`. Figma node `56:32743` draws the trigger
   as two bars and gives no open state. The two bars cross into an X on open.
-  The menu is a native popover, so Escape and a tap outside close it. The
-  `84px` offset in `Nav.astro` must follow the height of the mobile bar.
+  The menu is a native popover, so Escape and a tap outside close it.
+- `--nav-height` in `global.css` is the height of the bar. The bar, the top of
+  the menu, and the height of the hero all read it, so one value keeps the
+  three in step. It is 64px, and 72px from `40rem` up. Figma draws the bar at
+  89.5px, which takes too much of a laptop screen.
 - A popover holds no open state in the DOM. The header reads it with `:has()`
   to turn the bars, and a script copies it to `aria-expanded` on the button.
   The same script closes the menu on a link tap, because a popover stays open

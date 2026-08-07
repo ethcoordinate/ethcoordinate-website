@@ -41,11 +41,13 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 ---
 
 <section
-	class="relative flex min-h-[554px] items-center overflow-hidden px-4 pt-10 pb-5 lg:min-h-[726px] lg:px-16 lg:pt-[90px] lg:pb-[100px]"
+	class="relative flex min-h-[calc(100svh-var(--nav-height))] items-center overflow-hidden px-4 pt-10 pb-5 lg:px-16 lg:pt-[90px] lg:pb-[100px]"
 >
-	{/* The glow is twice as tall as the section. Only its top band shows. */}
+	{/* The glow box is twice as tall as the section, and the section clips it,
+	   so only the top band of the artwork shows. `cover` then fills that box
+	   at any aspect ratio, so no edge is ever left unpainted. */}
 	<div
-		class="pointer-events-none absolute inset-0 bg-[url(/hero-glow.svg)] bg-[length:auto_198%] bg-top bg-no-repeat"
+		class="pointer-events-none absolute inset-x-0 top-0 h-[200%] bg-[url(/hero-glow.svg)] bg-cover bg-top bg-no-repeat"
 		aria-hidden="true"
 	>
 	</div>

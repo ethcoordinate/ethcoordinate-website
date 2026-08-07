@@ -1,17 +1,13 @@
 ---
 import Logo from "./Logo.astro";
 import { site } from "../site";
-
-/* The menu opens below the mobile bar. That bar is `py-6` plus a `h-9` logo,
-   so it is 84px tall. Change this number if either value changes. */
-const menuTop = "84px";
 ---
 
 <header
 	class="border-subtle bg-surface sticky top-0 z-50 border-b transition-colors duration-200"
 >
 	<nav
-		class="flex items-center justify-between px-4 py-6 sm:gap-8 sm:px-10 lg:px-16"
+		class="flex h-[var(--nav-height)] items-center justify-between px-4 sm:gap-8 sm:px-10 lg:px-16"
 		aria-label={site.name}
 	>
 		<a
@@ -19,7 +15,7 @@ const menuTop = "84px";
 			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
 		>
 			<span class="sr-only">{site.home}</span>
-			<Logo class="h-9 w-auto sm:h-11" />
+			<Logo class="h-8 w-auto sm:h-9" />
 		</a>
 		<ul class="hidden items-center gap-6 text-[15px] sm:flex sm:gap-10">
 			{
@@ -60,8 +56,7 @@ const menuTop = "84px";
 	<div
 		id="nav-menu"
 		popover
-		style={{ top: menuTop }}
-		class="border-subtle bg-surface text-body fixed inset-x-0 bottom-auto m-0 w-auto rounded-none border-0 border-b p-0 sm:hidden"
+		class="border-subtle bg-surface text-body fixed inset-x-0 top-[var(--nav-height)] bottom-auto m-0 w-auto rounded-none border-0 border-b p-0 sm:hidden"
 	>
 		<ul>
 			{

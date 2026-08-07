@@ -26,10 +26,13 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
   both themes. The theme changes because the page background behind the glow
   changes.
 - **One mark file.** The light mark and the dark mark are identical.
-- **The glow sizes from the section height.** Figma draws the glow at a fixed
-  width and shows the top half. That width is 100% of the frame on desktop and
-  281% on mobile, so width is not a stable rule. Height is: the visible band is
-  always half the glow width. `background-size: auto 198%` reproduces both.
+- **The hero fills the screen under the nav.** `100svh` minus `--nav-height`.
+  `svh` is the small viewport, so the mobile address bar cannot push the call
+  to action off screen.
+- **The glow box is twice as tall as the section.** Figma draws the glow at a
+  fixed width and shows the top half of it. The glow box holds that rule, and
+  the section clips it. `background-size: cover` then fills the box at any
+  aspect ratio, so a wide short window never leaves an unpainted edge.
 - **One breakpoint.** `lg` (1024px) switches the whole hero between the mobile
   frame and the desktop frame. The desktop heading needs about 900px of line
   width, so a smaller breakpoint would overflow.
@@ -49,5 +52,5 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
 
 - The dot blur radius is an estimate. Figma holds it in an effect style that
   the MCP server does not report. The current value is 15% of the dot size.
-- The section uses a fixed `min-height` per breakpoint, because the glow sizes
-  from that height. Replace it if the copy grows.
+- The hero is one screen tall. Nothing of the next section peeks above the
+  fold. Subtract a few rem from the `min-height` if that reads as a dead end.
