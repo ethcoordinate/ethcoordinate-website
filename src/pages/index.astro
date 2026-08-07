@@ -2,10 +2,13 @@
 import { Font } from "astro:assets";
 import "../styles/global.css";
 import About from "../components/about.astro";
+import Cta from "../components/cta.astro";
+import Faq from "../components/faq.astro";
 import Footer from "../components/footer.astro";
 import Hero from "../components/hero.astro";
 import LogoSprite from "../components/logo-sprite.astro";
 import Nav from "../components/nav.astro";
+import Team from "../components/team.astro";
 import Ticker from "../components/ticker.astro";
 import WhatWeDo from "../components/what-we-do.astro";
 import { site } from "../site";
@@ -32,22 +35,9 @@ import { site } from "../site";
 			<Ticker />
 			<About />
 			<WhatWeDo />
-			{
-				site.nav
-					.filter(
-						(link) => !["#about", "#what-we-do"].includes(link.href),
-					)
-					.map((link) => (
-						<section
-							id={link.href.slice(1)}
-							class="border-subtle scroll-mt-32 border-b px-6 py-24 sm:px-10 lg:px-16"
-						>
-							<h2 class="text-3xl font-semibold tracking-tight">
-								{link.label}
-							</h2>
-						</section>
-					))
-			}
+			<Team />
+			<Faq />
+			<Cta />
 		</main>
 		<Footer />
 	</body>
