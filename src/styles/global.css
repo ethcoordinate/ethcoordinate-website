@@ -34,8 +34,13 @@
 	--icon-glow-mid: var(--blue-400);
 	--icon-glow-to: var(--blue-200);
 
-	/* The blob that bleeds in from both side edges of the about band. */
+	/* The blob that bleeds in from both side edges of the about band. The team
+	   avatars and the closing CTA reuse it. */
 	--about-glow: var(--blue-400);
+
+	/* The dashed ellipse of the closing CTA. Figma holds one blue in both
+	   themes, so this token never flips. */
+	--cta-dash: var(--blue-500);
 
 	/* The ticker holds one look in both themes, so these tokens never flip. */
 	--ticker-from: var(--ink-900);
@@ -91,6 +96,10 @@
 	--accent: var(--blue-200);
 	--logo-ink: var(--blue-200);
 	--logo-glow: var(--ink-950);
+	--heading-to: var(--blue-200);
+	--cta-from: var(--white);
+	--cta-to: var(--blue-400);
+	--cta-body: var(--ink-900);
 	--icon-glow-from: var(--ink-950);
 	--icon-glow-mid: var(--indigo-800);
 	--icon-glow-to: var(--blue-900);
@@ -109,6 +118,7 @@
 	--color-dot-blue: var(--dot-blue);
 	--color-dot-light: var(--dot-light);
 	--color-dash: var(--dash);
+	--color-cta-dash: var(--cta-dash);
 	--color-ticker-body: var(--ticker-body);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -147,6 +157,38 @@
 		radial-gradient(46% 62% at 122% 44%, var(--about-glow), transparent 70%);
 }
 
+/* Paints the gradient on the heading of the closing CTA. The hero tilts its
+   own gradient with the line count, so this one keeps a fixed angle. */
+@utility text-gradient-cta {
+	background-image: linear-gradient(
+		117deg,
+		var(--heading-from) 16%,
+		var(--heading-to) 41%
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* Paints the glow of the closing CTA. Figma centers the blob below the left of
+   the band, so the light climbs from that corner and fades to the right. */
+@utility bg-cta-glow {
+	background-image: radial-gradient(
+		62% 115% at 32% 112%,
+		var(--about-glow) 20%,
+		transparent 85%
+	);
+}
+
+/* Paints the glow behind a team avatar. */
+@utility bg-avatar-glow {
+	background-image: radial-gradient(
+		closest-side,
+		var(--about-glow),
+		transparent
+	);
+}
+
 /* Paints the gradient on the ticker bar. */
 @utility bg-ticker {
 	background-image: linear-gradient(
@@ -156,10 +198,22 @@
 	);
 }
 
-/* Layer 5: motion. `press` gives a control a short dip under the finger and a
-   soft overshoot on release. It also carries the hover fade, so one rule owns
-   the whole transition of a control. Add `inline-block` to an inline link,
-   because a transform does not move an inline box. */
+/* Layer 5: motion. */
+
+:root {
+	/* A stronger ease-out than the built in one. It starts fast, so a control
+	   answers the moment it is touched. */
+	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+	/* Lets `auto` take part in a height transition. Without it the accordion
+	   still opens, it only jumps. */
+	interpolate-size: allow-keywords;
+}
+
+/* `press` gives a control a short dip under the finger and a soft overshoot on
+   release. It also carries the hover fade, so one rule owns the whole
+   transition of a control. Add `inline-block` to an inline link, because a
+   transform does not move an inline box. */
 @utility press {
 	transition:
 		scale 220ms cubic-bezier(0.34, 1.56, 0.64, 1),

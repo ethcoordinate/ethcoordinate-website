@@ -46,6 +46,10 @@ Use the utility in a component. Never write a hex value in a component.
 | `--icon-glow-to`   | used by the super icons | Halo, far stop     | `--blue-200`   | `--blue-900`    |
 | `--about-glow` | used by `bg-about-glow` | Blob at the side edges | `--blue-400` | `--indigo-800` |
 | `--dash`       | `text-dash`       | Dashed circle and line     | `--blue-200`   | `--blue-500`    |
+| `--cta-dash`   | `text-cta-dash`   | Dashed ellipse of the CTA  | `--blue-500`   | `--blue-500`    |
+
+Figma holds one blue in the dashed ellipse of the closing CTA in both themes, so
+`--cta-dash` never flips. `--dash` does flip, which is why the two are separate.
 
 `logo-sprite.astro` reads `--logo-ink` and `--logo-glow` inside the SVG, so the
 logo follows the theme without a second asset.
@@ -58,8 +62,19 @@ utilities read the tokens above.
 | Utility         | Role                                        |
 | --------------- | ------------------------------------------- |
 | `text-gradient` | Paints the gradient on the heading glyphs.   |
+| `text-gradient-cta` | Paints the gradient on the closing CTA heading. |
 | `bg-cta`        | Paints the gradient on the CTA pill.         |
 | `bg-about-glow` | Paints the blob at each side of the about band. |
+| `bg-cta-glow`   | Paints the blob below the closing CTA band.  |
+| `bg-avatar-glow` | Paints the blob behind a team avatar.       |
+
+`text-gradient` and `text-gradient-cta` read the same two stops. Only the angle
+and the stop positions differ, so both headings flip with the theme.
+
+`bg-cta-glow` and `bg-avatar-glow` read `--about-glow`. Figma exports one blurred
+blob per place, but every export bakes the light color, so a committed asset
+could not flip. A radial gradient carries the same soft falloff and reads the
+token instead.
 
 `--heading-angle` tilts the heading gradient. It is `-35deg` on the one column
 layout and `-14deg` from `64rem` up.
