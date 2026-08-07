@@ -5,6 +5,10 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  image: {
+    // PokeAPI serves the official artwork from this host.
+    domains: ['raw.githubusercontent.com']
+  },
   fonts: [
     {
       provider: fontProviders.google(),

@@ -28,8 +28,9 @@
 - Give every `Image` a `loading` value. Use `eager` only for an image above the
   fold. Use `lazy` for the rest. Set `width` and `height`, so the box holds its
   space and the page never shifts.
-- The team photos in `src/assets/team/` are placeholders from
-  [picsum.photos](https://picsum.photos). Replace the files. Keep the names.
+- The team pictures come from the [PokeAPI](https://pokeapi.co).
+  `src/components/team.astro` fetches them at build time, so the build needs
+  network access.
 - Write every commit message as a conventional commit. Use
   `type(scope): subject`. Keep the subject short, lower case, and imperative.
 - The package manager is bun. Do not use npm, yarn or pnpm.
