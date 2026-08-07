@@ -34,9 +34,9 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 		`filter:blur(${(dot.size * 0.15).toFixed(1)}px)`,
 		`--dx:${((index % 2 ? -1 : 1) * (26 - dot.size / 5)).toFixed(1)}px`,
 		`--dy:${((index % 3 ? -1 : 1) * (20 - dot.size / 6)).toFixed(1)}px`,
-		`--dur-x:${(5 + dot.size / 14).toFixed(1)}s`,
-		`--dur-y:${(7 + dot.size / 11).toFixed(1)}s`,
-		`--delay:${(-index * 1.7).toFixed(1)}s`,
+		`--dur-x:${(3 + dot.size / 24).toFixed(1)}s`,
+		`--dur-y:${(4 + dot.size / 19).toFixed(1)}s`,
+		`--delay:${(-index * 1.1).toFixed(1)}s`,
 	].join(";");
 ---
 
