@@ -1,0 +1,155 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import DiscordIcon from "../icons/discord.svg";
+import TelegramIcon from "../icons/telegram.svg";
+import XIcon from "../icons/x.svg";
+import { site } from "../site";
+
+const icons = { x: XIcon, telegram: TelegramIcon, discord: DiscordIcon };
+
+/* The photos are placeholders. The glob sorts by file name, so `member-1.jpg`
+   pairs with the first member. Replace the files, keep the names. */
+const photos = Object.values(
+	import.meta.glob<{ default: ImageMetadata }>("../assets/team/*.jpg", {
+		eager: true,
+	}),
+).map((module) => module.default);
+
+const members = site.team.members.map((member, index) => ({
+	...member,
+	photo: photos[index],
+}));
+---
+
+<section id="team" class="scroll-mt-32 px-5 pt-5 lg:px-16 lg:pt-17">
+	<div class="mx-auto flex max-w-[82rem] flex-col gap-8 lg:gap-16">
+		<div class="flex flex-col gap-5 lg:flex-row lg:items-center">
+			<div class="flex flex-col gap-2 pt-4 lg:w-78 lg:shrink-0 lg:pb-8">
+				<p class="text-[27.625px] font-bold tracking-[1.06px]">
+					{site.team.number}
+				</p>
+				<h2
+					class="text-[32px] leading-[32px] font-extrabold tracking-[2.1px] whitespace-pre-line uppercase lg:text-[56px] lg:leading-[56px]"
+				>
+					{site.team.heading}
+				</h2>
+			</div>
+			<p class="max-w-88 text-base leading-[1.5]">{site.team.intro}</p>
+		</div>
+
+		{/* Small screens scroll the row sideways. A drag moves it and every card
+		   is a stop. The left padding gives the marker and the glow room to sit
+		   outside the card without the scroll box cutting them, and
+		   `scroll-pl-15` takes that padding back off the stop, so a card still
+		   lands on the margin of the page. The row bleeds off the right edge, so
+		   the next card shows that there is more. The rule below the row belongs
+		   to the wrapper, because a scrolling box would carry its own border
+		   away. */}
+		<div class="border-subtle border-b pb-10 lg:border-b-0 lg:pb-0">
+			<ul
+				class="-mr-5 -ml-15 flex snap-x snap-mandatory scroll-pl-15 gap-5 overflow-x-auto pr-5 pl-15 lg:mr-0 lg:ml-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-0 lg:overflow-visible lg:pr-0 lg:pl-0"
+			>
+				{
+					members.map(({ number, name, role, bio, photo }) => (
+						<li class="border-subtle relative w-78 shrink-0 snap-start border-l pb-8 lg:w-auto lg:border-b lg:pr-4 lg:pb-18">
+							{/* The glow sits left of and below the circle, so it bleeds
+							   over the border of the card. */}
+							<span
+								class="bg-avatar-glow pointer-events-none absolute top-3 -left-15 h-62 w-45 rounded-full opacity-60"
+								aria-hidden="true"
+							/>
+							<span
+								class="pointer-events-none absolute -top-3.5 -left-4 grid size-8 place-items-center"
+								aria-hidden="true"
+							>
+								<span class="border-body bg-surface absolute size-4.5 rotate-45 rounded-sm border" />
+								<span class="border-body bg-surface absolute size-2.5 rotate-45 rounded-xs border" />
+							</span>
+
+							{/* The circle takes the width it is given and shrinks below
+							   it, so a narrow column never pushes the number out of the
+							   card. The padding under the circle is what sets the copy
+							   below it. */}
+							<div class="relative flex gap-7 px-3 pt-3 pb-12">
+								<div class="relative w-44 min-w-0 shrink">
+									{/* A square turned on its corner. It rides the circle,
+									   so it follows every width. */}
+									<svg
+										class="pointer-events-none absolute -inset-[8.6%]"
+										viewBox="0 0 213 213"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="0.643"
+										stroke-dasharray="6 6"
+										aria-hidden="true"
+									>
+										<rect
+											x="31.19"
+											y="31.19"
+											width="150.614"
+											height="150.614"
+											transform="rotate(45 106.5 106.5)"
+										/>
+									</svg>
+									<div class="bg-subtle relative aspect-square overflow-hidden rounded-full">
+										<Image
+											src={photo}
+											alt={name}
+											width={364}
+											height={364}
+											loading="lazy"
+											class="size-full object-cover"
+										/>
+									</div>
+								</div>
+								<div class="w-14 shrink-0">
+									<p class="h-14 text-5xl leading-none font-bold">{number}</p>
+									<ul class="flex flex-col gap-2">
+										{site.team.networks.map(({ key, label, href }) => {
+											const Icon = icons[key];
+											return (
+												<li>
+													<a
+														href={href}
+														target="_blank"
+														rel="noreferrer"
+														class="border-subtle bg-surface hover:text-accent press focus-visible:outline-accent grid size-9 place-items-center rounded-full border-[1.5px] focus-visible:outline-2 focus-visible:outline-offset-2"
+														aria-label={label}
+													>
+														<Icon class="size-5" aria-hidden="true" />
+													</a>
+												</li>
+											);
+										})}
+									</ul>
+								</div>
+							</div>
+
+							<div class="relative flex flex-col gap-4 px-7">
+								{/* The second marker belongs to this block, so it holds
+								   its place beside the name at every width. */}
+								<span
+									class="pointer-events-none absolute top-8 -left-4 grid size-8 place-items-center"
+									aria-hidden="true"
+								>
+									<span class="border-body bg-surface absolute size-4.5 rotate-45 rounded-sm border" />
+									<span class="border-body bg-surface absolute size-2.5 rotate-45 rounded-xs border" />
+								</span>
+								<p class="text-[0.6875rem] font-medium tracking-[0.02em] uppercase">
+									{role}
+								</p>
+								{/* The name holds one line down to a narrow column, so every
+							   bio in the row starts at the same height. */}
+							<h3 class="text-[clamp(1.5rem,2.2vw,2rem)] leading-none font-bold">
+								{name}
+							</h3>
+								<p class="max-w-56 text-base leading-[1.45]">{bio}</p>
+							</div>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</div>
+</section>
