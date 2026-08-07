@@ -42,12 +42,14 @@ const percent = (value: number, total: number) =>
 		class="relative mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
 	>
 		<p
-			class="self-start text-[8px] font-bold tracking-[1px] whitespace-pre-line lg:text-[12px]"
+			style="--n: 0"
+			class="piece self-start text-[8px] font-bold tracking-[1px] whitespace-pre-line lg:text-[12px]"
 		>
 			{site.hero.eyebrow}
 		</p>
 		<h1
-			class="flex flex-col items-center text-center font-bold tracking-[-2px] uppercase"
+			style="--n: 1"
+			class="piece flex flex-col items-center text-center font-bold tracking-[-2px] uppercase"
 		>
 			<span
 				class="text-gradient text-[52px] leading-[0.96] font-extrabold lg:text-[76px]"
@@ -59,20 +61,21 @@ const percent = (value: number, total: number) =>
 			</span>
 		</h1>
 		<p
-			class="max-w-[462px] text-center text-[14px] leading-[1.5] lg:text-[17px]"
+			style="--n: 2"
+			class="piece max-w-[462px] text-center text-[14px] leading-[1.5] lg:text-[17px]"
 		>
 			{site.hero.body}
 		</p>
-		<div class="flex flex-col items-center gap-7">
+		<div style="--n: 3" class="piece flex flex-col items-center gap-7">
 			<a
 				href={site.hero.ctaHref}
-				class="bg-cta text-cta-body focus-visible:outline-accent rounded-full px-6 py-4 text-[14px] font-bold uppercase transition-opacity duration-200 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
+				class="bg-cta text-cta-body press focus-visible:outline-accent inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.ctaLabel}
 			</a>
 			<a
 				href={site.hero.emailHref}
-				class="hover:text-accent focus-visible:outline-accent rounded-sm text-[14px] font-bold underline transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4"
+				class="hover:text-accent press focus-visible:outline-accent inline-block rounded-sm text-[14px] font-bold underline focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.emailLabel}
 			</a>
@@ -97,3 +100,33 @@ const percent = (value: number, total: number) =>
 		))
 	}
 </section>
+
+<style>
+	/* The hero is the one place that earns an entrance. Each piece rises,
+	   fades, and sharpens, 90ms behind the piece above it. `--n` is the
+	   order of the piece. */
+	.piece {
+		opacity: 0;
+		translate: 0 8px;
+		filter: blur(2px);
+		animation: rise-in 350ms ease-out forwards;
+		animation-delay: calc(var(--n, 0) * 90ms);
+	}
+
+	@keyframes rise-in {
+		to {
+			opacity: 1;
+			translate: 0 0;
+			filter: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.piece {
+			opacity: 1;
+			translate: 0 0;
+			filter: none;
+			animation: none;
+		}
+	}
+</style>
