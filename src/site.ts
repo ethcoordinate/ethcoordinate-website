@@ -25,6 +25,14 @@ export const site = {
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com ↗",
 	},
+	/* The ticker repeats these phrases in one endless line. CSS makes them
+	   uppercase. */
+	ticker: [
+		"Make context travel",
+		"Connect the dots",
+		"Reduce coordination cost",
+		"Move the protocol forward",
+	],
 	footer: {
 		tagline: "Coordination is infrastructure.",
 		copyright: "© 2026 EthCoordinate",

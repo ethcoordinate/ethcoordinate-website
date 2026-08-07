@@ -27,6 +27,11 @@
 	--dot-blue: var(--blue-500);
 	--dot-light: var(--white);
 
+	/* The ticker holds one look in both themes, so these tokens never flip. */
+	--ticker-from: var(--ink-900);
+	--ticker-to: var(--indigo-800);
+	--ticker-body: var(--white);
+
 	/* The hero heading tilts its gradient to match the line count. */
 	--heading-angle: -35deg;
 
@@ -83,6 +88,7 @@
 	--color-cta-body: var(--cta-body);
 	--color-dot-blue: var(--dot-blue);
 	--color-dot-light: var(--dot-light);
+	--color-ticker-body: var(--ticker-body);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -107,6 +113,15 @@
 		90deg,
 		var(--cta-from) 0%,
 		var(--cta-to) 100%
+	);
+}
+
+/* Paints the gradient on the ticker bar. */
+@utility bg-ticker {
+	background-image: linear-gradient(
+		90deg,
+		var(--ticker-from) 0%,
+		var(--ticker-to) 100%
 	);
 }
 

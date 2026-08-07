@@ -17,6 +17,8 @@
 - Record every problem you solve in `docs/solutions/`. Use one markdown file per
   problem. Write the symptom, the cause, and the fix. Read this directory before
   you debug. Do not solve the same problem twice.
+- Write every commit message as a conventional commit. Use
+  `type(scope): subject`. Keep the subject short, lower case, and imperative.
 - The package manager is bun. Do not use npm, yarn or pnpm.
 - Do not run a dev server if not asked to, the user is already running one.
 

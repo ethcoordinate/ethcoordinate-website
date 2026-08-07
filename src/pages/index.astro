@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import Hero from "../components/Hero.astro";
 import LogoSprite from "../components/LogoSprite.astro";
 import Nav from "../components/Nav.astro";
+import Ticker from "../components/Ticker.astro";
 import { site } from "../site";
 ---
 
@@ -26,6 +27,7 @@ import { site } from "../site";
 		<Nav />
 		<main>
 			<Hero />
+			<Ticker />
 			{
 				site.nav.map((link) => (
 					<section

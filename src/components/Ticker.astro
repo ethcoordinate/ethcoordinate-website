@@ -1,0 +1,56 @@
+---
+import { site } from "../site";
+
+/* Two identical lists make the track. The track slides left by half its own
+   width, which is exactly one list. The second list is then where the first
+   one started, so the loop has no seam. The trailing `pe-*` gives the last
+   phrase of a list the same gap as the others, which keeps the halves
+   equal. */
+const lists = [false, true];
+---
+
+<div
+	class="ticker bg-ticker text-ticker-body overflow-hidden py-5 text-[12px] font-extrabold tracking-[0.5px] whitespace-nowrap uppercase"
+>
+	<div class="track flex w-max">
+		{
+			lists.map((clone) => (
+				<ul
+					class="flex shrink-0 gap-10 pe-10 lg:gap-16 lg:pe-16"
+					aria-hidden={clone ? "true" : undefined}
+				>
+					{site.ticker.map((phrase) => (
+						<li>{phrase}</li>
+					))}
+				</ul>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.track {
+		animation: ticker 20s linear infinite;
+		will-change: transform;
+	}
+
+	/* The pointer holds the line still, so a phrase can be read. A touch
+	   screen has no real hover, and a tap would leave the bar stopped. */
+	@media (hover: hover) {
+		.ticker:hover .track {
+			animation-play-state: paused;
+		}
+	}
+
+	@keyframes ticker {
+		to {
+			transform: translateX(-50%);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.track {
+			animation: none;
+		}
+	}
+</style>
