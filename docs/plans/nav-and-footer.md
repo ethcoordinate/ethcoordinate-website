@@ -26,6 +26,12 @@ Build the site shell from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
 
 - The dark theme values are a first pass. Replace them when the dark Figma
   nodes arrive.
-- The nav uses two rows below `640px`. Replace this with a menu if the link
-  list grows.
+- The nav opens a menu below `640px`. Figma node `56:32743` draws the trigger
+  as two bars and gives no open state. The two bars cross into an X on open.
+  The menu is a native popover, so Escape and a tap outside close it. The
+  `84px` offset in `Nav.astro` must follow the height of the mobile bar.
+- A popover holds no open state in the DOM. The header reads it with `:has()`
+  to turn the bars, and a script copies it to `aria-expanded` on the button.
+  The same script closes the menu on a link tap, because a popover stays open
+  when a link inside it fires.
 - The section bodies are stubs. Only the shell is in scope.

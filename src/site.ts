@@ -4,6 +4,8 @@ export const site = {
 	title: "EthCoordinate",
 	description: "Coordination is infrastructure.",
 	home: "Back to top",
+	menu: "Menu",
+	menuClose: "Close menu",
 	nav: [
 		{ href: "#about", label: "About" },
 		{ href: "#what-we-do", label: "What we do" },
