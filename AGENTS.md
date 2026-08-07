@@ -19,3 +19,16 @@
   you debug. Do not solve the same problem twice.
 - The package manager is bun. Do not use npm, yarn or pnpm.
 - Do not run a dev server if not asked to, the user is already running one.
+
+## Skills
+
+Skills live in `.agents/skills/`. `.claude/skills` is a symlink to that folder.
+The `skills` CLI writes to `.claude/skills`, so new skills land in
+`.agents/skills/` through the symlink. Git tracks `skills-lock.json`, not the
+skill files.
+
+```sh
+bunx skills@latest add <owner>/<repo> -a claude-code -s '*' -y
+bunx skills@latest experimental_install  # restore from skills-lock.json
+bunx skills@latest update -p -y          # update project skills
+```

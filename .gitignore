@@ -5,6 +5,8 @@ dist/
 
 # dependencies
 node_modules/
+# vendored skills; skills-lock.json restores them
+.agents/skills/
 
 # logs
 npm-debug.log*
