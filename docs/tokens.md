@@ -42,7 +42,7 @@ Use the utility in a component. Never write a hex value in a component.
 | `--dot-blue`   | `bg-dot-blue`     | Blue hero dot              | `--blue-500`   | `--blue-500`    |
 | `--dot-light`  | `bg-dot-light`    | Light hero dot             | `--white`      | `--white`       |
 
-`LogoSprite.astro` reads `--logo-ink` and `--logo-glow` inside the SVG, so the
+`logo-sprite.astro` reads `--logo-ink` and `--logo-glow` inside the SVG, so the
 logo follows the theme without a second asset.
 
 ## Gradients

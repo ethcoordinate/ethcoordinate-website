@@ -19,7 +19,7 @@ ticker therefore keeps one look in both themes.
 2. Add the `--ticker-*` tokens and the `bg-ticker` utility to
    `src/styles/global.css`. Keep them out of the theme blocks, because the bar
    does not flip.
-3. Build `Ticker.astro`. Use CSS only. No script.
+3. Build `ticker.astro`. Use CSS only. No script.
 4. Mount it in `index.astro`, between the hero and the first section.
 
 ## Motion

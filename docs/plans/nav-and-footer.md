@@ -18,7 +18,7 @@ Build the site shell from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
 2. Define the color tokens in `src/styles/global.css`. Map them to Tailwind
    utilities with `@theme inline`. See `docs/tokens.md`.
 3. Load Inter with the Astro fonts API. Do not add a font dependency.
-4. Build `Logo.astro`, `Nav.astro`, and `Footer.astro`.
+4. Build `logo.astro`, `nav.astro`, and `footer.astro`.
 5. Add the four deep link sections to `index.astro`. Use native smooth scroll.
 6. Keep all copy in `src/site.ts`.
 

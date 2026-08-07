@@ -15,7 +15,7 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
 1. Export the glow and the Ethereum mark as SVG. Save both to `public/`.
 2. Add the hero copy to `src/site.ts`.
 3. Add the gradient tokens to `src/styles/global.css`. See `docs/tokens.md`.
-4. Build `Hero.astro`. Mount it at the top of `<main>` in `index.astro`.
+4. Build `hero.astro`. Mount it at the top of `<main>` in `index.astro`.
 5. Widen the Inter weight range to `400 800`. The first heading line is
    extra bold.
 
