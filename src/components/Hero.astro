@@ -89,9 +89,13 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 		<div style="--n: 3" class="piece flex flex-col items-center gap-7">
 			<a
 				href={site.hero.ctaHref}
-				class="bg-cta text-cta-body press focus-visible:outline-accent inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
+				class="bg-cta text-cta-body press focus-visible:outline-accent group inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.ctaLabel}
+				<span
+					class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:translate-y-0.5 motion-safe:group-focus-visible:translate-y-0.5"
+					aria-hidden="true">{site.hero.ctaArrow}</span
+				>
 			</a>
 			<a
 				href={site.hero.emailHref}

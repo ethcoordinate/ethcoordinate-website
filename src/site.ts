@@ -19,7 +19,9 @@ export const site = {
 		titleBottom: "Move together",
 		body: "We facilitate the interaction between Ethereum’s stakeholders to accelerate the network’s adoption, combining technical rigor with pragmatism.",
 		ctaHref: "#what-we-do",
-		ctaLabel: "What we do ↓",
+		ctaLabel: "What we do",
+		/* The arrow is a separate element, because it moves on hover. */
+		ctaArrow: "↓",
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com ↗",
 	},
