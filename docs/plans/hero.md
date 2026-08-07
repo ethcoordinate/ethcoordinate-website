@@ -39,6 +39,11 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
   clock. Size drives the drift: a small dot travels further and faster, which
   reads as depth. Tailwind holds the `translate` and the `rotate` of a dot, so
   the drift uses `transform`, which the browser applies last.
+- **A dot drifts on two clocks, one per axis.** An element has one `transform`,
+  so the dot carries the x drift and an inner span carries the y drift. The two
+  periods never divide into each other, so one axis is always mid travel while
+  the other turns. A single axis with `alternate` stops twice per cycle, which
+  reads as static.
 
 ## Open items
 

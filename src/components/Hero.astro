@@ -21,19 +21,22 @@ const dots = [
 const percent = (value: number, total: number) =>
 	`${((value / total) * 100).toFixed(2)}%`;
 
-/* Each dot drifts. A small dot travels further and faster than a large one,
-   which reads as depth. The negative delay starts every dot at a different
-   point of its cycle, so the group never moves as one. */
+/* Each dot drifts on two clocks, one per axis. The two periods never divide
+   into each other, so one axis is always mid travel while the other turns.
+   The dot therefore never stops. A small dot travels further and faster than
+   a large one, which reads as depth. The negative delay starts every dot at
+   a different point of its cycle, so the group never moves as one. */
 const dotStyle = (dot: (typeof dots)[number], index: number) =>
 	[
 		`left:${percent(dot.x, frame.width)}`,
 		`top:${percent(dot.y, frame.height)}`,
 		`width:${percent(dot.size, frame.width)}`,
 		`filter:blur(${(dot.size * 0.15).toFixed(1)}px)`,
-		`--dx:${((index % 2 ? -1 : 1) * (10 - dot.size / 12)).toFixed(1)}px`,
-		`--dy:${(-(12 - dot.size / 10)).toFixed(1)}px`,
-		`--dur:${(7 + dot.size / 8).toFixed(1)}s`,
-		`--delay:${(-index * 1.9).toFixed(1)}s`,
+		`--dx:${((index % 2 ? -1 : 1) * (26 - dot.size / 5)).toFixed(1)}px`,
+		`--dy:${((index % 3 ? -1 : 1) * (20 - dot.size / 6)).toFixed(1)}px`,
+		`--dur-x:${(5 + dot.size / 14).toFixed(1)}s`,
+		`--dur-y:${(7 + dot.size / 11).toFixed(1)}s`,
+		`--delay:${(-index * 1.7).toFixed(1)}s`,
 	].join(";");
 ---
 
@@ -100,13 +103,17 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 	{
 		dots.map((dot, index) => (
 			<span
-				class:list={[
-					"dot pointer-events-none absolute hidden aspect-square -translate-x-1/2 -translate-y-1/2 rotate-25 rounded-[8%] lg:block",
-					dot.tone,
-				]}
+				class="dot pointer-events-none absolute hidden -translate-x-1/2 -translate-y-1/2 lg:block"
 				style={dotStyle(dot, index)}
 				aria-hidden="true"
-			/>
+			>
+				<span
+					class:list={[
+						"dot-body block aspect-square w-full rotate-25 rounded-[8%]",
+						dot.tone,
+					]}
+				/>
+			</span>
 		))
 	}
 </section>
@@ -131,16 +138,28 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 		}
 	}
 
-	/* Tailwind holds the `translate` and `rotate` of a dot, so the drift uses
-	   `transform`. The browser applies it last, so the two do not collide. */
+	/* One axis per element, because an element has one `transform`. Tailwind
+	   holds the `translate` and the `rotate` of a dot, so both drifts use
+	   `transform`, which the browser applies last. */
 	.dot {
-		animation: drift var(--dur) ease-in-out var(--delay) infinite alternate;
+		animation: drift-x var(--dur-x) ease-in-out var(--delay) infinite alternate;
 		will-change: transform;
 	}
 
-	@keyframes drift {
+	.dot-body {
+		animation: drift-y var(--dur-y) ease-in-out var(--delay) infinite alternate;
+		will-change: transform;
+	}
+
+	@keyframes drift-x {
 		to {
-			transform: translate(var(--dx), var(--dy));
+			transform: translateX(var(--dx));
+		}
+	}
+
+	@keyframes drift-y {
+		to {
+			transform: translateY(var(--dy));
 		}
 	}
 
@@ -152,7 +171,8 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 			animation: none;
 		}
 
-		.dot {
+		.dot,
+		.dot-body {
 			animation: none;
 		}
 	}
