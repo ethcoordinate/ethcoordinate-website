@@ -36,6 +36,8 @@ All commands are run from the root of the project, from a terminal:
 | `bun run build`           | Build your production site to `./dist/`          |
 | `bun run preview`         | Build, then preview on the Workers runtime       |
 | `bun run deploy`          | Build and deploy to Cloudflare Workers           |
+| `bun run lint`            | oxlint + Tailwind class-order check              |
+| `bun run lint:fix`        | Autofix lint issues and sort Tailwind classes    |
 | `bun run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 
 ## 👀 Want to learn more?
