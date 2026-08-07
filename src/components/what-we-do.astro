@@ -1,0 +1,68 @@
+---
+import Dots from "./dots.astro";
+import { site } from "../site";
+
+/* The Figma frame. Every decoration below is a position in this box. */
+const frame = { width: 1440, height: 690 };
+
+const dots = [
+	{ x: 43.9, y: 308.4, size: 30 },
+	{ x: 125.6, y: 444.1, size: 10 },
+	{ x: 213.8, y: 593.5, size: 70 },
+	{ x: 355.3, y: 390.2, size: 20 },
+	{ x: 1282.6, y: 388.1, size: 10 },
+	{ x: 1324.9, y: 504.4, size: 30 },
+	{ x: 1358.3, y: 83.8, size: 20 },
+];
+---
+
+<section
+	id="what-we-do"
+	class="relative scroll-mt-32 overflow-hidden px-5 py-5 lg:px-16 lg:pt-[84px] lg:pb-[30px]"
+>
+	{/* The arc and the line share the Figma frame, so one SVG carries that box.
+	   `slice` keeps the arc round and pins it to the right edge, whatever
+	   height the copy gives the section. */}
+	<svg
+		class="text-dash pointer-events-none absolute inset-0 hidden size-full lg:block"
+		viewBox={`0 0 ${frame.width} ${frame.height}`}
+		preserveAspectRatio="xMaxYMid slice"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="1.5"
+		stroke-dasharray="7.56 7.56"
+		aria-hidden="true"
+	>
+		<circle cx="1247.5" cy="416.4" r="284.75"></circle>
+		<line x1="1358.6" y1="80.4" x2="1053.6" y2="700.4"></line>
+	</svg>
+
+	<div class="relative mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row">
+		<div class="flex flex-col gap-2 lg:w-[312px] lg:shrink-0">
+			<p class="text-[27.625px] font-bold tracking-[1.06px]">
+				{site.whatWeDo.number}
+			</p>
+			<h2
+				class="text-[32px] leading-[32px] font-extrabold tracking-[2.1px] whitespace-pre-line uppercase lg:text-[56px] lg:leading-[56px]"
+			>
+				{site.whatWeDo.heading}
+			</h2>
+		</div>
+		<dl class="flex flex-1 flex-col gap-10 py-10">
+			{
+				site.whatWeDo.items.map(({ title, body }) => (
+					<div class="flex flex-col lg:flex-row lg:gap-[60px]">
+						<dt class="text-[28px] font-bold uppercase lg:w-[240px] lg:shrink-0 lg:text-right">
+							{title}
+						</dt>
+						<dd class="text-[16px] leading-[1.45] lg:max-w-[386px] lg:flex-1">
+							{body}
+						</dd>
+					</div>
+				))
+			}
+		</dl>
+	</div>
+
+	<Dots frame={frame} dots={dots} />
+</section>

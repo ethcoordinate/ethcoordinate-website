@@ -50,6 +50,36 @@ export const site = {
 			},
 		},
 	},
+	whatWeDo: {
+		number: "02.",
+		/* Figma breaks the heading after the first word. The newline keeps that
+		   shape. */
+		heading: "What\nWe do",
+		/* Each title wraps on its own at the 240px column width, so no title
+		   carries a newline. */
+		items: [
+			{
+				title: "Staker support",
+				body: "We maintain a safe, informed space for independent stakers to stay engaged with the network.",
+			},
+			{
+				title: "Protocol coordination",
+				body: "We facilitate coordination around core protocol development and its adjacent efforts.",
+			},
+			{
+				title: "Forkcast",
+				body: "We develop and steward Forkcast, the most-used platform for tracking research and engineering initiatives on Ethereum’s core protocol.",
+			},
+			{
+				title: "Protocol economics",
+				body: "We champion research and implementation of changes to core protocol economics.",
+			},
+			{
+				title: "Open-source tooling",
+				body: "We maintain the open-source tools and documentation used by participants of the consensus set.",
+			},
+		],
+	},
 	/* The ticker repeats these phrases in one endless line. CSS makes them
 	   uppercase. */
 	ticker: [

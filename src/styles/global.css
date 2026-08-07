@@ -26,6 +26,7 @@
 	--cta-body: var(--white);
 	--dot-blue: var(--blue-500);
 	--dot-light: var(--white);
+	--dash: var(--blue-200);
 
 	/* The three stops of the halo inside a super icon. The line art of the icon
 	   holds one blue in both themes, so only the halo flips. */
@@ -79,6 +80,7 @@
 		--icon-glow-mid: var(--indigo-800);
 		--icon-glow-to: var(--blue-900);
 		--about-glow: var(--indigo-800);
+		--dash: var(--blue-500);
 	}
 }
 
@@ -93,6 +95,7 @@
 	--icon-glow-mid: var(--indigo-800);
 	--icon-glow-to: var(--blue-900);
 	--about-glow: var(--indigo-800);
+	--dash: var(--blue-500);
 }
 
 /* Layer 3: Tailwind map. `inline` keeps each utility pointing at the live
@@ -105,6 +108,7 @@
 	--color-cta-body: var(--cta-body);
 	--color-dot-blue: var(--dot-blue);
 	--color-dot-light: var(--dot-light);
+	--color-dash: var(--dash);
 	--color-ticker-body: var(--ticker-body);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }

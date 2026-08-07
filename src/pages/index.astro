@@ -7,6 +7,7 @@ import Hero from "../components/hero.astro";
 import LogoSprite from "../components/logo-sprite.astro";
 import Nav from "../components/nav.astro";
 import Ticker from "../components/ticker.astro";
+import WhatWeDo from "../components/what-we-do.astro";
 import { site } from "../site";
 ---
 
@@ -30,9 +31,12 @@ import { site } from "../site";
 			<Hero />
 			<Ticker />
 			<About />
+			<WhatWeDo />
 			{
 				site.nav
-					.filter((link) => link.href !== "#about")
+					.filter(
+						(link) => !["#about", "#what-we-do"].includes(link.href),
+					)
 					.map((link) => (
 						<section
 							id={link.href.slice(1)}

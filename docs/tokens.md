@@ -45,6 +45,7 @@ Use the utility in a component. Never write a hex value in a component.
 | `--icon-glow-mid`  | used by the super icons | Halo, middle stop  | `--blue-400`   | `--indigo-800`  |
 | `--icon-glow-to`   | used by the super icons | Halo, far stop     | `--blue-200`   | `--blue-900`    |
 | `--about-glow` | used by `bg-about-glow` | Blob at the side edges | `--blue-400` | `--indigo-800` |
+| `--dash`       | `text-dash`       | Dashed circle and line     | `--blue-200`   | `--blue-500`    |
 
 `logo-sprite.astro` reads `--logo-ink` and `--logo-glow` inside the SVG, so the
 logo follows the theme without a second asset.
@@ -92,6 +93,9 @@ for `--accent` and `--logo-ink` come from the dark logo wordmark, which reads
 
 Light nodes: `56:30883` nav, `56:31060` footer, `56:30890` hero.
 Dark nodes: `52:26047` nav, `52:26230` footer, `52:26054` hero.
+
+Figma has no variable for the dashed circle and the line. Both read `#b4c6ed`
+in the light node and `#133cd0` in the dark one, which is `--dash`.
 
 ## Themes
 
