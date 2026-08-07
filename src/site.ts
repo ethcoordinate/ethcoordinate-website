@@ -28,7 +28,9 @@ export const site = {
 		/* The arrow is a separate element, because it moves on hover. */
 		ctaArrow: "↓",
 		emailHref: "mailto:team@ethcoordinate.com",
-		emailLabel: "team@ethcoordinate.com ↗",
+		emailLabel: "team@ethcoordinate.com",
+		/* The arrow is a separate element, because it turns on hover. */
+		emailArrow: "↗",
 	},
 	about: {
 		number: "01.",

@@ -77,9 +77,14 @@ const dots = [
 			</a>
 			<a
 				href={site.hero.emailHref}
-				class="hover:text-accent press focus-visible:outline-accent inline-block rounded-sm text-[14px] font-bold underline focus-visible:outline-2 focus-visible:outline-offset-4"
+				class="hover:text-accent press group focus-visible:outline-accent inline-block rounded-sm text-[14px] font-bold underline focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.emailLabel}
+				{/* The arrow turns 45 degrees, so it morphs into a right arrow. */}
+				<span
+					class="inline-block transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+					aria-hidden="true">{site.hero.emailArrow}</span
+				>
 			</a>
 		</div>
 	</div>
