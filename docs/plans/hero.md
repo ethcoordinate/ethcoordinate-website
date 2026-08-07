@@ -47,6 +47,9 @@ Build the landing page hero from Figma file `EPr1BWJ9CL7obLdsPAOKlE`.
   periods never divide into each other, so one axis is always mid travel while
   the other turns. A single axis with `alternate` stops twice per cycle, which
   reads as static.
+- **`dots.astro` owns all of the above.** The hero passes its frame and its dot
+  list. The what we do section passes its own. See
+  `docs/plans/what-we-do.md`.
 
 ## Open items
 

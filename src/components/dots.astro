@@ -1,0 +1,114 @@
+---
+interface Props {
+	/* The Figma frame the positions below are measured in. */
+	frame: { width: number; height: number };
+	/* `x` and `y` are the center of a dot. `size` is the side of the square.
+	   All values are pixels in the frame above. */
+	dots: { x: number; y: number; size: number; tone?: string }[];
+}
+
+const { frame, dots } = Astro.props;
+
+/* Each dot drifts on two clocks, one per axis. The two periods never divide
+   into each other, so one axis is always mid travel while the other turns.
+   The dot therefore never stops. A small dot travels further and faster than
+   a large one, which reads as depth. The negative delay starts every dot at
+   a different point of its cycle, so the group never moves as one. `--push`
+   carries the same depth into the pointer parallax. */
+const dotStyle = (dot: Props["dots"][number], index: number) =>
+	[
+		`left:${((dot.x / frame.width) * 100).toFixed(2)}%`,
+		`top:${((dot.y / frame.height) * 100).toFixed(2)}%`,
+		`width:${((dot.size / frame.width) * 100).toFixed(2)}%`,
+		`filter:blur(${(dot.size * 0.15).toFixed(1)}px)`,
+		`--dx:${((index % 2 ? -1 : 1) * (26 - dot.size / 5)).toFixed(1)}px`,
+		`--dy:${((index % 3 ? -1 : 1) * (20 - dot.size / 6)).toFixed(1)}px`,
+		`--dur-x:${(3 + dot.size / 24).toFixed(1)}s`,
+		`--dur-y:${(4 + dot.size / 19).toFixed(1)}s`,
+		`--delay:${(-index * 1.1).toFixed(1)}s`,
+		`--push:${(30 - dot.size / 4).toFixed(1)}px`,
+	].join(";");
+---
+
+{
+	dots.map((dot, index) => (
+		<span
+			class="dot pointer-events-none absolute hidden -translate-x-1/2 -translate-y-1/2 lg:block"
+			style={dotStyle(dot, index)}
+			aria-hidden="true"
+		>
+			<span
+				class:list={[
+					"dot-body block aspect-square w-full rotate-25 rounded-[8%]",
+					dot.tone ?? "bg-dot-blue",
+				]}
+			/>
+		</span>
+	))
+}
+
+<style>
+	/* One axis per element, because an element has one `transform`. Tailwind
+	   holds the `translate` and the `rotate` of the outer span, so both drifts
+	   use `transform`, which the browser applies last. */
+	.dot {
+		animation: drift-x var(--dur-x) ease-in-out var(--delay) infinite alternate;
+		will-change: transform;
+	}
+
+	/* The inner span keeps its `translate` free, so the pointer parallax rides
+	   there and never overwrites the drift. */
+	.dot-body {
+		animation: drift-y var(--dur-y) ease-in-out var(--delay) infinite alternate;
+		translate: calc(var(--pointer-x, 0) * var(--push))
+			calc(var(--pointer-y, 0) * var(--push));
+		transition: translate 600ms cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: transform, translate;
+	}
+
+	@keyframes drift-x {
+		to {
+			transform: translateX(var(--dx));
+		}
+	}
+
+	@keyframes drift-y {
+		to {
+			transform: translateY(var(--dy));
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dot,
+		.dot-body {
+			animation: none;
+		}
+
+		/* Only the inner span. The outer one needs its `translate` to stay
+		   centered on the point. */
+		.dot-body {
+			translate: none;
+		}
+	}
+</style>
+
+<script>
+	/* One listener for the page, however many dot fields it holds. The two
+	   variables run from -1 to 1 across the viewport. Each dot scales them by
+	   its own `--push`, so the group parallaxes instead of moving as one. */
+	if (matchMedia("(pointer: fine)").matches) {
+		const root = document.documentElement;
+		let pending = 0;
+
+		addEventListener("pointermove", (event) => {
+			if (pending) return;
+			pending = requestAnimationFrame(() => {
+				pending = 0;
+				const x = (event.clientX / innerWidth) * 2 - 1;
+				const y = (event.clientY / innerHeight) * 2 - 1;
+				root.style.setProperty("--pointer-x", `${x.toFixed(3)}`);
+				root.style.setProperty("--pointer-y", `${y.toFixed(3)}`);
+			});
+		});
+	}
+</script>

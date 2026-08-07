@@ -1,12 +1,11 @@
 ---
+import Dots from "./dots.astro";
 import { site } from "../site";
 
 /* The Figma hero frame. Every decoration below is a position in this box.
    Percentages keep the layout at any width. */
 const frame = { width: 1440, height: 726 };
 
-/* The floating dots. `x` and `y` are the center. `size` is the side of the
-   square. All values are pixels in the frame above. */
 const dots = [
 	{ x: 195.9, y: 288.9, size: 36, tone: "bg-dot-blue" },
 	{ x: 401.9, y: 494.9, size: 20, tone: "bg-dot-light" },
@@ -17,27 +16,6 @@ const dots = [
 	{ x: 73.9, y: 439.9, size: 30, tone: "bg-dot-blue" },
 	{ x: 1363.9, y: 399.9, size: 30, tone: "bg-dot-blue" },
 ];
-
-const percent = (value: number, total: number) =>
-	`${((value / total) * 100).toFixed(2)}%`;
-
-/* Each dot drifts on two clocks, one per axis. The two periods never divide
-   into each other, so one axis is always mid travel while the other turns.
-   The dot therefore never stops. A small dot travels further and faster than
-   a large one, which reads as depth. The negative delay starts every dot at
-   a different point of its cycle, so the group never moves as one. */
-const dotStyle = (dot: (typeof dots)[number], index: number) =>
-	[
-		`left:${percent(dot.x, frame.width)}`,
-		`top:${percent(dot.y, frame.height)}`,
-		`width:${percent(dot.size, frame.width)}`,
-		`filter:blur(${(dot.size * 0.15).toFixed(1)}px)`,
-		`--dx:${((index % 2 ? -1 : 1) * (26 - dot.size / 5)).toFixed(1)}px`,
-		`--dy:${((index % 3 ? -1 : 1) * (20 - dot.size / 6)).toFixed(1)}px`,
-		`--dur-x:${(3 + dot.size / 24).toFixed(1)}s`,
-		`--dur-y:${(4 + dot.size / 19).toFixed(1)}s`,
-		`--delay:${(-index * 1.1).toFixed(1)}s`,
-	].join(";");
 ---
 
 <section
@@ -106,22 +84,7 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 		</div>
 	</div>
 
-	{
-		dots.map((dot, index) => (
-			<span
-				class="dot pointer-events-none absolute hidden -translate-x-1/2 -translate-y-1/2 lg:block"
-				style={dotStyle(dot, index)}
-				aria-hidden="true"
-			>
-				<span
-					class:list={[
-						"dot-body block aspect-square w-full rotate-25 rounded-[8%]",
-						dot.tone,
-					]}
-				/>
-			</span>
-		))
-	}
+	<Dots frame={frame} dots={dots} />
 </section>
 
 <style>
@@ -144,41 +107,11 @@ const dotStyle = (dot: (typeof dots)[number], index: number) =>
 		}
 	}
 
-	/* One axis per element, because an element has one `transform`. Tailwind
-	   holds the `translate` and the `rotate` of a dot, so both drifts use
-	   `transform`, which the browser applies last. */
-	.dot {
-		animation: drift-x var(--dur-x) ease-in-out var(--delay) infinite alternate;
-		will-change: transform;
-	}
-
-	.dot-body {
-		animation: drift-y var(--dur-y) ease-in-out var(--delay) infinite alternate;
-		will-change: transform;
-	}
-
-	@keyframes drift-x {
-		to {
-			transform: translateX(var(--dx));
-		}
-	}
-
-	@keyframes drift-y {
-		to {
-			transform: translateY(var(--dy));
-		}
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		.piece {
 			opacity: 1;
 			translate: 0 0;
 			filter: none;
-			animation: none;
-		}
-
-		.dot,
-		.dot-body {
 			animation: none;
 		}
 	}
