@@ -1,15 +1,35 @@
 ---
-import MissionIcon from "../icons/mission.svg";
-import ValueIcon from "../icons/value.svg";
-import VisionIcon from "../icons/vision.svg";
+import MissionBack from "../icons/mission-back.svg";
+import MissionFront from "../icons/mission-front.svg";
+import ValueBack from "../icons/value-back.svg";
+import ValueFront from "../icons/value-front.svg";
+import VisionBack from "../icons/vision-back.svg";
+import VisionFront from "../icons/vision-front.svg";
 import { site } from "../site";
 
 /* Each icon is artwork, so it stays out of `site.ts`. The copy comes from
-   there. */
+   there. An icon stacks a blurred back copy and a sharp front copy. The CSS
+   masks crossfade them. See
+   docs/solutions/safari-drops-mask-over-svg-filter.md. */
 const cards = [
-	{ Icon: MissionIcon, ...site.about.purpose.mission },
-	{ Icon: VisionIcon, ...site.about.purpose.vision },
-	{ Icon: ValueIcon, ...site.about.purpose.value },
+	{
+		Back: MissionBack,
+		Front: MissionFront,
+		frontMask: "mask-icon-front-tall",
+		...site.about.purpose.mission,
+	},
+	{
+		Back: VisionBack,
+		Front: VisionFront,
+		frontMask: "mask-icon-front",
+		...site.about.purpose.vision,
+	},
+	{
+		Back: ValueBack,
+		Front: ValueFront,
+		frontMask: "mask-icon-front",
+		...site.about.purpose.value,
+	},
 ];
 ---
 
@@ -44,12 +64,15 @@ const cards = [
 	<div class="bg-about-glow px-5 pt-5 pb-10 lg:px-16 lg:pt-20 lg:pb-[110px]">
 		<ul class="mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row">
 			{
-				cards.map(({ Icon, title, body }) => (
+				cards.map(({ Back, Front, frontMask, title, body }) => (
 					<li class="flex gap-5 lg:flex-1">
-						<Icon
-							class="size-[80px] shrink-0 lg:size-[116px]"
+						<div
+							class="relative size-[80px] shrink-0 lg:size-[116px]"
 							aria-hidden="true"
-						/>
+						>
+							<Back class="mask-icon-back absolute inset-0 size-full" />
+							<Front class={`${frontMask} absolute inset-0 size-full`} />
+						</div>
 						<div class="flex max-w-[244px] flex-col gap-2 pt-10 lg:gap-5 lg:pt-12">
 							<h3 class="text-[30px] leading-[1.22] font-bold uppercase">
 								{title}

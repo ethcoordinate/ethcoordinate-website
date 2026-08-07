@@ -189,6 +189,24 @@
 	);
 }
 
+/* The vertical crossfade inside a super icon. The back layer is the blurred
+   copy and fades in toward the bottom. The front layer is the sharp copy plus
+   the halo and fades out. Safari drops an SVG mask on a group that holds a
+   filter, so the fade lives here as a CSS mask. See
+   docs/solutions/safari-drops-mask-over-svg-filter.md. */
+@utility mask-icon-back {
+	mask-image: linear-gradient(to bottom, transparent 46.55%, black 100%);
+}
+
+@utility mask-icon-front {
+	mask-image: linear-gradient(to bottom, black 37.5%, transparent 65.95%);
+}
+
+/* The mission fade starts at the top edge. Figma draws it that way. */
+@utility mask-icon-front-tall {
+	mask-image: linear-gradient(to bottom, black 4.74%, transparent 65.95%);
+}
+
 /* Paints the gradient on the ticker bar. */
 @utility bg-ticker {
 	background-image: linear-gradient(
