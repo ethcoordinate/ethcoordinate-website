@@ -21,6 +21,15 @@
   you debug. Do not solve the same problem twice.
 - Name every file in `src/` in kebab-case, components and pages included. The
   import name stays PascalCase, the file name does not.
+- Keep every photo in `src/assets/`. Import it and render it with the `Image`
+  component of `astro:assets`. Never write a plain `<img>` and never put a photo
+  in `public/`. Astro only optimizes an imported asset. `public/` holds artwork
+  that must stay byte for byte, such as an SVG.
+- Give every `Image` a `loading` value. Use `eager` only for an image above the
+  fold. Use `lazy` for the rest. Set `width` and `height`, so the box holds its
+  space and the page never shifts.
+- The team photos in `src/assets/team/` are placeholders from
+  [picsum.photos](https://picsum.photos). Replace the files. Keep the names.
 - Write every commit message as a conventional commit. Use
   `type(scope): subject`. Keep the subject short, lower case, and imperative.
 - The package manager is bun. Do not use npm, yarn or pnpm.
