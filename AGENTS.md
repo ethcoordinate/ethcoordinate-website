@@ -7,6 +7,9 @@
   that does not exist yet. Delete before you add.
 - Keep all copy text in `src/site.ts`. It is the only source of truth for copy.
   Import from it. Do not write literal text in `.astro` files.
+- Keep all color in `src/styles/global.css`. It is the only source of truth for
+  color. Use the Tailwind token utilities. Do not write a hex value in a
+  component. See `docs/tokens.md`.
 - Keep the repo agent friendly. Use few files, plain names, and no hidden magic.
   Record every command in this file.
 - Write the plan for multi-step work in `docs/plans/`. Use one markdown file per

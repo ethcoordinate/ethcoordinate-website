@@ -1,19 +1,40 @@
 ---
-import '../styles/global.css';
-import { site } from '../site';
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import LogoSprite from "../components/LogoSprite.astro";
+import Nav from "../components/Nav.astro";
+import { site } from "../site";
 ---
 
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{site.title}</title>
 		<meta name="description" content={site.description} />
+		<Font cssVariable="--font-inter" preload />
 	</head>
-	<body class="grid min-h-dvh place-items-center">
-		<h1 class="text-4xl font-bold tracking-tight">{site.heading}</h1>
+	<body
+		id="top"
+		class="bg-surface text-body font-sans antialiased transition-colors duration-200"
+	>
+		<LogoSprite />
+		<Nav />
+		<main>
+			{
+				site.nav.map((link) => (
+					<section
+						id={link.href.slice(1)}
+						class="border-subtle scroll-mt-32 border-b px-6 py-24 sm:px-10 lg:px-16"
+					>
+						<h2 class="text-3xl font-semibold tracking-tight">{link.label}</h2>
+					</section>
+				))
+			}
+		</main>
+		<Footer />
 	</body>
 </html>

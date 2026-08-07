@@ -1,1 +1,58 @@
 @import "tailwindcss";
+
+/* Layer 1: palette. Raw Figma colors. Never use these in a component. */
+:root {
+	--blue-200: #b4c6ed;
+	--blue-500: #133cd0;
+	--blue-900: #040530;
+	--ink-900: #171716;
+	--ink-950: #171724;
+	--indigo-800: #222275;
+	--white: #ffffff;
+
+	/* Layer 2: semantic tokens. One value per role. These flip with the theme.
+	   See docs/tokens.md. */
+	--surface: var(--white);
+	--body: var(--ink-900);
+	--subtle: var(--blue-200);
+	--accent: var(--blue-500);
+	--logo-ink: var(--blue-900);
+	--logo-glow: var(--blue-200);
+}
+
+/* The theme follows the operating system. `data-theme` on <html> overrides it. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--surface: var(--ink-950);
+		--body: var(--white);
+		--subtle: var(--indigo-800);
+		--accent: var(--blue-200);
+		--logo-ink: var(--blue-200);
+		--logo-glow: var(--ink-950);
+	}
+}
+
+:root[data-theme="dark"] {
+	--surface: var(--ink-950);
+	--body: var(--white);
+	--subtle: var(--indigo-800);
+	--accent: var(--blue-200);
+	--logo-ink: var(--blue-200);
+	--logo-glow: var(--ink-950);
+}
+
+/* Layer 3: Tailwind map. `inline` keeps each utility pointing at the live
+   variable, so a theme change repaints without a rebuild. */
+@theme inline {
+	--color-surface: var(--surface);
+	--color-body: var(--body);
+	--color-subtle: var(--subtle);
+	--color-accent: var(--accent);
+	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
