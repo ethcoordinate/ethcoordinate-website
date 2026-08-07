@@ -11,7 +11,7 @@ import { site } from "../site";
 		aria-label={site.name}
 	>
 		<a
-			href="#top"
+			href="#"
 			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
 		>
 			<span class="sr-only">{site.home}</span>
@@ -39,7 +39,7 @@ import { site } from "../site";
 			aria-expanded="false"
 			data-label-open={site.menu}
 			data-label-close={site.menuClose}
-			class="hover:text-accent press focus-visible:outline-accent -mr-3 rounded-sm p-3 focus-visible:outline-2 focus-visible:outline-offset-2 sm:hidden"
+			class="hover:text-accent press focus-visible:outline-accent -mr-3 cursor-pointer rounded-sm p-3 focus-visible:outline-2 focus-visible:outline-offset-2 sm:hidden"
 		>
 			<span class="sr-only">{site.menu}</span>
 			{/* Figma draws the menu as two bars. They cross into an X on open. */}
