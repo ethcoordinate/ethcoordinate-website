@@ -1,0 +1,16 @@
+name: sync dev
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Creates dev on the first run. Fails if dev diverges from main.
+      - run: git push origin main:dev
