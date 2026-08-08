@@ -222,10 +222,6 @@
 	/* A stronger ease-out than the built in one. It starts fast, so a control
 	   answers the moment it is touched. */
 	--ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-
-	/* Lets `auto` take part in a height transition. Without it the accordion
-	   still opens, it only jumps. */
-	interpolate-size: allow-keywords;
 }
 
 /* `press` gives a control a short dip under the finger and a soft overshoot on

@@ -32,11 +32,7 @@ import { site } from "../site";
 			<div class="border-subtle flex-1 border-b">
 				{
 					site.faq.items.map(({ question, answer }, index) => (
-						<details
-							class="border-subtle border-t"
-							name="faq"
-							open={index === 0}
-						>
+						<details class="border-subtle border-t" open={index === 0}>
 							{/* A full width row is too big to scale under the finger,
 							   so it tints instead. */}
 							<summary class="hover:text-accent flex cursor-pointer list-none items-center justify-between gap-5 py-6.5 text-[1.1875rem] leading-[1.45] font-bold transition-colors duration-200 [&::-webkit-details-marker]:hidden">
@@ -64,20 +60,26 @@ import { site } from "../site";
 
 <style>
 	/* The row carries the height, the copy carries the fade. Splitting the two
-	   is what keeps the open from reading as one block of text popping in. */
+	   is what keeps the open from reading as one block of text popping in.
+	   The `0fr` to `1fr` track is the one height animation every engine can
+	   interpolate. A `block-size` animation to `auto` runs only in Chromium. */
 	details::details-content {
-		block-size: 0;
+		display: grid;
+		grid-template-rows: 0fr;
 		overflow: hidden;
 		transition:
-			block-size 260ms var(--ease-out),
-			content-visibility 260ms allow-discrete;
+			grid-template-rows 200ms var(--ease-out),
+			content-visibility 200ms allow-discrete;
 	}
 
+	/* The close stays a bit faster than the open. */
 	details[open]::details-content {
-		block-size: auto;
+		grid-template-rows: 1fr;
+		transition-duration: 260ms;
 	}
 
 	.answer {
+		min-height: 0;
 		opacity: 0;
 		translate: 0 -0.5rem;
 		transition:
