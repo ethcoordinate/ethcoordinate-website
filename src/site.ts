@@ -99,7 +99,11 @@ export const site = {
 		   key names the icon file. Addresses are placeholders. */
 		networks: [
 			{ key: "x", label: "X", href: "https://x.com/ethcoordinate" },
-			{ key: "telegram", label: "Telegram", href: "https://t.me/ethcoordinate" },
+			{
+				key: "telegram",
+				label: "Telegram",
+				href: "https://t.me/ethcoordinate",
+			},
 			{
 				key: "discord",
 				label: "Discord",
@@ -162,8 +166,8 @@ export const site = {
 		number: "04.",
 		heading: "FAQ",
 		lead: "A few things worth knowing.",
-		intro: "We’re early, so some answers will evolve. Here’s where things stand today.",
-		/* Figma writes only the first answer. The rest wait for copy. */
+		intro:
+			"We’re early, so some answers will evolve. Here’s where things stand today.",
 		items: [
 			{
 				question: "What is EthCoordinate?",
@@ -171,24 +175,59 @@ export const site = {
 					"EthCoordinate is an independent Ethereum organization focused on helping protocol contributors and ecosystem teams understand one another, align around shared work, and make progress together.",
 			},
 			{
-				question: "Are you part of the Ethereum Foundation?",
+				question: "Who exactly is on EthCoordinate?",
 				answer:
-					"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+					"The current active members carrying everyday responsibilities are: Nixorokish, Butta, Patricio Worthalter, Yorick, Jerome de Tychey, Marc Garreau and Franco Balzani. Several affiliates help in specific initiatives that fit their availability. Some are: Nolan Ross (Lamboshi), Waqwaqwaq, Valefar, Remy Roy, Sam Coffey, Colfax Selby and a small handful that want to remain unnamed.",
 			},
 			{
-				question: "What kinds of tools will you build?",
+				question: "How are you funded?",
 				answer:
-					"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+					"We have collected donations over the years and managed to spend the funds very carefully. Some of our main donors were the Ethereum Foundation, Optimism’s RPGF program, Octant, Arbitrum DAO, Rocketpool, Gitcoin and several individuals.",
 			},
 			{
-				question: "Can my team collaborate with EthCoordinate?",
+				question: "Why did you rename?",
 				answer:
-					"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+					"EthStaker as a name was too limiting given the scope of tasks we were signing up for.",
 			},
 			{
-				question: "How can I stay in the loop?",
+				question: "What are your main initiatives?",
 				answer:
-					"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+					"We continue doing everything EthStaker was doing and we also help with running Forkcast, supporting cryptoeconomic research and with general coordination tasks.",
+			},
+			{
+				question:
+					"How do you interact with other organizations like Ethlabs and the Ethereum Foundation?",
+				answer:
+					"We take specifically friendly positions with all the organizations and individuals that steward Ethereum.",
+			},
+			{
+				question: "How do you manage conflict of interests?",
+				answer:
+					"EthCoordinate as an organization has minimal basic opinions (see mission, vision and values) and it’s a requirement for all members to be aligned with them. The individual members are allowed to engage in any kind of activity that’s not in conflict with the published basic opinions.",
+			},
+			{
+				question:
+					"What will EthCoordinate’s relationship be with the roadmap and development decisions?",
+				answer:
+					"EthCoordinate exists to make coordination smoother. We will avoid taking positions in roadmap items or primary research of the kind that happens inside other organizations like Ethlabs and the Ethereum Foundation.",
+			},
+			{
+				question:
+					"How will EthCoordinate handle conflicts of interest in ACD coordination?",
+				answer:
+					"All the members of EthCoordinate believe that credible neutrality is one of the main distinctive features of Ethereum and we strive to preserve it. If during any initiative (ACD or else) a member is exposed to conflict, a mechanism will have to be set up to not contest the neutrality of the outcome.",
+			},
+			{
+				question:
+					"How does EthCoordinate plan to elevate ETH as a store of value (SoV)?",
+				answer:
+					"ETH being understood as a globally accessible store of value is in our vision. We will deploy our resources responsibly for this vision to become true.",
+			},
+			{
+				question:
+					"What does this change mean for the continuation of the existing solo staker support and the general industry topics that EthStaker historically covered?",
+				answer:
+					"Holding the community of home stakers together remains a top priority of EthCoordinate.",
 			},
 		],
 	},
