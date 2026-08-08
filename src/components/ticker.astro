@@ -5,7 +5,9 @@ import { site } from "../site";
    width, which is exactly one list. The second list is then where the first
    one started, so the loop has no seam. The trailing `pe-*` gives the last
    phrase of a list the same gap as the others, which keeps the halves
-   equal. */
+   equal. Each list repeats the phrases six times, so one list is wider than
+   any viewport and no blank gap shows before the loop restarts. */
+const phrases = Array.from({ length: 6 }, () => site.ticker).flat();
 const lists = [false, true];
 ---
 
@@ -19,7 +21,7 @@ const lists = [false, true];
 					class="flex shrink-0 gap-10 pe-10 lg:gap-16 lg:pe-16"
 					aria-hidden={clone ? "true" : undefined}
 				>
-					{site.ticker.map((phrase) => (
+					{phrases.map((phrase) => (
 						<li>{phrase}</li>
 					))}
 				</ul>
@@ -30,7 +32,8 @@ const lists = [false, true];
 
 <style>
 	.track {
-		animation: ticker 20s linear infinite;
+		/* Six repeats per list need six times the old 20s to keep the speed. */
+		animation: ticker 120s linear infinite;
 		will-change: transform;
 	}
 
