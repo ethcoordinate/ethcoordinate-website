@@ -1,5 +1,7 @@
 # EthCoordinate 🌐
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/b7e0849f-bfcb-4e2b-b1f6-99c693025c0a/deploy-status)](https://app.netlify.com/projects/ethcoordinate/deploys)
+
 Marketing site for EthCoordinate. Astro 7 + Tailwind 4, deployed as a static
 site on Netlify. A push to `main` syncs the `dev` branch, and Netlify deploys
 `dev` to dev.ethcoordinate.org.
