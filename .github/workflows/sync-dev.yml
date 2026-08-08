@@ -11,6 +11,9 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      # Full history, so git can prove the push is a fast-forward.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       # Creates dev on the first run. Fails if dev diverges from main.
       - run: git push origin main:dev

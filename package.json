@@ -8,9 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro build && wrangler dev",
-    "deploy": "astro build && wrangler deploy",
-    "deploy:dev": "astro build && wrangler deploy --env dev",
+    "preview": "astro build && astro preview",
     "astro": "astro",
     "lint": "oxlint && rustywind --check-formatted src",
     "lint:fix": "oxlint --fix && rustywind --write src"
@@ -22,8 +20,7 @@
   },
   "devDependencies": {
     "oxlint": "^1.77.0",
-    "rustywind": "^0.26.0",
-    "wrangler": "^4.120.0"
+    "rustywind": "^0.26.0"
   },
   "trustedDependencies": [
     "rustywind"

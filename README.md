@@ -1,7 +1,8 @@
 # EthCoordinate 🌐
 
 Marketing site for EthCoordinate. Astro 7 + Tailwind 4, deployed as a static
-site on Cloudflare Workers.
+site on Netlify. A push to `main` syncs the `dev` branch, and Netlify deploys
+`dev` to dev.ethcoordinate.org.
 
 ## 🚀 Setup
 
@@ -27,8 +28,7 @@ The package manager is bun. Node 22.12 or later.
 │   ├── plans/          one plan per task
 │   ├── solutions/      one file per solved problem
 │   └── tokens.md       color and font tokens
-├── astro.config.mjs
-└── wrangler.jsonc      Cloudflare Workers config
+└── astro.config.mjs
 ```
 
 Copy lives in `src/site.ts`. Color lives in `src/styles/global.css`. Do not
@@ -41,8 +41,7 @@ write literal text or hex values in a component.
 | `bun install`      | Install dependencies                          |
 | `bun run dev`      | Start the dev server at `localhost:4321`      |
 | `bun run build`    | Build the site to `./dist/`                   |
-| `bun run preview`  | Build, then serve on the Workers runtime      |
-| `bun run deploy`   | Build and deploy to Cloudflare Workers        |
+| `bun run preview`  | Build, then serve the static output           |
 | `bun run lint`     | oxlint and Tailwind class order check         |
 | `bun run lint:fix` | Autofix lint issues and sort Tailwind classes |
 
