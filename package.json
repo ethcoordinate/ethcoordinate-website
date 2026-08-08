@@ -10,6 +10,7 @@
     "build": "astro build",
     "preview": "astro build && wrangler dev",
     "deploy": "astro build && wrangler deploy",
+    "deploy:dev": "astro build && wrangler deploy --env dev",
     "astro": "astro",
     "lint": "oxlint && rustywind --check-formatted src",
     "lint:fix": "oxlint --fix && rustywind --write src"
