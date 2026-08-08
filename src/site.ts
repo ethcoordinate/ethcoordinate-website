@@ -114,7 +114,7 @@ export const site = {
 		members: [
 			{
 				number: "01",
-				name: "Mara Chen",
+				name: "Mara Zen",
 				role: "Protocol research",
 				bio: "Mara turns dense protocol conversations into shared maps, useful questions, and clear next steps.",
 			},
