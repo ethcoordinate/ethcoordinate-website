@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  // Canonical origin. Meta tags and JSON-LD build absolute URLs from it.
+  site: 'https://ethcoordinate.com',
   image: {
     // PokeAPI serves the official artwork from this host.
     domains: ['raw.githubusercontent.com']

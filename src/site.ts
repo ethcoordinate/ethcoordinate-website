@@ -6,8 +6,15 @@ const bio =
 /** The only source of truth for site copy. Edit text here, not in components. */
 export const site = {
 	name: "EthCoordinate",
-	title: "EthCoordinate",
-	description: "Coordination is infrastructure.",
+	seo: {
+		title: "EthCoordinate — Helping Ethereum Move Together",
+		description:
+			"EthCoordinate is the Ethereum coordination org that grew out of EthStaker. We support home stakers, facilitate core protocol coordination, steward Forkcast, and advance protocol economics.",
+		/* Exported from the Figma "X cover" frame. Lives in public/. */
+		image: "/og.jpg",
+		imageAlt: "Helping Ethereum move together",
+		twitter: "@ethcoordinate",
+	},
 	home: "Back to top",
 	menu: "Menu",
 	menuClose: "Close menu",
