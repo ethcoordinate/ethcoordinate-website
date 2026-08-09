@@ -49,7 +49,9 @@ import { site } from "../site";
 									<line class="bar" x1="9" y1="2" x2="9" y2="16" />
 								</svg>
 							</summary>
-							<p class="answer pb-6.5 text-base leading-[1.5]">{answer}</p>
+							<div class="panel">
+								<p class="answer text-base leading-[1.5]">{answer}</p>
+							</div>
 						</details>
 					))
 				}
@@ -61,38 +63,51 @@ import { site } from "../site";
 <style>
 	/* The row carries the height, the copy carries the fade. Splitting the two
 	   is what keeps the open from reading as one block of text popping in.
-	   The `0fr` to `1fr` track is the one height animation every engine can
-	   interpolate. A `block-size` animation to `auto` runs only in Chromium. */
+	   Firefox never starts a transition on the `::details-content` pseudo
+	   element, so a real wrapper carries the `0fr` to `1fr` track animation.
+	   The pseudo element only keeps the content rendered; the collapsed track
+	   is what hides a closed answer. */
 	details::details-content {
+		content-visibility: visible;
+	}
+
+	.panel {
 		display: grid;
 		grid-template-rows: 0fr;
 		overflow: hidden;
-		transition:
-			grid-template-rows 200ms var(--ease-out),
-			content-visibility 200ms allow-discrete;
+		transition: grid-template-rows 200ms var(--ease-out);
 	}
 
 	/* The close stays a bit faster than the open. */
-	details[open]::details-content {
+	details[open] .panel {
 		grid-template-rows: 1fr;
 		transition-duration: 260ms;
 	}
 
+	/* The padding moves with the row. Left on the box, it would hold a 26px
+	   floor under every closed row in Firefox, because the track minimum
+	   cannot shrink below the padding. */
 	.answer {
 		min-height: 0;
+		padding-bottom: 0;
 		opacity: 0;
 		translate: 0 -0.5rem;
 		transition:
 			opacity 160ms ease,
-			translate 160ms var(--ease-out);
+			translate 160ms var(--ease-out),
+			padding-bottom 200ms var(--ease-out);
 	}
 
 	/* The copy waits for the row to make room, so it never rises into a box
-	   that is still closing. */
+	   that is still closing. The padding keeps the row's own pace. */
 	details[open] .answer {
+		padding-bottom: calc(var(--spacing) * 6.5);
 		opacity: 1;
 		translate: 0 0;
-		transition-delay: 60ms;
+		transition:
+			opacity 160ms ease 60ms,
+			translate 160ms var(--ease-out) 60ms,
+			padding-bottom 260ms var(--ease-out);
 	}
 
 	.mark {
@@ -116,16 +131,14 @@ import { site } from "../site";
 	/* Reduced motion keeps the fade, which explains the change, and drops every
 	   move. */
 	@media (prefers-reduced-motion: reduce) {
-		details::details-content,
-		.answer,
+		.panel,
 		.bar {
-			transition:
-				opacity 160ms ease,
-				content-visibility 160ms allow-discrete;
+			transition: none;
 		}
 
 		.answer {
 			translate: none;
+			transition: opacity 160ms ease;
 		}
 	}
 </style>
