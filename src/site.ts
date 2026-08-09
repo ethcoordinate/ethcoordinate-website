@@ -150,7 +150,7 @@ export const site = {
 				number: "07",
 				name: "Franco Balzani",
 				role: "Project manager and Operations",
-				bio: "Almost decade around projects",
+				bio: "A decade around projects",
 				imageUrl:
 					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
 				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
