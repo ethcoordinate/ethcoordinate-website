@@ -161,12 +161,6 @@ export const site = {
 				role: "Project manager and Operations",
 				bio: "Almost decade around projects",
 			},
-			{
-				number: "08",
-				name: "XXXX",
-				role: "XXX",
-				bio: "XX",
-			},
 		],
 	},
 	faq: {
