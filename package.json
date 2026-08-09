@@ -11,7 +11,8 @@
     "preview": "astro build && astro preview",
     "astro": "astro",
     "lint": "oxlint && rustywind --check-formatted src",
-    "lint:fix": "oxlint --fix && rustywind --write src"
+    "lint:fix": "oxlint --fix && rustywind --write src",
+    "check": "astro check"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -19,8 +20,10 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "oxlint": "^1.77.0",
-    "rustywind": "^0.26.0"
+    "rustywind": "^0.26.0",
+    "typescript": "5"
   },
   "trustedDependencies": [
     "rustywind"
