@@ -1,4 +1,6 @@
 ---
+import glow from "../assets/hero-glow.webp";
+import mark from "../assets/hero-mark.webp";
 import Dots from "./dots.astro";
 import { site } from "../site";
 
@@ -23,15 +25,22 @@ const dots = [
 >
 	{/* The glow box is twice as tall as the section, and the section clips it,
 	   so only the top band of the artwork shows. `cover` then fills that box
-	   at any aspect ratio, so no edge is ever left unpainted. */}
+	   at any aspect ratio, so no edge is ever left unpainted. The artwork is a
+	   webp render of the Figma export. The export carried live SVG filters,
+	   and the browser paid for them on every load. See docs/solutions. */}
 	<div
-		class="pointer-events-none absolute inset-x-0 top-0 h-[200%] bg-[url(/hero-glow.svg)] bg-cover bg-top bg-no-repeat"
+		class="pointer-events-none absolute inset-x-0 top-0 h-[200%] bg-cover bg-top bg-no-repeat"
+		style={{ backgroundImage: `url(${glow.src})` }}
 		aria-hidden="true"
 	>
 	</div>
 	<div
-		class="pointer-events-none absolute hidden aspect-square w-[27.56%] bg-[url(/hero-mark.svg)] bg-contain bg-no-repeat lg:block"
-		style={{ left: "35.39%", top: "0.3%" }}
+		class="pointer-events-none absolute hidden aspect-square w-[27.56%] bg-contain bg-no-repeat lg:block"
+		style={{
+			left: "35.39%",
+			top: "0.3%",
+			backgroundImage: `url(${mark.src})`,
+		}}
 		aria-hidden="true"
 	>
 	</div>
