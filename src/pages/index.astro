@@ -23,7 +23,7 @@ const jsonLd = JSON.stringify({
 	logo: new URL("/favicon.svg", Astro.site),
 	email: site.hero.emailLabel,
 	description: site.seo.description,
-	sameAs: site.team.networks.map((n) => n.href),
+	sameAs: site.networks.map((n) => n.href),
 });
 ---
 

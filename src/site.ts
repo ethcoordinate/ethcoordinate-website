@@ -1,7 +1,4 @@
-/* Figma writes one bio and repeats it in all eight cards. Only the first one
-   is real. */
-const bio =
-	"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.";
+import type { SiteShape } from "./site-types";
 
 /** The only source of truth for site copy. Edit text here, not in components. */
 export const site = {
@@ -32,23 +29,19 @@ export const site = {
 		body: "We facilitate the interaction between Ethereum’s stakeholders to accelerate the network’s adoption, combining technical rigor with pragmatism.",
 		ctaHref: "#what-we-do",
 		ctaLabel: "What we do",
-		/* The arrow is a separate element, because it moves on hover. */
 		ctaArrow: "↓",
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com",
-		/* The arrow is a separate element, because it turns on hover. */
 		emailArrow: "↗",
 	},
 	about: {
 		number: "01.",
-		/* Figma breaks the heading after each word. The newlines keep that shape. */
 		heading: "What’s\nEth\nCoordinate?",
 		/* The `<b>` tag marks the name. The component renders these as HTML. */
 		body: [
 			"<b>EthCoordinate</b> is the natural evolution of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum’s consensus mechanism.",
 			"As the ecosystem shifted in 2026, new organizational gaps opened up, and that same team launched <b>EthCoordinate</b> to close them, broadening their scope with new mission-aligned members along the way.",
 		],
-		/* Three cards below the copy. `about.astro` pairs each one with an icon. */
 		purpose: {
 			mission: {
 				title: "Mission",
@@ -66,11 +59,7 @@ export const site = {
 	},
 	whatWeDo: {
 		number: "02.",
-		/* Figma breaks the heading after the first word. The newline keeps that
-		   shape. */
 		heading: "What\nWe do",
-		/* Each title wraps on its own at the 240px column width, so no title
-		   carries a newline. */
 		items: [
 			{
 				title: "Staker support",
@@ -96,70 +85,75 @@ export const site = {
 	},
 	team: {
 		number: "03.",
-		/* Figma breaks the heading after the first word. The newline keeps that
-		   shape. */
 		heading: "Who’s\nHere",
 		intro:
 			"Our team is made up of Ethereum professionals across research, protocol development, and community.",
-		/* One set of addresses for the whole team. Every card shows the same
-		   pills, in this order. Drop an entry to drop that pill everywhere. The
-		   key names the icon file. Addresses are placeholders. */
-		networks: [
-			{ key: "x", label: "X", href: "https://x.com/ethcoordinate" },
-			{
-				key: "telegram",
-				label: "Telegram",
-				href: "https://t.me/ethcoordinate",
-			},
-			{
-				key: "discord",
-				label: "Discord",
-				href: "https://discord.gg/ethcoordinate",
-			},
-		],
-		/* Every member below is a placeholder. Figma carries no real names. */
+		/* `imageUrl` takes any image address. `socials` holds the links of the
+		   member; `key` picks the icon: "x", "telegram", or "discord". Images
+		   and links are placeholders. */
 		members: [
 			{
 				number: "01",
 				name: "Nixo",
 				role: "Founder",
 				bio: "decentralization / privacy / open source maxi",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "02",
 				name: "Patricio Worthalter",
 				role: "Founder",
 				bio: "Founder - Proof of Attendance Protocol @poapxyz",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "03",
 				name: "Butta",
 				role: "Stakeholder coordination",
 				bio: "@ethStaker | @beaconcha_in",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "04",
 				name: "Jerome de Tychey",
 				role: "Ecosystem builder",
 				bio: "Driving Ethereum ecosystem & DeFi growth, one block at a time.",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "05",
 				name: "Yorick",
 				role: "Protocol coordination",
 				bio: "Member of ethstaker; maintain Eth Docker",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "06",
 				name: "Marc",
 				role: "dev",
 				bio: "building http://forkcast.org",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 			{
 				number: "07",
 				name: "Franco Balzani",
 				role: "Project manager and Operations",
 				bio: "Almost decade around projects",
+				imageUrl:
+					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
+				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
 			},
 		],
 	},
@@ -167,8 +161,7 @@ export const site = {
 		number: "04.",
 		heading: "FAQ",
 		lead: "A few things worth knowing.",
-		intro:
-			"We’re early, so some answers will evolve. Here’s where things stand today.",
+		intro: "We’re early, so some answers will evolve. Here’s where things stand today.",
 		items: [
 			{
 				question: "What is EthCoordinate?",
@@ -213,14 +206,12 @@ export const site = {
 					"EthCoordinate exists to make coordination smoother. We will avoid taking positions in roadmap items or primary research of the kind that happens inside other organizations like Ethlabs and the Ethereum Foundation.",
 			},
 			{
-				question:
-					"How will EthCoordinate handle conflicts of interest in ACD coordination?",
+				question: "How will EthCoordinate handle conflicts of interest in ACD coordination?",
 				answer:
 					"All the members of EthCoordinate believe that credible neutrality is one of the main distinctive features of Ethereum and we strive to preserve it. If during any initiative (ACD or else) a member is exposed to conflict, a mechanism will have to be set up to not contest the neutrality of the outcome.",
 			},
 			{
-				question:
-					"How does EthCoordinate plan to elevate ETH as a store of value (SoV)?",
+				question: "How does EthCoordinate plan to elevate ETH as a store of value (SoV)?",
 				answer:
 					"ETH being understood as a globally accessible store of value is in our vision. We will deploy our resources responsibly for this vision to become true.",
 			},
@@ -232,8 +223,7 @@ export const site = {
 			},
 		],
 	},
-	/* The ticker repeats these phrases in one endless line. CSS makes them
-	   uppercase. */
+	/* CSS repeats these phrases in one endless uppercase line. */
 	ticker: [
 		"Make context travel",
 		"Connect the dots",
@@ -247,8 +237,15 @@ export const site = {
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com",
 	},
+	/* The social profiles of the org. The footer and the JSON-LD read this
+	   list. */
+	networks: [
+		{ key: "x", label: "X", href: "https://x.com/ethcoordinate" },
+		{ key: "telegram", label: "Telegram", href: "https://t.me/ethcoordinate" },
+		{ key: "discord", label: "Discord", href: "https://discord.gg/ethcoordinate" },
+	],
 	footer: {
 		tagline: "Coordination is infrastructure.",
 		copyright: "© 2026 EthCoordinate",
 	},
-} as const;
+} as const satisfies SiteShape;
