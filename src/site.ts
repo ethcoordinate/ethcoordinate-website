@@ -155,15 +155,6 @@ export const site = {
 				image: francoBalzani,
 				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
 			},
-			{
-				number: "08",
-				name: "Lamboshi",
-				role: "Advisor",
-				bio: "Community leader at @ethstaker.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/lamboshi.jpg",
-				socials: [{ key: "x", href: "https://x.com/L_Nakaghini" }],
-			},
 		],
 	},
 	faq: {
