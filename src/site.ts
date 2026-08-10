@@ -107,7 +107,7 @@ export const site = {
 				role: "Founder",
 				bio: "Recovering founder of POAP",
 				imageUrl:
-					"https://pbs.twimg.com/profile_images/1544690687714672640/3TxH8_vW_400x400.jpg",
+					"https://pfp-ethcoordinate.netlify.app/patricio.jpg",
 				socials: [{ key: "x", href: "https://x.com/worthalter" }],
 			},
 			{
@@ -125,7 +125,7 @@ export const site = {
 				role: "Ecosystem builder",
 				bio: "Driving Ethereum ecosystem & DeFi growth, one block at a time.",
 				imageUrl:
-					"https://pbs.twimg.com/profile_images/1955288324760797184/nbPDswHM_400x400.jpg",
+					"https://pfp-ethcoordinate.netlify.app/jerome.jpg",
 				socials: [{ key: "x", href: "https://x.com/jdetychey" }],
 			},
 			{
@@ -134,7 +134,7 @@ export const site = {
 				role: "Protocol coordination",
 				bio: "Exited founder of Cryptomanufaktur",
 				imageUrl:
-					"https://pbs.twimg.com/profile_images/606610639663058944/5TXYbPk-_400x400.jpg",
+					"https://pfp-ethcoordinate.netlify.app/yorick.jpg",
 				socials: [{ key: "x", href: "https://x.com/yorickdowne" }],
 			},
 			{
@@ -152,7 +152,7 @@ export const site = {
 				role: "Project manager and Operations",
 				bio: "A decade around projects.",
 				imageUrl:
-					"https://pbs.twimg.com/profile_images/2086789004343611392/P-SBAQNM_400x400.jpg",
+					"https://pfp-ethcoordinate.netlify.app/franco.jpg",
 				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
 			},
 		],
