@@ -1,21 +1,51 @@
 ---
+import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 import sharp from "sharp";
 import DiscordIcon from "../icons/discord.svg";
 import TelegramIcon from "../icons/telegram.svg";
 import XIcon from "../icons/x.svg";
 import { site } from "../site";
+import type { SiteShape } from "../site-types";
+
+type Member = SiteShape["team"]["members"][number];
+const members: readonly Member[] = site.team.members;
 
 /* `key` in a member social entry maps to one icon and one label here. */
 const icons = { x: XIcon, telegram: TelegramIcon, discord: DiscordIcon };
 const labels = { x: "X", telegram: "Telegram", discord: "Discord" };
 
+/* A member sets `image` or `imageUrl`. The type in `site-types.ts` enforces
+   exactly one, so the casts below are safe. The `Image` props take a local
+   or a remote src but not a union of the two, so the cast names only the
+   local type. Both work at runtime. */
+const photo = (m: Member) => (m.image ?? m.imageUrl) as ImageMetadata;
+
+/* Sharp reads a local photo from disk and a remote photo from fetched
+   bytes. `fsPath` is set at runtime but Astro keeps it out of the public
+   type. */
+const photoInput = async (m: Member): Promise<string | Buffer> =>
+	m.image
+		? (m.image as typeof m.image & { fsPath: string }).fsPath
+		: Buffer.from(await (await fetch(m.imageUrl as string)).arrayBuffer());
+
+const anchor = (href: string, label: string) =>
+	`<a href="${href.startsWith("http") ? href : `https://${href}`}" target="_blank" rel="noreferrer" class="underline hover:text-accent">${label}</a>`;
+
+/* Turns a markdown link `[label](url)` or a bare domain into a link that
+   opens a new tab. One pass, so a domain inside a markdown link is not
+   linked twice. */
+const linkify = (text: string) =>
+	text.replace(
+		/\[([^\]]+)\]\(([^)\s]+)\)|\b(?:https?:\/\/)?(?:[\w-]+\.)+[a-z]{2,}(?:\/\S*)?/gi,
+		(match, label, url) => anchor(url ?? match, label ?? match),
+	);
+
 /* A tiny inline copy of each photo sits behind the real image, so the circle
    never shows empty while the image loads. Built once at build time. */
 const blurs = await Promise.all(
-	site.team.members.map(({ image }) =>
-		/* `fsPath` is set at runtime but Astro keeps it out of the public type. */
-		sharp((image as typeof image & { fsPath: string }).fsPath)
+	members.map(async (member) =>
+		sharp(await photoInput(member))
 			.resize(24, 24, { fit: "cover" })
 			.webp({ quality: 40 })
 			.toBuffer()
@@ -24,7 +54,7 @@ const blurs = await Promise.all(
 );
 ---
 
-<section id="team" class="scroll-mt-[var(--nav-height)] px-5 pt-5 lg:px-16 lg:pt-17">
+<section class="px-5 pt-5 lg:px-16 lg:pt-17">
 	<div class="mx-auto flex max-w-[82rem] flex-col gap-8 lg:gap-16">
 		<div class="flex flex-col gap-5 lg:flex-row lg:items-center">
 			<div class="flex flex-col gap-2 pt-4 lg:w-78 lg:shrink-0 lg:pb-8">
@@ -55,7 +85,7 @@ const blurs = await Promise.all(
 				class="-mt-4 -mr-5 -ml-15 flex snap-x snap-mandatory scroll-pl-15 gap-5 overflow-x-auto pt-4 pr-5 pl-15 lg:mt-0 lg:mr-0 lg:ml-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-0 lg:overflow-visible lg:pt-0 lg:pr-0 lg:pl-0"
 			>
 				{
-					site.team.members.map(({ number, name, role, bio, image, socials }, i) => (
+					members.map(({ number, name, role, bio, socials }, i) => (
 						<li class="border-subtle relative w-78 shrink-0 snap-start border-l pb-8 lg:w-auto lg:border-b lg:pr-4 lg:pb-18">
 							{/* The glow sits left of and below the circle, so it bleeds
 							   over the border of the card. */}
@@ -103,7 +133,7 @@ const blurs = await Promise.all(
 										{/* `text-transparent` keeps the alt text from flashing
 										   over the placeholder while the image loads. */}
 										<Image
-											src={image}
+											src={photo(members[i])}
 											alt={name}
 											width={364}
 											height={364}
@@ -153,7 +183,7 @@ const blurs = await Promise.all(
 							<h3 class="text-[clamp(1.5rem,2.2vw,2rem)] leading-none font-bold">
 								{name}
 							</h3>
-								<p class="max-w-56 text-base leading-[1.45]">{bio}</p>
+								<p class="max-w-56 text-base leading-[1.45]" set:html={linkify(bio)} />
 							</div>
 						</li>
 					))
