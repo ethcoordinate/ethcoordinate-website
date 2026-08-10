@@ -242,7 +242,7 @@ export const site = {
 	networks: [
 		{ key: "x", label: "X", href: "https://x.com/ethcoordinate" },
 		{ key: "telegram", label: "Telegram", href: "https://t.me/ethcoordinate" },
-		{ key: "discord", label: "Discord", href: "https://discord.gg/ethcoordinate" },
+		{ key: "discord", label: "Discord", href: "https://discord.com/invite/ethstaker" },
 	],
 	footer: {
 		tagline: "Coordination is infrastructure.",
