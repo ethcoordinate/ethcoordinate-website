@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import sharp from "sharp";
 import DiscordIcon from "../icons/discord.svg";
 import TelegramIcon from "../icons/telegram.svg";
 import XIcon from "../icons/x.svg";
@@ -8,6 +9,19 @@ import { site } from "../site";
 /* `key` in a member social entry maps to one icon and one label here. */
 const icons = { x: XIcon, telegram: TelegramIcon, discord: DiscordIcon };
 const labels = { x: "X", telegram: "Telegram", discord: "Discord" };
+
+/* A tiny inline copy of each photo sits behind the real image, so the circle
+   never shows empty while the image loads. Built once at build time. */
+const blurs = await Promise.all(
+	site.team.members.map(({ image }) =>
+		/* `fsPath` is set at runtime but Astro keeps it out of the public type. */
+		sharp((image as typeof image & { fsPath: string }).fsPath)
+			.resize(24, 24, { fit: "cover" })
+			.webp({ quality: 40 })
+			.toBuffer()
+			.then((buffer) => `data:image/webp;base64,${buffer.toString("base64")}`),
+	),
+);
 ---
 
 <section id="team" class="scroll-mt-[var(--nav-height)] px-5 pt-5 lg:px-16 lg:pt-17">
@@ -41,7 +55,7 @@ const labels = { x: "X", telegram: "Telegram", discord: "Discord" };
 				class="-mt-4 -mr-5 -ml-15 flex snap-x snap-mandatory scroll-pl-15 gap-5 overflow-x-auto pt-4 pr-5 pl-15 lg:mt-0 lg:mr-0 lg:ml-0 lg:grid lg:snap-none lg:grid-cols-4 lg:gap-0 lg:overflow-visible lg:pt-0 lg:pr-0 lg:pl-0"
 			>
 				{
-					site.team.members.map(({ number, name, role, bio, imageUrl, socials }) => (
+					site.team.members.map(({ number, name, role, bio, image, socials }, i) => (
 						<li class="border-subtle relative w-78 shrink-0 snap-start border-l pb-8 lg:w-auto lg:border-b lg:pr-4 lg:pb-18">
 							{/* The glow sits left of and below the circle, so it bleeds
 							   over the border of the card. */}
@@ -82,14 +96,19 @@ const labels = { x: "X", telegram: "Telegram", discord: "Discord" };
 											transform="rotate(45 106.5 106.5)"
 										/>
 									</svg>
-									<div class="bg-subtle relative aspect-square overflow-hidden rounded-full">
+									<div
+										class="bg-subtle relative aspect-square overflow-hidden rounded-full bg-cover"
+										style={`background-image:url(${blurs[i]})`}
+									>
+										{/* `text-transparent` keeps the alt text from flashing
+										   over the placeholder while the image loads. */}
 										<Image
-											src={imageUrl}
+											src={image}
 											alt={name}
 											width={364}
 											height={364}
 											loading="lazy"
-											class="size-full object-cover"
+											class="size-full object-cover text-transparent"
 										/>
 									</div>
 								</div>
