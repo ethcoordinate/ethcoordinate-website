@@ -32,11 +32,11 @@ export const site = {
 	hero: {
 		/* Figma sets one word per line. The newlines keep that shape. */
 		eyebrow: "AN\nETHEREUM\nCOORDINATION\nORG",
-		titleTop: "Helping Ethereum",
-		titleBottom: "Move together",
-		body: "We facilitate the interaction between Ethereum’s stakeholders to accelerate the network’s adoption, combining technical rigor with pragmatism.",
+		titleTop: "A coordination engine",
+		titleBottom: "for Ethereum",
+		body: "Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
 		ctaHref: "#what-we-do",
-		ctaLabel: "What we do",
+		ctaLabel: "About",
 		ctaArrow: "↓",
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com",
