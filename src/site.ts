@@ -105,7 +105,7 @@ export const site = {
 				number: "02",
 				name: "Patricio Worthalter",
 				role: "Founder",
-				bio: "Recovering founder of POAP",
+				bio: "Recovering founder of POAP.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/1544690687714672640/3TxH8_vW_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/worthalter" }],
@@ -114,7 +114,7 @@ export const site = {
 				number: "03",
 				name: "Butta",
 				role: "Stakeholder coordination",
-				bio: "Co-founder of Beaconchain",
+				bio: "Co-founder of Beaconchain.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/1194253131401629698/EyjkSMoX_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/Butta_eth" }],
@@ -132,7 +132,7 @@ export const site = {
 				number: "05",
 				name: "Yorick",
 				role: "Protocol coordination",
-				bio: "Exited founder of Cryptomanufaktur",
+				bio: "Exited founder of Cryptomanufaktur.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/606610639663058944/5TXYbPk-_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/yorickdowne" }],
