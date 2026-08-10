@@ -103,7 +103,7 @@ export const site = {
 				number: "01",
 				name: "Nixo",
 				role: "Founder",
-				bio: "Decentralization / Privacy / Open source maxi.",
+				bio: "Former team lead EF Protocol Support, long-time EthStaker member.",
 				image: nixo,
 				socials: [{ key: "x", href: "https://x.com/nixorokish" }],
 			},
