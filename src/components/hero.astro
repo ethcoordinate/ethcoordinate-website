@@ -9,7 +9,9 @@ import { site } from "../site";
 const frame = { width: 1440, height: 726 };
 
 const dots = [
-	{ x: 195.9, y: 288.9, size: 36, tone: "bg-dot-blue" },
+	/* Figma puts this dot at 195.9, 288.9, where the drift lands it on the
+	   heading. It sits higher here, clear of the glyphs. */
+	{ x: 150, y: 195, size: 36, tone: "bg-dot-blue" },
 	{ x: 401.9, y: 494.9, size: 20, tone: "bg-dot-light" },
 	{ x: 1070.1, y: 444.7, size: 40.7, tone: "bg-dot-light" },
 	{ x: 286.9, y: 423.9, size: 20, tone: "bg-dot-blue" },
