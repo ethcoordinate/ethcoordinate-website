@@ -84,9 +84,9 @@ const dots = [
 			>
 				{site.hero.ctaLabel}
 				{/* The arrow is artwork, so it is drawn here, not in `site.ts`. It
-				   nudges toward the section it opens. */}
+				   points down and nudges toward the section it opens. */}
 				<svg
-					class="align-[-0.125em] ms-1.5 inline-block size-3.5 transition-transform duration-150 ease-out motion-safe:group-hover:translate-x-0.5 motion-safe:group-focus-visible:translate-x-0.5"
+					class="align-[-0.125em] ms-1.5 inline-block size-3.5 transition-transform duration-150 ease-out motion-safe:group-hover:translate-y-0.5 motion-safe:group-focus-visible:translate-y-0.5"
 					viewBox="0 0 16 16"
 					fill="none"
 					stroke="currentColor"
@@ -95,7 +95,7 @@ const dots = [
 					stroke-linejoin="round"
 					aria-hidden="true"
 				>
-					<path d="M2 8h11M9 3.5 13.5 8 9 12.5"></path>
+					<path d="M8 2v11M3.5 9 8 13.5 12.5 9"></path>
 				</svg>
 			</a>
 			<a
