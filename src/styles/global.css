@@ -35,6 +35,11 @@
 	   themes, so this token never flips. */
 	--cta-dash: var(--blue-500);
 
+	/* The base color under the hero artwork. The artwork is dark in both
+	   themes, so this token never flips. It paints the band while the webp
+	   loads, so the hero never flashes white. */
+	--hero-base: var(--ink-950);
+
 	/* The hero heading tilts its gradient to match the line count. */
 	--heading-angle: -35deg;
 
@@ -101,6 +106,7 @@
 	--color-dot-light: var(--dot-light);
 	--color-dash: var(--dash);
 	--color-cta-dash: var(--cta-dash);
+	--color-hero-base: var(--hero-base);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
