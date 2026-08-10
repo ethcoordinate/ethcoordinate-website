@@ -1,14 +1,12 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
 
-import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
   // Canonical origin. Meta tags and JSON-LD build absolute URLs from it.
   site: 'https://ethcoordinate.org',
-  integrations: [sitemap()],
   image: {
     // A team member photo can be a remote `imageUrl` on any https host.
     remotePatterns: [{ protocol: 'https' }]
