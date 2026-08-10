@@ -144,7 +144,7 @@ export const site = {
 				number: "06",
 				name: "Marc",
 				role: "dev",
-				bio: "Building http://forkcast.org",
+				bio: "Building forkcast.org",
 				image: marc,
 				socials: [{ key: "x", href: "https://x.com/wolovim" }],
 			},
