@@ -9,6 +9,8 @@
   that does not exist yet. Delete before you add.
 - Keep all copy text in `src/site.ts`. It is the only source of truth for copy.
   Import from it. Do not write literal text in `.astro` files.
+- Keep every route path in `src/routes.ts`. It is the only source of truth for
+  routes. Import from it. Do not write a literal path.
 - Keep all color in `src/styles/global.css`. It is the only source of truth for
   color. Use the Tailwind token utilities. Do not write a hex value in a
   component. See `docs/tokens.md`.
@@ -28,9 +30,10 @@
 - Give every `Image` a `loading` value. Use `eager` only for an image above the
   fold. Use `lazy` for the rest. Set `width` and `height`, so the box holds its
   space and the page never shifts.
-- The team pictures come from the [PokeAPI](https://pokeapi.co).
-  `src/components/team.astro` fetches them at build time, so the build needs
-  network access.
+- A team member photo is `image` (an import from `src/assets/team/`) or
+  `imageUrl` (a remote https address). Exactly one of the two. The build
+  fetches a remote photo and the satori fonts, so the build needs network
+  access.
 - Write every commit message as a conventional commit. Use
   `type(scope): subject`. Keep the subject short, lower case, and imperative.
 - The package manager is bun. Do not use npm, yarn or pnpm.

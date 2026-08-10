@@ -6,28 +6,75 @@ import marc from "./assets/team/marc.jpg";
 import nixo from "./assets/team/nixo.jpg";
 import patricioWorthalter from "./assets/team/patricio-worthalter.jpg";
 import yorick from "./assets/team/yorick.jpg";
+import { routes } from "./routes";
 import type { SiteShape } from "./site-types";
 
 /** The only source of truth for site copy. Edit text here, not in components. */
 export const site = {
 	name: "EthCoordinate",
 	seo: {
-		title: "EthCoordinate — A coordination engine for Ethereum",
-		description:
-			"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
-		/* Exported from the Figma "X cover" frame. Lives in public/. */
-		image: "/og.jpg",
 		imageAlt: "Helping Ethereum move together",
 		twitter: "@ethcoordinate",
 	},
-	home: "Back to top",
+	/* One entry per page. The layout reads title, description, and the OG
+	   image from here. The home image is the Figma "X cover" export in
+	   `public/`. The other images come from `src/pages/og/[slug].png.ts`,
+	   which satori renders at build time. */
+	pages: {
+		home: {
+			path: routes.home,
+			title: "EthCoordinate — A coordination engine for Ethereum",
+			description:
+				"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
+			image: "/og.jpg",
+			imageWidth: 1500,
+			imageHeight: 540,
+		},
+		about: {
+			path: routes.about,
+			title: "About — EthCoordinate",
+			description:
+				"EthCoordinate is the natural evolution of EthStaker. The same team, with a broader scope, closes new organizational gaps in the Ethereum ecosystem.",
+			image: "/og/about.png",
+			imageWidth: 1200,
+			imageHeight: 630,
+		},
+		initiatives: {
+			path: routes.initiatives,
+			title: "Initiatives — EthCoordinate",
+			description:
+				"Staker support, protocol coordination, Forkcast, protocol economics research, and open-source tooling.",
+			image: "/og/initiatives.png",
+			imageWidth: 1200,
+			imageHeight: 630,
+		},
+		team: {
+			path: routes.team,
+			title: "Team — EthCoordinate",
+			description:
+				"Our team is made up of Ethereum professionals across research, protocol development, and community.",
+			image: "/og/team.png",
+			imageWidth: 1200,
+			imageHeight: 630,
+		},
+		faq: {
+			path: routes.faq,
+			title: "FAQ — EthCoordinate",
+			description:
+				"Answers about EthCoordinate: who we are, how we are funded, and how we work with other Ethereum organizations.",
+			image: "/og/faq.png",
+			imageWidth: 1200,
+			imageHeight: 630,
+		},
+	},
+	home: "Home",
 	menu: "Menu",
 	menuClose: "Close menu",
 	nav: [
-		{ href: "#about", label: "About" },
-		{ href: "#what-we-do", label: "Initiatives" },
-		{ href: "#team", label: "Team" },
-		{ href: "#faq", label: "FAQ" },
+		{ href: routes.about, label: "About" },
+		{ href: routes.initiatives, label: "Initiatives" },
+		{ href: routes.team, label: "Team" },
+		{ href: routes.faq, label: "FAQ" },
 	],
 	hero: {
 		/* Figma sets one word per line. The newlines keep that shape. */
@@ -35,9 +82,8 @@ export const site = {
 		titleTop: "A coordination engine",
 		titleBottom: "for Ethereum",
 		body: "Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
-		ctaHref: "#what-we-do",
+		ctaHref: routes.about,
 		ctaLabel: "About",
-		ctaArrow: "↓",
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com",
 		emailArrow: "↗",
@@ -50,20 +96,6 @@ export const site = {
 			"<b>EthCoordinate</b> is the natural evolution of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum’s consensus mechanism.",
 			"As the ecosystem shifted in 2026, new organizational gaps opened up, and that same team launched <b>EthCoordinate</b> to close them, broadening their scope with new mission-aligned members along the way.",
 		],
-		purpose: {
-			mission: {
-				title: "Mission",
-				body: "Facilitate the interaction between the stakeholders of the ecosystem to accelerate the adoption of the <b>Ethereum</b> network.",
-			},
-			vision: {
-				title: "Vision",
-				body: "<b>Ethereum mainnet</b> is the bedrock for scaling humanity’s productivity, and <b>ETH</b> is the asset that aligns the incentives of everyone building on it.",
-			},
-			value: {
-				title: "Value",
-				body: "Technical rigor combined with pragmatism, so <b>Ethereum</b> stays the most accessible and credibly neutral global blockchain.",
-			},
-		},
 	},
 	whatWeDo: {
 		number: "",
@@ -98,7 +130,8 @@ export const site = {
 			"Our team is made up of Ethereum professionals across research, protocol development, and community.",
 		/* `image` takes an import from `src/assets/team/`. `socials` holds the
 		   links of the member; `key` picks the icon: "x", "telegram", or
-		   "discord". */
+		   "discord". A `bio` may hold a markdown link `[label](url)`; a bare
+		   domain also becomes a link. */
 		members: [
 			{
 				number: "01",
@@ -232,14 +265,7 @@ export const site = {
 			},
 		],
 	},
-	/* CSS repeats these phrases in one endless uppercase line. */
-	ticker: [
-		"Make context travel",
-		"Connect the dots",
-		"Reduce coordination cost",
-		"Move the protocol forward",
-	],
-	/* The closing band, between the FAQ and the footer. */
+	/* The closing band, between the page content and the footer. */
 	cta: {
 		eyebrow: "Open channel",
 		heading: "Working on something we should know about?",
