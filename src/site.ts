@@ -170,7 +170,7 @@ export const site = {
 		number: "",
 		heading: "FAQ",
 		lead: "A few things worth knowing.",
-		intro: "We’re early, so some answers will evolve. Here’s where things stand today.",
+		intro: "We're just getting started, so consider this an evolving FAQ.",
 		items: [
 			{
 				question: "What is EthCoordinate?",
