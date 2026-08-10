@@ -5,6 +5,7 @@ import marc from "./assets/team/marc.jpg";
 import nixo from "./assets/team/nixo.jpg";
 import patricioWorthalter from "./assets/team/patricio-worthalter.jpg";
 import yorick from "./assets/team/yorick.jpg";
+import lamboshi from "./assets/team/lamboshi.jpg";
 import type { SiteShape } from "./site-types";
 
 /** The only source of truth for site copy. Edit text here, not in components. */
@@ -149,6 +150,14 @@ export const site = {
 			},
 			{
 				number: "07",
+				name: "Lamboshi",
+				role: "Advisor",
+				bio: "Community leader at @ethstaker.",
+				image: lamboshi,
+				socials: [{ key: "x", href: "https://x.com/L_Nakaghini" }],
+			},
+			{
+				number: "08",
 				name: "Franco Balzani",
 				role: "Project manager and Operations",
 				bio: "A decade around projects.",
