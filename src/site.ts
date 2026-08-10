@@ -43,7 +43,7 @@ export const site = {
 		emailArrow: "↗",
 	},
 	about: {
-		number: "01.",
+		number: "",
 		heading: "What’s\nEth\nCoordinate?",
 		/* The `<b>` tag marks the name. The component renders these as HTML. */
 		body: [
@@ -66,7 +66,7 @@ export const site = {
 		},
 	},
 	whatWeDo: {
-		number: "02.",
+		number: "",
 		heading: "What\nWe do",
 		items: [
 			{
@@ -92,7 +92,7 @@ export const site = {
 		],
 	},
 	team: {
-		number: "03.",
+		number: "",
 		heading: "Who’s\nHere",
 		intro:
 			"Our team is made up of Ethereum professionals across research, protocol development, and community.",
@@ -167,7 +167,7 @@ export const site = {
 		],
 	},
 	faq: {
-		number: "04.",
+		number: "",
 		heading: "FAQ",
 		lead: "A few things worth knowing.",
 		intro: "We’re early, so some answers will evolve. Here’s where things stand today.",
