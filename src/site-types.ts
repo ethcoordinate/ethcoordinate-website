@@ -1,6 +1,8 @@
 /* `bun run check` enforces this shape on `site.ts`. It turns a wrong social
    `key` or a missing member field into a build error. `key` must name an
    icon file in `src/icons/`. */
+import type { ImageMetadata } from "astro";
+
 export type SocialKey = "x" | "telegram" | "discord";
 
 export type SiteShape = {
@@ -11,7 +13,7 @@ export type SiteShape = {
 			name: string;
 			role: string;
 			bio: string;
-			imageUrl: string;
+			image: ImageMetadata;
 			socials: readonly { key: SocialKey; href: string }[];
 			[k: string]: unknown;
 		}[];

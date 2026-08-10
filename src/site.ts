@@ -1,3 +1,10 @@
+import butta from "./assets/team/butta.jpg";
+import francoBalzani from "./assets/team/franco-balzani.jpg";
+import jeromeDeTychey from "./assets/team/jerome-de-tychey.jpg";
+import marc from "./assets/team/marc.jpg";
+import nixo from "./assets/team/nixo.jpg";
+import patricioWorthalter from "./assets/team/patricio-worthalter.jpg";
+import yorick from "./assets/team/yorick.jpg";
 import type { SiteShape } from "./site-types";
 
 /** The only source of truth for site copy. Edit text here, not in components. */
@@ -88,17 +95,16 @@ export const site = {
 		heading: "Who’s\nHere",
 		intro:
 			"Our team is made up of Ethereum professionals across research, protocol development, and community.",
-		/* `imageUrl` takes any image address. `socials` holds the links of the
-		   member; `key` picks the icon: "x", "telegram", or "discord". Images
-		   and links are placeholders. */
+		/* `image` takes an import from `src/assets/team/`. `socials` holds the
+		   links of the member; `key` picks the icon: "x", "telegram", or
+		   "discord". */
 		members: [
 			{
 				number: "01",
 				name: "Nixo",
 				role: "Founder",
 				bio: "Decentralization / Privacy / Open source maxi.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/nixo.jpg",
+				image: nixo,
 				socials: [{ key: "x", href: "https://x.com/nixorokish" }],
 			},
 			{
@@ -106,8 +112,7 @@ export const site = {
 				name: "Patricio Worthalter",
 				role: "Founder",
 				bio: "Recovering founder of POAP.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/patricio.jpg",
+				image: patricioWorthalter,
 				socials: [{ key: "x", href: "https://x.com/worthalter" }],
 			},
 			{
@@ -115,8 +120,7 @@ export const site = {
 				name: "Butta",
 				role: "Stakeholder coordination",
 				bio: "Co-founder of Beaconchain.",
-				imageUrl:
-					"https://pbs.twimg.com/profile_images/1194253131401629698/EyjkSMoX_400x400.jpg",
+				image: butta,
 				socials: [{ key: "x", href: "https://x.com/Butta_eth" }],
 			},
 			{
@@ -124,8 +128,7 @@ export const site = {
 				name: "Jerome de Tychey",
 				role: "Ecosystem builder",
 				bio: "Driving Ethereum ecosystem & DeFi growth, one block at a time.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/jerome.jpg",
+				image: jeromeDeTychey,
 				socials: [{ key: "x", href: "https://x.com/jdetychey" }],
 			},
 			{
@@ -133,8 +136,7 @@ export const site = {
 				name: "Yorick",
 				role: "Protocol coordination",
 				bio: "Exited founder of Cryptomanufaktur.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/yorick.jpg",
+				image: yorick,
 				socials: [{ key: "x", href: "https://x.com/yorickdowne" }],
 			},
 			{
@@ -142,8 +144,7 @@ export const site = {
 				name: "Marc",
 				role: "dev",
 				bio: "Building http://forkcast.org",
-				imageUrl:
-					"https://pbs.twimg.com/profile_images/1484303206402379777/pJ1VfANi_400x400.jpg",
+				image: marc,
 				socials: [{ key: "x", href: "https://x.com/wolovim" }],
 			},
 			{
@@ -151,8 +152,7 @@ export const site = {
 				name: "Franco Balzani",
 				role: "Project manager and Operations",
 				bio: "A decade around projects.",
-				imageUrl:
-					"https://pfp-ethcoordinate.netlify.app/franco.jpg",
+				image: francoBalzani,
 				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
 			},
 		],
