@@ -98,8 +98,8 @@ export const site = {
 				role: "Founder",
 				bio: "decentralization / privacy / open source maxi",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/1936868987662454784/9IkpiM_w_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/nixorokish" }],
 			},
 			{
 				number: "02",
@@ -107,8 +107,8 @@ export const site = {
 				role: "Founder",
 				bio: "Founder - Proof of Attendance Protocol @poapxyz",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/1544690687714672640/3TxH8_vW_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/worthalter" }],
 			},
 			{
 				number: "03",
@@ -116,8 +116,8 @@ export const site = {
 				role: "Stakeholder coordination",
 				bio: "@ethStaker | @beaconcha_in",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/1194253131401629698/EyjkSMoX_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/Butta_eth" }],
 			},
 			{
 				number: "04",
@@ -125,8 +125,8 @@ export const site = {
 				role: "Ecosystem builder",
 				bio: "Driving Ethereum ecosystem & DeFi growth, one block at a time.",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/1955288324760797184/nbPDswHM_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/jdetychey" }],
 			},
 			{
 				number: "05",
@@ -134,8 +134,8 @@ export const site = {
 				role: "Protocol coordination",
 				bio: "Member of ethstaker; maintain Eth Docker",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/606610639663058944/5TXYbPk-_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/yorickdowne" }],
 			},
 			{
 				number: "06",
@@ -143,8 +143,8 @@ export const site = {
 				role: "dev",
 				bio: "building http://forkcast.org",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/1484303206402379777/pJ1VfANi_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/wolovim" }],
 			},
 			{
 				number: "07",
@@ -152,8 +152,8 @@ export const site = {
 				role: "Project manager and Operations",
 				bio: "A decade around projects",
 				imageUrl:
-					"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
-				socials: [{ key: "x", href: "https://x.com/ethcoordinate" }],
+					"https://pbs.twimg.com/profile_images/2086789004343611392/P-SBAQNM_400x400.jpg",
+				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
 			},
 		],
 	},
