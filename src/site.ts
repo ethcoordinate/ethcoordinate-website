@@ -5,7 +5,7 @@ import marc from "./assets/team/marc.jpg";
 import nixo from "./assets/team/nixo.jpg";
 import patricioWorthalter from "./assets/team/patricio-worthalter.jpg";
 import yorick from "./assets/team/yorick.jpg";
-import lamboshi from "./assets/team/lamboshi.jpg";
+import lamboshi from "./assets/team/Lamboshi.jpg";
 import type { SiteShape } from "./site-types";
 
 /** The only source of truth for site copy. Edit text here, not in components. */
