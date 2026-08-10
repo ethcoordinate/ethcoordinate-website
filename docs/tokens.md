@@ -41,10 +41,7 @@ Use the utility in a component. Never write a hex value in a component.
 | `--cta-body`   | `text-cta-body`   | CTA pill label             | `--white`      | `--ink-900`     |
 | `--dot-blue`   | `bg-dot-blue`     | Blue hero dot              | `--blue-500`   | `--blue-500`    |
 | `--dot-light`  | `bg-dot-light`    | Light hero dot             | `--white`      | `--white`       |
-| `--icon-glow-from` | used by the super icons | Halo, near stop    | `--blue-200`   | `--ink-950`     |
-| `--icon-glow-mid`  | used by the super icons | Halo, middle stop  | `--blue-400`   | `--indigo-800`  |
-| `--icon-glow-to`   | used by the super icons | Halo, far stop     | `--blue-200`   | `--blue-900`    |
-| `--about-glow` | used by `bg-about-glow` | Blob at the side edges | `--blue-400` | `--indigo-800` |
+| `--glow` | used by the glow utilities | Blob color of every glow | `--blue-400` | `--indigo-800` |
 | `--dash`       | `text-dash`       | Dashed circle and line     | `--blue-200`   | `--blue-500`    |
 | `--cta-dash`   | `text-cta-dash`   | Dashed ellipse of the CTA  | `--blue-500`   | `--blue-500`    |
 
@@ -64,14 +61,14 @@ utilities read the tokens above.
 | `text-gradient` | Paints the gradient on the heading glyphs.   |
 | `text-gradient-cta` | Paints the gradient on the closing CTA heading. |
 | `bg-cta`        | Paints the gradient on the CTA pill.         |
-| `bg-about-glow` | Paints the blob at each side of the about band. |
+| `bg-glow` | Paints the blob at each side edge of a band. |
 | `bg-cta-glow`   | Paints the blob below the closing CTA band.  |
 | `bg-avatar-glow` | Paints the blob behind a team avatar.       |
 
 `text-gradient` and `text-gradient-cta` read the same two stops. Only the angle
 and the stop positions differ, so both headings flip with the theme.
 
-`bg-cta-glow` and `bg-avatar-glow` read `--about-glow`. Figma exports one blurred
+`bg-cta-glow` and `bg-avatar-glow` read `--glow`. Figma exports one blurred
 blob per place, but every export bakes the light color, so a committed asset
 could not flip. A radial gradient carries the same soft falloff and reads the
 token instead.
@@ -83,9 +80,7 @@ layout and `-14deg` from `64rem` up.
 Both serve the light theme and the dark theme. The page background behind them
 supplies the theme. See `docs/plans/hero.md`.
 
-`src/icons/*.svg` is artwork too, so it may hold a hex value. Astro writes each
-file into the page, so the halo stops read `--icon-glow-*` and follow the
-theme. Everything else in an icon is one blue in both themes.
+`src/icons/*.svg` is artwork too, so it may hold a hex value.
 
 Every token inside an SVG carries the light hex as a fallback, so the file also
 reads on its own. See

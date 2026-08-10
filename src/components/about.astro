@@ -1,39 +1,8 @@
 ---
-import MissionBack from "../icons/mission-back.svg";
-import MissionFront from "../icons/mission-front.svg";
-import ValueBack from "../icons/value-back.svg";
-import ValueFront from "../icons/value-front.svg";
-import VisionBack from "../icons/vision-back.svg";
-import VisionFront from "../icons/vision-front.svg";
 import { site } from "../site";
-
-/* Each icon is artwork, so it stays out of `site.ts`. The copy comes from
-   there. An icon stacks a blurred back copy and a sharp front copy. The CSS
-   masks crossfade them. See
-   docs/solutions/safari-drops-mask-over-svg-filter.md. */
-const cards = [
-	{
-		Back: MissionBack,
-		Front: MissionFront,
-		frontMask: "mask-icon-front-tall",
-		...site.about.purpose.mission,
-	},
-	{
-		Back: VisionBack,
-		Front: VisionFront,
-		frontMask: "mask-icon-front",
-		...site.about.purpose.vision,
-	},
-	{
-		Back: ValueBack,
-		Front: ValueFront,
-		frontMask: "mask-icon-front",
-		...site.about.purpose.value,
-	},
-];
 ---
 
-<section id="about" class="scroll-mt-32">
+<section id="about" class="bg-glow scroll-mt-32">
 	<div class="px-5 py-5 lg:px-16 lg:pt-[110px]">
 		<div
 			class="mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row lg:items-center"
@@ -52,39 +21,12 @@ const cards = [
 				{
 					site.about.body.map((paragraph) => (
 						<p
-							class="text-[16px] leading-[1.45] lg:flex-1"
+							class="text-[16px] leading-[1.45] lg:flex-1 lg:text-xl lg:leading-[1.5]"
 							set:html={paragraph}
 						/>
 					))
 				}
 			</div>
 		</div>
-	</div>
-
-	<div class="bg-about-glow px-5 pt-5 pb-10 lg:px-16 lg:pt-20 lg:pb-[110px]">
-		<ul class="mx-auto flex max-w-[1312px] flex-col gap-5 lg:flex-row">
-			{
-				cards.map(({ Back, Front, frontMask, title, body }) => (
-					<li class="flex gap-5 lg:flex-1">
-						<div
-							class="relative size-[80px] shrink-0 lg:size-[116px]"
-							aria-hidden="true"
-						>
-							<Back class="mask-icon-back absolute inset-0 size-full" />
-							<Front class={`${frontMask} absolute inset-0 size-full`} />
-						</div>
-						<div class="flex max-w-[244px] flex-col gap-2 pt-10 lg:gap-5 lg:pt-12">
-							<h3 class="text-[30px] leading-[1.22] font-bold uppercase">
-								{title}
-							</h3>
-							<p
-								class="text-[14px] leading-[20px] lg:text-[16px] lg:leading-[24px]"
-								set:html={body}
-							/>
-						</div>
-					</li>
-				))
-			}
-		</ul>
 	</div>
 </section>

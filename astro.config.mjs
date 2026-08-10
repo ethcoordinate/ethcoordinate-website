@@ -8,8 +8,8 @@ export default defineConfig({
   // Canonical origin. Meta tags and JSON-LD build absolute URLs from it.
   site: 'https://ethcoordinate.org',
   image: {
-    // PokeAPI serves the official artwork from this host.
-    domains: ['raw.githubusercontent.com']
+    // A team member photo can be a remote `imageUrl` on any https host.
+    remotePatterns: [{ protocol: 'https' }]
   },
   fonts: [
     {

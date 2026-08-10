@@ -8,15 +8,19 @@ export type SocialKey = "x" | "telegram" | "discord";
 export type SiteShape = {
 	networks: readonly { key: SocialKey; label: string; href: string }[];
 	team: {
-		members: readonly {
+		/* A member photo is `image` (an import from `src/assets/team/`) or
+		   `imageUrl` (a remote address). Exactly one of the two. */
+		members: readonly ({
 			number: string;
 			name: string;
 			role: string;
 			bio: string;
-			image: ImageMetadata;
 			socials: readonly { key: SocialKey; href: string }[];
 			[k: string]: unknown;
-		}[];
+		} & (
+			| { image: ImageMetadata; imageUrl?: never }
+			| { image?: never; imageUrl: string }
+		))[];
 		[k: string]: unknown;
 	};
 	[k: string]: unknown;

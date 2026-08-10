@@ -9,7 +9,6 @@ import Hero from "../components/hero.astro";
 import LogoSprite from "../components/logo-sprite.astro";
 import Nav from "../components/nav.astro";
 import Team from "../components/team.astro";
-import Ticker from "../components/ticker.astro";
 import WhatWeDo from "../components/what-we-do.astro";
 import { site } from "../site";
 
@@ -48,7 +47,7 @@ const jsonLd = JSON.stringify({
 		<!-- X falls back to the og: tags for title, description, and image. -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:site" content={site.seo.twitter} />
-		<script type="application/ld+json" set:html={jsonLd} />
+		<script is:inline type="application/ld+json" set:html={jsonLd} />
 		<Font cssVariable="--font-inter" preload />
 	</head>
 	<body
@@ -59,7 +58,6 @@ const jsonLd = JSON.stringify({
 		<Nav />
 		<main>
 			<Hero />
-			<Ticker />
 			<About />
 			<WhatWeDo />
 			<Team />

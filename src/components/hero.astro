@@ -9,7 +9,9 @@ import { site } from "../site";
 const frame = { width: 1440, height: 726 };
 
 const dots = [
-	{ x: 195.9, y: 288.9, size: 36, tone: "bg-dot-blue" },
+	/* Figma puts this dot at 195.9, 288.9, where the drift lands it on the
+	   heading. It sits higher here, clear of the glyphs. */
+	{ x: 150, y: 195, size: 36, tone: "bg-dot-blue" },
 	{ x: 401.9, y: 494.9, size: 20, tone: "bg-dot-light" },
 	{ x: 1070.1, y: 444.7, size: 40.7, tone: "bg-dot-light" },
 	{ x: 286.9, y: 423.9, size: 20, tone: "bg-dot-blue" },
@@ -45,8 +47,10 @@ const dots = [
 	>
 	</div>
 
+	{/* `z-10` keeps the copy above the drifting dots, which come later in the
+	   DOM. */}
 	<div
-		class="relative mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
+		class="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
 	>
 		<p
 			style="--n: 0"
@@ -79,10 +83,20 @@ const dots = [
 				class="bg-cta text-cta-body press focus-visible:outline-accent group inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.ctaLabel}
-				<span
-					class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:translate-y-0.5 motion-safe:group-focus-visible:translate-y-0.5"
-					aria-hidden="true">{site.hero.ctaArrow}</span
+				{/* The arrow is artwork, so it is drawn here, not in `site.ts`. It
+				   points down and nudges toward the section it opens. */}
+				<svg
+					class="align-[-0.125em] ms-1.5 inline-block size-3.5 transition-transform duration-150 ease-out motion-safe:group-hover:translate-y-0.5 motion-safe:group-focus-visible:translate-y-0.5"
+					viewBox="0 0 16 16"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
 				>
+					<path d="M8 2v11M3.5 9 8 13.5 12.5 9"></path>
+				</svg>
 			</a>
 			<a
 				href={site.hero.emailHref}

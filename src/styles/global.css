@@ -28,24 +28,12 @@
 	--dot-light: var(--white);
 	--dash: var(--blue-200);
 
-	/* The three stops of the halo inside a super icon. The line art of the icon
-	   holds one blue in both themes, so only the halo flips. */
-	--icon-glow-from: var(--blue-200);
-	--icon-glow-mid: var(--blue-400);
-	--icon-glow-to: var(--blue-200);
-
-	/* The blob that bleeds in from both side edges of the about band. The team
-	   avatars and the closing CTA reuse it. */
-	--about-glow: var(--blue-400);
+	/* The blob color of every glow utility. */
+	--glow: var(--blue-400);
 
 	/* The dashed ellipse of the closing CTA. Figma holds one blue in both
 	   themes, so this token never flips. */
 	--cta-dash: var(--blue-500);
-
-	/* The ticker holds one look in both themes, so these tokens never flip. */
-	--ticker-from: var(--ink-900);
-	--ticker-to: var(--indigo-800);
-	--ticker-body: var(--white);
 
 	/* The hero heading tilts its gradient to match the line count. */
 	--heading-angle: -35deg;
@@ -81,10 +69,7 @@
 		--cta-from: var(--white);
 		--cta-to: var(--blue-400);
 		--cta-body: var(--ink-900);
-		--icon-glow-from: var(--ink-950);
-		--icon-glow-mid: var(--indigo-800);
-		--icon-glow-to: var(--blue-900);
-		--about-glow: var(--indigo-800);
+		--glow: var(--indigo-800);
 		--dash: var(--blue-500);
 	}
 }
@@ -100,10 +85,7 @@
 	--cta-from: var(--white);
 	--cta-to: var(--blue-400);
 	--cta-body: var(--ink-900);
-	--icon-glow-from: var(--ink-950);
-	--icon-glow-mid: var(--indigo-800);
-	--icon-glow-to: var(--blue-900);
-	--about-glow: var(--indigo-800);
+	--glow: var(--indigo-800);
 	--dash: var(--blue-500);
 }
 
@@ -119,7 +101,6 @@
 	--color-dot-light: var(--dot-light);
 	--color-dash: var(--dash);
 	--color-cta-dash: var(--cta-dash);
-	--color-ticker-body: var(--ticker-body);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -147,14 +128,14 @@
 	);
 }
 
-/* Paints the two blobs that bleed in from the side edges of the about band.
-   Figma draws one blurred ellipse per edge. A radial gradient carries the same
-   soft falloff, so the band needs no artwork. The centers sit off the box, so
+/* Paints two blobs that bleed in from the side edges of a band. Figma draws
+   one blurred ellipse per edge. A radial gradient carries the same soft
+   falloff, so the band needs no artwork. The centers sit off the box, so
    only the tail of each blob reaches the text. */
-@utility bg-about-glow {
+@utility bg-glow {
 	background-image:
-		radial-gradient(46% 62% at -22% 44%, var(--about-glow), transparent 70%),
-		radial-gradient(46% 62% at 122% 44%, var(--about-glow), transparent 70%);
+		radial-gradient(46% 62% at -22% 44%, var(--glow), transparent 70%),
+		radial-gradient(46% 62% at 122% 44%, var(--glow), transparent 70%);
 }
 
 /* Paints the gradient on the heading of the closing CTA. The hero tilts its
@@ -175,7 +156,7 @@
 @utility bg-cta-glow {
 	background-image: radial-gradient(
 		62% 115% at 32% 112%,
-		var(--about-glow) 20%,
+		var(--glow) 20%,
 		transparent 85%
 	);
 }
@@ -184,35 +165,8 @@
 @utility bg-avatar-glow {
 	background-image: radial-gradient(
 		closest-side,
-		var(--about-glow),
+		var(--glow),
 		transparent
-	);
-}
-
-/* The vertical crossfade inside a super icon. The back layer is the blurred
-   copy and fades in toward the bottom. The front layer is the sharp copy plus
-   the halo and fades out. Safari drops an SVG mask on a group that holds a
-   filter, so the fade lives here as a CSS mask. See
-   docs/solutions/safari-drops-mask-over-svg-filter.md. */
-@utility mask-icon-back {
-	mask-image: linear-gradient(to bottom, transparent 46.55%, black 100%);
-}
-
-@utility mask-icon-front {
-	mask-image: linear-gradient(to bottom, black 37.5%, transparent 65.95%);
-}
-
-/* The mission fade starts at the top edge. Figma draws it that way. */
-@utility mask-icon-front-tall {
-	mask-image: linear-gradient(to bottom, black 4.74%, transparent 65.95%);
-}
-
-/* Paints the gradient on the ticker bar. */
-@utility bg-ticker {
-	background-image: linear-gradient(
-		90deg,
-		var(--ticker-from) 0%,
-		var(--ticker-to) 100%
 	);
 }
 
