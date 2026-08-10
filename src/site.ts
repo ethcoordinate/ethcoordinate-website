@@ -96,7 +96,7 @@ export const site = {
 				number: "01",
 				name: "Nixo",
 				role: "Founder",
-				bio: "decentralization / privacy / open source maxi",
+				bio: "Decentralization / Privacy / Open source maxi.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/1936868987662454784/9IkpiM_w_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/nixorokish" }],
@@ -132,7 +132,7 @@ export const site = {
 				number: "05",
 				name: "Yorick",
 				role: "Protocol coordination",
-				bio: "Member of ethstaker; maintain Eth Docker",
+				bio: "Member of ethstaker; maintain Eth Docker.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/606610639663058944/5TXYbPk-_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/yorickdowne" }],
@@ -141,7 +141,7 @@ export const site = {
 				number: "06",
 				name: "Marc",
 				role: "dev",
-				bio: "building http://forkcast.org",
+				bio: "Building http://forkcast.org",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/1484303206402379777/pJ1VfANi_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/wolovim" }],
@@ -150,7 +150,7 @@ export const site = {
 				number: "07",
 				name: "Franco Balzani",
 				role: "Project manager and Operations",
-				bio: "A decade around projects",
+				bio: "A decade around projects.",
 				imageUrl:
 					"https://pbs.twimg.com/profile_images/2086789004343611392/P-SBAQNM_400x400.jpg",
 				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
