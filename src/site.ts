@@ -11,9 +11,9 @@ import type { SiteShape } from "./site-types";
 export const site = {
 	name: "EthCoordinate",
 	seo: {
-		title: "EthCoordinate — Helping Ethereum Move Together",
+		title: "EthCoordinate — A coordination engine for Ethereum",
 		description:
-			"EthCoordinate is the Ethereum coordination org that grew out of EthStaker. We support home stakers, facilitate core protocol coordination, steward Forkcast, and advance protocol economics.",
+			"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
 		/* Exported from the Figma "X cover" frame. Lives in public/. */
 		image: "/og.jpg",
 		imageAlt: "Helping Ethereum move together",
