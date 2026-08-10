@@ -25,7 +25,7 @@ export const site = {
 	menuClose: "Close menu",
 	nav: [
 		{ href: "#about", label: "About" },
-		{ href: "#what-we-do", label: "What we do" },
+		{ href: "#what-we-do", label: "Initiatives" },
 		{ href: "#team", label: "Team" },
 		{ href: "#faq", label: "FAQ" },
 	],
@@ -44,7 +44,7 @@ export const site = {
 	},
 	about: {
 		number: "",
-		heading: "What’s\nEth\nCoordinate?",
+		heading: "About",
 		/* The `<b>` tag marks the name. The component renders these as HTML. */
 		body: [
 			"<b>EthCoordinate</b> is the natural evolution of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum’s consensus mechanism.",
@@ -67,7 +67,7 @@ export const site = {
 	},
 	whatWeDo: {
 		number: "",
-		heading: "What\nWe do",
+		heading: "Initiatives",
 		items: [
 			{
 				title: "Staker support",
@@ -93,7 +93,7 @@ export const site = {
 	},
 	team: {
 		number: "",
-		heading: "Who’s\nHere",
+		heading: "Team",
 		intro:
 			"Our team is made up of Ethereum professionals across research, protocol development, and community.",
 		/* `image` takes an import from `src/assets/team/`. `socials` holds the
