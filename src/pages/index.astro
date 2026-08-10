@@ -1,9 +1,18 @@
 ---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import About from "../components/about.astro";
 import Cta from "../components/cta.astro";
+import Faq from "../components/faq.astro";
+import Footer from "../components/footer.astro";
 import Hero from "../components/hero.astro";
-import Base from "../layouts/base.astro";
+import LogoSprite from "../components/logo-sprite.astro";
+import Nav from "../components/nav.astro";
+import Team from "../components/team.astro";
+import WhatWeDo from "../components/what-we-do.astro";
 import { site } from "../site";
 
+const ogImage = new URL(site.seo.image, Astro.site);
 /* URL values serialize to strings, because URL has a toJSON method. */
 const jsonLd = JSON.stringify({
 	"@context": "https://schema.org",
@@ -12,13 +21,49 @@ const jsonLd = JSON.stringify({
 	url: Astro.site,
 	logo: new URL("/favicon.svg", Astro.site),
 	email: site.hero.emailLabel,
-	description: site.pages.home.description,
+	description: site.seo.description,
 	sameAs: site.networks.map((n) => n.href),
 });
 ---
 
-<Base page={site.pages.home}>
-	<script is:inline type="application/ld+json" slot="head" set:html={jsonLd} />
-	<Hero />
-	<Cta />
-</Base>
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{site.seo.title}</title>
+		<meta name="description" content={site.seo.description} />
+		<link rel="canonical" href={Astro.site} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:title" content={site.seo.title} />
+		<meta property="og:description" content={site.seo.description} />
+		<meta property="og:url" content={Astro.site} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1500" />
+		<meta property="og:image:height" content="540" />
+		<meta property="og:image:alt" content={site.seo.imageAlt} />
+		<!-- X falls back to the og: tags for title, description, and image. -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content={site.seo.twitter} />
+		<script is:inline type="application/ld+json" set:html={jsonLd} />
+		<Font cssVariable="--font-inter" preload />
+	</head>
+	<body
+		id="top"
+		class="bg-surface text-body font-sans antialiased transition-colors duration-200"
+	>
+		<LogoSprite />
+		<Nav />
+		<main>
+			<Hero />
+			<About />
+			<WhatWeDo />
+			<Team />
+			<Faq />
+			<Cta />
+		</main>
+		<Footer />
+	</body>
+</html>

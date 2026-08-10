@@ -11,7 +11,7 @@ import { site } from "../site";
 		aria-label={site.name}
 	>
 		<a
-			href="/"
+			href="#"
 			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
 		>
 			<span class="sr-only">{site.home}</span>
@@ -23,12 +23,7 @@ import { site } from "../site";
 					<li>
 						<a
 							href={link.href}
-							aria-current={
-								Astro.url.pathname.replace(/\/$/, "") === link.href
-									? "page"
-									: undefined
-							}
-							class="hover:text-accent press focus-visible:outline-accent aria-[current]:text-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+							class="hover:text-accent press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
 						>
 							{link.label}
 						</a>

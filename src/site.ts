@@ -13,61 +13,15 @@ import type { SiteShape } from "./site-types";
 export const site = {
 	name: "EthCoordinate",
 	seo: {
+		title: "EthCoordinate — A coordination engine for Ethereum",
+		description:
+			"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
+		/* Exported from the Figma "X cover" frame. Lives in public/. */
+		image: "/og.jpg",
 		imageAlt: "Helping Ethereum move together",
 		twitter: "@ethcoordinate",
 	},
-	/* One entry per page. The layout reads title, description, and the OG
-	   image from here. The home image is the Figma "X cover" export in
-	   `public/`. The other images come from `src/pages/og/[slug].png.ts`,
-	   which satori renders at build time. */
-	pages: {
-		home: {
-			path: routes.home,
-			title: "EthCoordinate — A coordination engine for Ethereum",
-			description:
-				"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
-			image: "/og.jpg",
-			imageWidth: 1500,
-			imageHeight: 540,
-		},
-		about: {
-			path: routes.about,
-			title: "About — EthCoordinate",
-			description:
-				"EthCoordinate is the natural evolution of EthStaker. The same team, with a broader scope, closes new organizational gaps in the Ethereum ecosystem.",
-			image: "/og/about.png",
-			imageWidth: 1200,
-			imageHeight: 630,
-		},
-		initiatives: {
-			path: routes.initiatives,
-			title: "Initiatives — EthCoordinate",
-			description:
-				"Staker support, protocol coordination, Forkcast, protocol economics research, and open-source tooling.",
-			image: "/og/initiatives.png",
-			imageWidth: 1200,
-			imageHeight: 630,
-		},
-		team: {
-			path: routes.team,
-			title: "Team — EthCoordinate",
-			description:
-				"Our team is made up of Ethereum professionals across research, protocol development, and community.",
-			image: "/og/team.png",
-			imageWidth: 1200,
-			imageHeight: 630,
-		},
-		faq: {
-			path: routes.faq,
-			title: "FAQ — EthCoordinate",
-			description:
-				"Answers about EthCoordinate: who we are, how we are funded, and how we work with other Ethereum organizations.",
-			image: "/og/faq.png",
-			imageWidth: 1200,
-			imageHeight: 630,
-		},
-	},
-	home: "Home",
+	home: "Back to top",
 	menu: "Menu",
 	menuClose: "Close menu",
 	nav: [
