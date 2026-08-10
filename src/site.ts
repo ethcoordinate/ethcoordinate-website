@@ -152,7 +152,7 @@ export const site = {
 				role: "Project manager and Operations",
 				bio: "A decade around projects.",
 				imageUrl:
-					"https://pbs.twimg.com/profile_images/2086789004343611392/P-SBAQNM_400x400.jpg",
+					"https://pfp-ethcoordinate.netlify.app/franco.jpg",
 				socials: [{ key: "x", href: "https://x.com/holafiasco" }],
 			},
 		],
