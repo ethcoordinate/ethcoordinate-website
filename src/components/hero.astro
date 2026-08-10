@@ -45,8 +45,10 @@ const dots = [
 	>
 	</div>
 
+	{/* `z-10` keeps the copy above the drifting dots, which come later in the
+	   DOM. */}
 	<div
-		class="relative mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
+		class="relative z-10 mx-auto flex w-full max-w-[1312px] flex-col items-center gap-6 lg:gap-[26px]"
 	>
 		<p
 			style="--n: 0"
@@ -79,10 +81,20 @@ const dots = [
 				class="bg-cta text-cta-body press focus-visible:outline-accent group inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
 			>
 				{site.hero.ctaLabel}
-				<span
-					class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:translate-y-0.5 motion-safe:group-focus-visible:translate-y-0.5"
-					aria-hidden="true">{site.hero.ctaArrow}</span
+				{/* The arrow is artwork, so it is drawn here, not in `site.ts`. It
+				   nudges toward the page it opens. */}
+				<svg
+					class="align-[-0.125em] ms-1.5 inline-block size-3.5 transition-transform duration-150 ease-out motion-safe:group-hover:translate-x-0.5 motion-safe:group-focus-visible:translate-x-0.5"
+					viewBox="0 0 16 16"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
 				>
+					<path d="M2 8h11M9 3.5 13.5 8 9 12.5"></path>
+				</svg>
 			</a>
 			<a
 				href={site.hero.emailHref}
