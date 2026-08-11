@@ -69,7 +69,7 @@ export const site = {
 			},
 			{
 				title: "Protocol economics",
-				body: "We champion research and implementation of changes to core protocol economics.",
+				body: "We support research and rigorous debate on questions critical to Ethereum’s long-term economic health.",
 			},
 			{
 				title: "Open-source tooling",
