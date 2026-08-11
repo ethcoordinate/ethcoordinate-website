@@ -16,9 +16,9 @@ export const site = {
 		title: "EthCoordinate — A coordination engine for Ethereum",
 		description:
 			"Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
-		/* Exported from the Figma "X cover" frame. Lives in public/. */
+		/* Exported from the Figma "OG image" frame. Lives in public/. */
 		image: "/og.jpg",
-		imageAlt: "Helping Ethereum move together",
+		imageAlt: "EthCoordinate",
 		twitter: "@ethcoordinate",
 	},
 	home: "Back to top",
