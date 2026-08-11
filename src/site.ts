@@ -38,8 +38,8 @@ export const site = {
 		body: "Providing support for governance operations, facilitating stakeholder engagement, and maintaining home staking tooling & software.",
 		ctaHref: routes.about,
 		ctaLabel: "About",
-		emailHref: "mailto:team@ethcoordinate.com",
-		emailLabel: "team@ethcoordinate.com",
+		emailHref: "mailto:team@ethcoordinate.org",
+		emailLabel: "team@ethcoordinate.org",
 		emailArrow: "↗",
 	},
 	about: {
