@@ -35,10 +35,11 @@
 	   themes, so this token never flips. */
 	--cta-dash: var(--blue-500);
 
-	/* The base color under the hero artwork. The artwork is dark in both
-	   themes, so this token never flips. It paints the band while the webp
-	   loads, so the hero never flashes white. */
-	--hero-base: var(--ink-950);
+	/* The base color under the hero artwork. The artwork is transparent
+	   where its glows fade, so this base sets the theme of the whole band.
+	   It also paints the band while the webp loads, so the hero never
+	   flashes the wrong color. */
+	--hero-base: var(--white);
 
 	/* The hero heading tilts its gradient to match the line count. */
 	--heading-angle: -35deg;
@@ -76,6 +77,7 @@
 		--cta-body: var(--ink-900);
 		--glow: var(--indigo-800);
 		--dash: var(--blue-500);
+		--hero-base: var(--ink-950);
 	}
 }
 
@@ -92,6 +94,7 @@
 	--cta-body: var(--ink-900);
 	--glow: var(--indigo-800);
 	--dash: var(--blue-500);
+	--hero-base: var(--ink-950);
 }
 
 /* Layer 3: Tailwind map. `inline` keeps each utility pointing at the live

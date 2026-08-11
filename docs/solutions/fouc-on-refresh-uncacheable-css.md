@@ -28,6 +28,6 @@ Three causes stack:
 2. Set `build: { inlineStylesheets: 'always' }` in `astro.config.mjs`. The
    site is one page and the CSS gzips to ~7 KB. The HTML carries the CSS, so
    no fetch, no flash, in any browser.
-3. Give the hero glow box `bg-hero-base`, a token that holds the dark base
-   of the artwork in both themes. The band paints dark at once, and the
-   artwork covers it when it loads.
+3. Give the hero glow box `bg-hero-base`, a token that holds the base color
+   of the artwork and flips with the theme. The band paints in the right
+   color at once, and the artwork covers it when it loads.
