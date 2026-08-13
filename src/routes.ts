@@ -3,6 +3,7 @@
    section id. */
 export const routes = {
 	home: "/",
+	top: "#top",
 	about: "#about",
 	initiatives: "#what-we-do",
 	team: "#team",

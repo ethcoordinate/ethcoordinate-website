@@ -1,6 +1,7 @@
 ---
 import DiscordIcon from "../icons/discord.svg";
 import Logo from "./logo.astro";
+import { routes } from "../routes";
 import { site } from "../site";
 
 /* The footer only shows the Discord profile. */
@@ -16,7 +17,7 @@ const discord = site.networks.find((n) => n.key === "discord");
 	>
 		<p class="text-sm sm:order-2">{site.footer.tagline}</p>
 		<a
-			href="#"
+			href={routes.top}
 			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 sm:order-1"
 		>
 			<span class="sr-only">{site.home}</span>

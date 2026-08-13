@@ -35,7 +35,7 @@ import { site } from "../site";
 			<div class="border-subtle flex-1 border-b">
 				{
 					site.faq.items.map(({ question, answer }, index) => (
-						<details class="border-subtle border-t" open={index === 0}>
+						<details class="border-subtle border-t" name="faq" open={index === 0}>
 							{/* A full width row is too big to scale under the finger,
 							   so it tints instead. */}
 							<summary class="hover:text-accent flex cursor-pointer list-none items-center justify-between gap-5 py-6.5 text-[1.1875rem] leading-[1.45] font-bold transition-colors duration-200 [&::-webkit-details-marker]:hidden">
