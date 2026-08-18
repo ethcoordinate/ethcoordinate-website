@@ -1,0 +1,80 @@
+---
+/* The community band. The team stat counts `team.members`, so the number
+   cannot drift from the list the page already shows. */
+import { site } from "../site";
+
+const stats = [
+	...site.community.stats,
+	{
+		value: String(site.team.members.length),
+		...site.community.teamStat,
+	},
+];
+---
+
+<section
+	id="join"
+	class="scroll-mt-[var(--nav-height)] px-5 pt-14 lg:px-16 lg:pt-24"
+>
+	<div class="mx-auto flex max-w-[82rem] flex-col gap-8 lg:gap-12">
+		<div class="flex flex-col gap-5 lg:flex-row lg:items-center">
+			<div class="flex flex-col gap-2 pt-4 lg:w-78 lg:shrink-0">
+				<p class="text-[27.625px] font-bold tracking-[1.06px]">
+					{site.community.number}
+				</p>
+				<h2
+					class="text-[32px] leading-[32px] font-extrabold tracking-[2.1px] uppercase lg:text-[56px] lg:leading-[56px]"
+				>
+					{site.community.heading}
+				</h2>
+			</div>
+			<p class="max-w-88 text-base leading-[1.5]">{site.community.intro}</p>
+		</div>
+
+		<div class="border-subtle grid border-t sm:grid-cols-2">
+			{
+				stats.map((stat) => (
+					<div class="border-subtle flex flex-col gap-2 border-b px-7 pt-[26px] pb-[30px] sm:border-l">
+						<p class="text-accent text-5xl leading-none font-bold">
+							{stat.value}
+						</p>
+						<h3 class="text-[15px] font-bold tracking-[1px] uppercase">
+							{stat.label}
+						</h3>
+						<p class="text-[14px] leading-[1.45] text-pretty opacity-[0.72]">
+							{stat.note}
+						</p>
+					</div>
+				))
+			}
+		</div>
+
+		<div class="border-subtle grid border-t sm:grid-cols-2">
+			{
+				site.community.channels.map((channel) => (
+					<a
+						href={channel.href}
+						target="_blank"
+						rel="noreferrer"
+						class="border-subtle hover:text-accent press focus-visible:outline-accent group flex flex-col gap-2.5 border-b px-6 pt-5 pb-[22px] focus-visible:outline-2 focus-visible:-outline-offset-2 sm:border-l"
+					>
+						<span class="flex items-center gap-2 text-[20px] leading-[1.2] font-bold">
+							{channel.label}
+							{/* The arrow is artwork, so it is typed here, not in
+							   `site.ts`. It turns 45 degrees on hover. */}
+							<span
+								class="text-accent inline-block text-[14px] font-bold transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+								aria-hidden="true"
+							>
+								↗
+							</span>
+						</span>
+						<span class="text-[15px] leading-[1.45] text-pretty opacity-[0.78]">
+							{channel.note}
+						</span>
+					</a>
+				))
+			}
+		</div>
+	</div>
+</section>

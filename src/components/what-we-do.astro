@@ -1,5 +1,6 @@
 ---
 import Dots from "./dots.astro";
+import Properties from "./properties.astro";
 import { site } from "../site";
 
 /* The Figma frame. Every decoration below is a position in this box. */
@@ -50,20 +51,14 @@ const dots = [
 				{site.whatWeDo.heading}
 			</h2>
 		</div>
-		<dl class="flex flex-1 flex-col gap-10 py-10">
-			{
-				site.whatWeDo.items.map(({ title, body }) => (
-					<div class="flex flex-col lg:flex-row lg:gap-[60px]">
-						<dt class="text-[28px] font-bold uppercase lg:w-[240px] lg:shrink-0 lg:text-right">
-							{title}
-						</dt>
-						<dd class="text-[16px] leading-[1.45] lg:max-w-[386px] lg:flex-1">
-							{body}
-						</dd>
-					</div>
-				))
-			}
-		</dl>
+
+		{/* The initiatives now sit inside the EthCoordinate box, because
+		   EthCoordinate is what runs them. The heading is wider than its
+		   column, so the box starts below its baseline and the corner never
+		   crosses the glyphs. */}
+		<div class="flex-1 pt-4 lg:pt-28">
+			<Properties />
+		</div>
 	</div>
 
 	<Dots frame={frame} dots={dots} />

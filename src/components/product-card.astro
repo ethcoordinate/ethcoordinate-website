@@ -1,0 +1,73 @@
+---
+/* One product, in a gapless grid. The card draws its own bottom rule, so a
+   column of cards reads as one hairline. It uses the semantic tokens only,
+   so another site re-skins it by overriding those tokens. */
+import { site } from "../site";
+import type { Product } from "../site-types";
+
+interface Props {
+	product: Product;
+}
+
+const { product } = Astro.props;
+
+/* The bar on the left edge. The dash grows as the tie to the product
+   loosens. `global.css` owns the pattern. */
+const tiers = {
+	1: "bg-tier-1",
+	2: "bg-tier-2",
+	3: "bg-tier-3",
+	4: "bg-tier-4",
+};
+
+const owner = site.product.owners[product.ownerKind];
+const ownerLine = product.owner ? `${owner} · ${product.owner}` : owner;
+const off = product.href.startsWith("http");
+---
+
+<div
+	class="border-subtle relative flex min-h-[152px] flex-col gap-2.5 border-b pt-5 pr-6 pb-[22px] pl-[26px]"
+>
+	<span
+		class:list={["absolute inset-y-0 left-0 w-[2px]", tiers[product.tier]]}
+		aria-hidden="true"></span>
+
+	<div class="flex items-center gap-2">
+		<span
+			class="border-subtle rounded-full border px-[9px] pt-[3px] pb-1 text-[11px] font-bold tracking-[1px] whitespace-nowrap uppercase opacity-90"
+		>
+			{product.area}
+		</span>
+		{
+			product.external && (
+				<span
+					class="text-accent ms-auto text-[14px] font-bold"
+					aria-hidden="true"
+				>
+					↗
+				</span>
+			)
+		}
+	</div>
+
+	<a
+		href={product.href}
+		target={off ? "_blank" : undefined}
+		rel={off ? "noreferrer" : undefined}
+		class="hover:text-accent press focus-visible:outline-accent self-start text-[20px] leading-[1.2] font-bold focus-visible:outline-2 focus-visible:outline-offset-4"
+	>
+		{product.title}
+	</a>
+
+	<p class="flex-1 text-[15px] leading-[1.45] text-pretty opacity-[0.78]">
+		{product.blurb}
+	</p>
+
+	<p
+		class="text-accent flex flex-wrap items-center gap-2 text-[11px] font-bold tracking-[1px] uppercase"
+	>
+		<span>{ownerLine}</span>
+		<span class="opacity-[0.45]" aria-hidden="true">·</span>
+		<span>{site.product.tiers[product.tier]}</span>
+	</p>
+</div>

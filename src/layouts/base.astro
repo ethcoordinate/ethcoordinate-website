@@ -1,0 +1,64 @@
+---
+/* The shell of every page: head, nav, footer. A page fills the default slot
+   with its sections and the `head` slot with anything extra, such as the
+   JSON-LD of the home page. */
+import { Font } from "astro:assets";
+import "../styles/global.css";
+import Footer from "../components/footer.astro";
+import LogoSprite from "../components/logo-sprite.astro";
+import Nav from "../components/nav.astro";
+import { site } from "../site";
+
+interface Props {
+	title?: string;
+	description?: string;
+	/* The `key` of the nav item that owns this page. */
+	active?: string;
+}
+
+const {
+	title = site.seo.title,
+	description = site.seo.description,
+	active = "",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(site.seo.image, Astro.site);
+---
+
+<html lang="en" class="scroll-smooth">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={site.seo.imageAlt} />
+		<!-- X falls back to the og: tags for title, description, and image. -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content={site.seo.twitter} />
+		<slot name="head" />
+		<Font cssVariable="--font-inter" preload />
+	</head>
+	<body
+		id="top"
+		class="bg-surface text-body font-sans antialiased transition-colors duration-200"
+	>
+		<LogoSprite />
+		<Nav active={active} />
+		<main>
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
