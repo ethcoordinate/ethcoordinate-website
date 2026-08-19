@@ -24,6 +24,26 @@ Use the utility in a component. Never write a hex value in a component.
 | `--indigo-800`  | `#222275` |
 | `--white`       | `#ffffff` |
 
+## Third party brands
+
+A brand color fills or rules inside the frame of that brand. It never carries
+text, and it never flips with the theme. Cyan on EthStaker is the clearest
+case: it is a rule only, which is what keeps that pair at AA.
+
+| Name                 | Value                     | Where                        |
+| -------------------- | ------------------------- | ---------------------------- |
+| `--ethstaker-blue`   | `#0071bc`                 | Bar above the EthStaker column |
+| `--ethstaker-cyan`   | `#00ffff`                 | Left rule of the handoff panel |
+| `--forkcast-from`    | `#00d4ff`                 | Forkcast gradient, near stop |
+| `--forkcast-to`      | `#a855f7`                 | Forkcast gradient, far stop  |
+| `--forkcast-surface` | `#0b0e14`                 | Background of the Forkcast frame |
+| `--forkcast-ink`     | `--white`                 | Text inside that frame       |
+| `--forkcast-edge`    | `rgb(0 212 255 / 0.28)`   | Border of that frame         |
+| `--forkcast-rule`    | `rgb(255 255 255 / 0.1)`  | Hairlines inside that frame  |
+| `--forkcast-body`    | `rgb(255 255 255 / 0.55)` | Secondary text in that frame |
+| `--forkcast-strong`  | `rgb(255 255 255 / 0.75)` | The attribution line         |
+| `--forkcast-scan`    | `rgb(255 255 255 / 0.045)`| The scanline texture         |
+
 ## Semantic tokens
 
 | Token          | Utility           | Role                       | Light          | Dark            |
@@ -64,6 +84,17 @@ utilities read the tokens above.
 | `bg-glow` | Paints the blob at each side edge of a band. |
 | `bg-cta-glow`   | Paints the blob below the closing CTA band.  |
 | `bg-avatar-glow` | Paints the blob behind a team avatar.       |
+
+| `bg-forkcast-bar` | Paints the Forkcast rule above a menu column. |
+| `text-gradient-forkcast` | Paints the Forkcast wordmark. |
+| `bg-forkcast-mark` | Paints the Forkcast dot and its glow. |
+| `bg-scanlines`  | Paints the scanline texture of the Forkcast frame. |
+| `bg-tier-1` to `bg-tier-4` | Paints the bar on the left edge of a product card. |
+| `logo-on-dark`  | Holds the dark theme logo colors inside a dark frame. |
+
+The four tier bars read `--accent` and differ only in the dash. The dash grows
+as the tie to the product loosens: solid owns its domain, and the widest gaps
+mark a product we only catalogue.
 
 `text-gradient` and `text-gradient-cta` read the same two stops. Only the angle
 and the stop positions differ, so both headings flip with the theme.

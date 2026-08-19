@@ -1,0 +1,165 @@
+---
+/* Our work → Staker support. The page explains the programme and hands the
+   operational pages to ethstaker.org. The handoff panel is the largest
+   object on the page, and it must stay that way. */
+import Breadcrumb from "../../components/breadcrumb.astro";
+import Cta from "../../components/cta.astro";
+import ProductCard from "../../components/product-card.astro";
+import Base from "../../layouts/base.astro";
+import { site } from "../../site";
+
+const page = site.stakerSupport;
+---
+
+<Base
+	title={page.seo.title}
+	description={page.seo.description}
+	active="work"
+>
+	<Breadcrumb items={page.breadcrumb} />
+
+	<div class="px-4 pt-10 pb-18 sm:px-10 lg:px-16">
+		<div class="mx-auto max-w-[1312px]">
+			<div class="mb-14 flex flex-col gap-8 lg:flex-row lg:gap-[60px]">
+				<div class="flex flex-col gap-2 lg:w-78 lg:shrink-0">
+					<p class="text-[27.625px] font-bold tracking-[1.06px]">
+						{page.number}
+					</p>
+					<h1
+						class="text-[32px] leading-[32px] font-extrabold tracking-[2.1px] uppercase lg:text-[56px] lg:leading-[56px]"
+					>
+						{page.heading}
+					</h1>
+				</div>
+				<p class="max-w-[560px] text-[20px] leading-[1.45] text-pretty">
+					{page.intro}
+				</p>
+			</div>
+
+			{/* The cyan is EthStaker's. It rules the panel and never carries
+			   text, which is what keeps the pair at AA. */}
+			<div
+				class="border-subtle mb-16 flex flex-col gap-10 border border-l-ethstaker-cyan border-l-[3px] px-5 pt-9 pb-10 lg:flex-row lg:gap-14 lg:px-10"
+			>
+				<div class="flex max-w-[520px] flex-col gap-4">
+					<p
+						class="text-accent text-[11px] font-bold tracking-[1.2px] uppercase"
+					>
+						{page.handoff.eyebrow}
+					</p>
+					<h2
+						class="text-[28px] leading-[1.1] font-extrabold tracking-[1.2px] uppercase lg:text-[34px]"
+					>
+						{page.handoff.heading}
+					</h2>
+					<p class="text-[16px] leading-[1.5] text-pretty opacity-[0.82]">
+						{page.handoff.body}
+					</p>
+					<div class="mt-2">
+						<a
+							href={page.handoff.cta.href}
+							target="_blank"
+							rel="noreferrer"
+							class="bg-cta text-cta-body press focus-visible:outline-accent group inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
+						>
+							{page.handoff.cta.label}
+							<span
+								class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+								aria-hidden="true">↗</span
+							>
+						</a>
+					</div>
+				</div>
+
+				<div
+					class="border-subtle grid flex-1 border-t sm:grid-cols-2"
+				>
+					{
+						page.handoff.links.map((link) => (
+							<a
+								href={link.href}
+								target="_blank"
+								rel="noreferrer"
+								class="border-subtle hover:text-accent press focus-visible:outline-accent group flex flex-col gap-1 border-b border-l px-[18px] py-4 focus-visible:outline-2 focus-visible:-outline-offset-2"
+							>
+								<span class="text-[15px] font-bold">
+									{link.label}
+									<span
+										class="ms-0.5 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+										aria-hidden="true"
+									>
+										↗
+									</span>
+								</span>
+								<span class="text-[13px] opacity-[0.68]">{link.note}</span>
+							</a>
+						))
+					}
+				</div>
+			</div>
+
+			<div class="mb-6 flex flex-wrap items-baseline gap-4">
+				<h2
+					class="text-[24px] font-extrabold tracking-[1.6px] uppercase lg:text-[28px]"
+				>
+					{page.products.heading}
+				</h2>
+				<p class="text-[13px] opacity-60">{page.products.aside}</p>
+			</div>
+
+			{/* A gapless grid, so the rules the cards draw form one hairline. */}
+			<div class="border-subtle mb-16 grid border-t border-r lg:grid-cols-2">
+				{page.products.cards.map((card) => <ProductCard product={card} />)}
+			</div>
+
+			<h2
+				class="mb-5 text-[24px] font-extrabold tracking-[1.6px] uppercase lg:text-[28px]"
+			>
+				{page.answers.heading}
+			</h2>
+			{/* A phone scrolls the table sideways. Squeezed to 390px the three
+			   columns break every line. */}
+			<div class="overflow-x-auto">
+				<table class="w-full min-w-[560px] border-collapse">
+					<thead>
+						<tr>
+							{
+								page.answers.columns.map((column, index) => (
+									<th
+										class:list={[
+											"border-subtle border-b py-2.5 text-[11px] font-bold tracking-[1.2px] uppercase opacity-60",
+											index === 0 && "pr-3 text-left",
+											index === 1 && "px-3 text-left",
+											index === 2 && "pl-3 text-right",
+										]}
+									>
+										{column}
+									</th>
+								))
+							}
+						</tr>
+					</thead>
+					<tbody>
+						{
+							page.answers.rows.map((row) => (
+								<tr>
+									<td class="border-subtle border-b py-3.5 pr-3 text-[16px] font-bold">
+										{row.route}
+									</td>
+									<td class="border-subtle border-b px-3 py-3.5 text-[15px] opacity-[0.82]">
+										{row.use}
+									</td>
+									<td class="border-subtle border-b py-3.5 pl-3 text-right text-[14px] opacity-70">
+										{row.who}
+									</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<Cta cta={page.cta} />
+</Base>

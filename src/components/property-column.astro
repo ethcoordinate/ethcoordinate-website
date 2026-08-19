@@ -1,0 +1,131 @@
+---
+/* One column of a nav dropdown, and one column of the property grid on the
+   home page. Both read the same array in `site.ts`.
+
+   `band` is the row above the others. The home page uses it for
+   EthCoordinate, the umbrella that EthStaker and Forkcast run under. A band
+   carries the initiatives in its slot instead of a link list, because the
+   initiatives are what EthCoordinate runs. */
+import type { MenuGroup } from "../site-types";
+
+interface Props {
+	group: MenuGroup;
+	band?: boolean;
+	/* The dropdown and the home page grid pad the column differently. */
+	class?: string;
+}
+
+const { group, band = false, class: className } = Astro.props;
+
+/* `rule` names the color bar above the column name. Forkcast carries a
+   gradient, so the bar is a utility, not a color. */
+const rules = {
+	ethstaker: "bg-ethstaker-blue",
+	forkcast: "bg-forkcast-bar",
+	accent: "bg-accent",
+};
+
+const off = (href: string) => href.startsWith("http");
+---
+
+<div
+	class:list={[
+		"border-subtle flex flex-col gap-[18px] border-t lg:border-t-0 lg:border-l",
+		className,
+	]}
+>
+	<div class="flex flex-col gap-[9px]">
+		<span class:list={["h-[3px] w-[26px]", rules[group.rule]]} aria-hidden="true"
+		></span>
+		<div class="flex items-center gap-2.5">
+			{/* The marks stay transparent: the SVG has no background and the dot
+			   is the gradient itself, so both sit on either theme. */}
+			{
+				group.mark === "ethstaker" && (
+					<svg
+						class="size-5 shrink-0"
+						viewBox="20 25 250 250"
+						aria-hidden="true"
+					>
+						<use href="#es-mark" />
+					</svg>
+				)
+			}
+			{
+				group.mark === "forkcast" && (
+					<span
+						class="bg-forkcast-mark size-4.5 shrink-0 rounded-full"
+						aria-hidden="true"
+					/>
+				)
+			}
+			<h3
+				class:list={[
+					"leading-none font-extrabold tracking-[1.4px] uppercase",
+					band ? "text-[24px]" : "text-[19px]",
+				]}
+			>
+				{group.name}
+			</h3>
+		</div>
+		<p class="text-[13px] leading-[1.45] text-pretty opacity-70">{group.note}</p>
+	</div>
+
+	{
+		band ? (
+			<slot />
+		) : (
+			<div class="flex flex-1 flex-col gap-[18px]">
+				<ul class="flex flex-col">
+					{group.items.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								target={off(item.href) ? "_blank" : undefined}
+								rel={off(item.href) ? "noreferrer" : undefined}
+								class="border-subtle hover:text-accent press focus-visible:outline-accent flex items-baseline gap-2.5 border-t py-[9px] leading-[1.25] focus-visible:outline-2 focus-visible:-outline-offset-2"
+							>
+								<span class="text-[14px] font-bold whitespace-nowrap">
+									{item.label}
+								</span>
+								<span class="text-[12px] text-pretty opacity-[0.58]">
+									{item.note}
+								</span>
+								{item.external && (
+									<span
+										class="text-accent ms-auto text-[12px]"
+										aria-hidden="true"
+									>
+										↗
+									</span>
+								)}
+							</a>
+						</li>
+					))}
+				</ul>
+
+				<a
+					href={group.link.href}
+					target={off(group.link.href) ? "_blank" : undefined}
+					rel={off(group.link.href) ? "noreferrer" : undefined}
+					class="text-accent press focus-visible:outline-accent group mt-auto flex items-center gap-1.5 pt-1.5 text-[11px] font-bold tracking-[1.2px] uppercase hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4"
+				>
+					<span>{group.link.label}</span>
+					{/* The arrow is artwork, so it is typed here, not in `site.ts`.
+					   It turns 45 degrees on hover, so it morphs into a right
+					   arrow. */}
+					<span
+						class:list={[
+							"inline-block transition-transform duration-150 ease-out",
+							group.link.external &&
+								"motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45",
+						]}
+						aria-hidden="true"
+					>
+						{group.link.external ? "↗" : "→"}
+					</span>
+				</a>
+			</div>
+		)
+	}
+</div>

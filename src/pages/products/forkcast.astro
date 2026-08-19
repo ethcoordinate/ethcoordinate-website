@@ -1,0 +1,184 @@
+---
+/* Products → Forkcast. The Tier 1 pattern: one screen, one destination, no
+   operational content. Forkcast keeps its own colours, type and texture. We
+   frame it; we do not restyle it. */
+import Breadcrumb from "../../components/breadcrumb.astro";
+import Base from "../../layouts/base.astro";
+import { site } from "../../site";
+
+const page = site.forkcast;
+---
+
+<Base title={page.seo.title} description={page.seo.description} active="products">
+	<Breadcrumb items={page.breadcrumb} />
+
+	<div class="bg-glow px-4 pt-12 pb-18 sm:px-10 lg:px-16">
+		<div class="mx-auto flex max-w-[1312px] flex-col gap-12 lg:flex-row lg:gap-16">
+			<div class="flex flex-col gap-6 lg:w-[600px] lg:shrink-0">
+				<p class="flex items-center gap-2.5">
+					<span class="bg-accent h-3.5 w-[2px]" aria-hidden="true"></span>
+					<span
+						class="text-accent text-[11px] font-bold tracking-[1.2px] uppercase"
+					>
+						{page.tier}
+					</span>
+				</p>
+				<h1
+					class="text-[44px] leading-none font-extrabold tracking-[1.6px] uppercase lg:text-[64px]"
+				>
+					{page.heading}
+				</h1>
+				<p class="text-[20px] leading-[1.45] text-pretty">{page.body}</p>
+
+				<dl class="border-subtle flex flex-col border-t">
+					{
+						page.facts.map((fact) => (
+							<div class="border-subtle flex flex-col gap-1 border-b py-3.5 sm:flex-row sm:gap-6">
+								<dt class="text-[11px] font-bold tracking-[1.2px] uppercase opacity-60 sm:w-[150px] sm:shrink-0">
+									{fact.key}
+								</dt>
+								<dd class="text-[15px] leading-[1.45]">{fact.value}</dd>
+							</div>
+						))
+					}
+				</dl>
+
+				<div class="mt-2 flex flex-wrap items-center gap-5">
+					<a
+						href={page.cta.href}
+						target="_blank"
+						rel="noreferrer"
+						class="bg-cta text-cta-body press focus-visible:outline-accent group inline-block rounded-full px-6 py-4 text-[14px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4"
+					>
+						{page.cta.label}
+						<span
+							class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+							aria-hidden="true">↗</span
+						>
+					</a>
+					<a
+						href={page.link.href}
+						target="_blank"
+						rel="noreferrer"
+						class="hover:text-accent press group focus-visible:outline-accent inline-block rounded-sm text-[16px] font-bold underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-4"
+					>
+						{page.link.label}
+						<span
+							class="ms-1 inline-block transition-transform duration-150 ease-out motion-safe:group-hover:rotate-45 motion-safe:group-focus-visible:rotate-45"
+							aria-hidden="true">↗</span
+						>
+					</a>
+				</div>
+			</div>
+
+			<div class="flex flex-1 flex-col gap-3">
+				{/* Forkcast, unmodified, inside our frame. */}
+				<div
+					class="bg-forkcast-surface border-forkcast-edge relative overflow-hidden border px-7 pt-[26px] pb-[30px]"
+				>
+					<div
+						class="bg-scanlines pointer-events-none absolute inset-0"
+						aria-hidden="true"
+					>
+					</div>
+					<div class="relative flex flex-col gap-[22px]">
+						<div class="flex items-center gap-3">
+							<span
+								class="bg-forkcast-mark size-[26px] rounded-full"
+								aria-hidden="true"></span>
+							<span
+								class="text-gradient-forkcast text-[19px] font-extrabold tracking-[1.4px] uppercase"
+							>
+								{page.frame.name}
+							</span>
+							<span
+								class="text-forkcast-body ms-auto text-[11px] font-bold tracking-[1.2px] uppercase"
+							>
+								{page.frame.domain}
+							</span>
+						</div>
+						{
+							page.frame.rows.map((row) => (
+								<div class="border-forkcast-rule flex items-center gap-4 border-t py-3">
+									<span class="text-forkcast-ink text-[16px] font-bold">
+										{row.name}
+									</span>
+									<span
+										class:list={[
+											"rounded-full border px-[9px] pt-[3px] pb-1 text-[10px] font-bold tracking-[1px] uppercase",
+											row.shipped
+												? "border-forkcast-to text-forkcast-to"
+												: "border-forkcast-from text-forkcast-from",
+										]}
+									>
+										{row.status}
+									</span>
+									<span class="text-forkcast-body ms-auto text-[13px]">
+										{row.meta}
+									</span>
+								</div>
+							))
+						}
+					</div>
+				</div>
+				<p class="text-[12px] leading-[1.5] opacity-60">{page.frame.note}</p>
+
+				<div class="mt-6 flex flex-col gap-3">
+					<h2
+						class="text-[11px] font-bold tracking-[1.2px] uppercase opacity-60"
+					>
+						{page.linkback.heading}
+					</h2>
+					{/* The reciprocal ask: one attribution line in Forkcast's own
+					   footer. Nothing sits above its header. */}
+					<div
+						class="bg-forkcast-surface border-forkcast-edge overflow-hidden border"
+					>
+						<p class="text-forkcast-body px-6 pt-[18px] pb-5 text-[13px]">
+							{page.linkback.body}
+						</p>
+						<p
+							class="border-forkcast-rule text-forkcast-strong flex flex-wrap items-center gap-3 border-t px-6 py-3.5 text-[12px] font-bold tracking-[1.2px] uppercase"
+						>
+							<span class="opacity-60">{page.linkback.prefix}</span>
+							{/* The wordmark carries the mark in its first 44 units. The
+							   `use` holds the full size of the sprite and the viewBox
+							   crops it to that part, so the line needs no second
+							   asset. */}
+							<span class="logo-on-dark inline-flex items-center gap-2">
+								<svg class="size-3.5" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+									<use href="#ec-logo" width="189" height="44"></use>
+								</svg>
+								<span>{page.linkback.name}</span>
+							</span>
+							<span class="text-forkcast-from ms-auto">
+								{page.linkback.domain} ↗
+							</span>
+						</p>
+					</div>
+					<p class="text-[12px] leading-[1.5] opacity-60">
+						{page.linkback.note}
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="border-subtle grid border-t lg:grid-cols-4">
+		{
+			page.rules.map((rule) => (
+				<div class="border-subtle flex flex-col gap-2 border-b px-7 pt-[26px] pb-[30px] lg:border-b-0 lg:border-l">
+					<p class="text-accent text-[27.625px] font-bold tracking-[1.06px]">
+						{rule.number}
+					</p>
+					<h2 class="text-[15px] font-bold tracking-[1px] uppercase">
+						{rule.title}
+					</h2>
+					<p class="text-[14px] leading-[1.45] text-pretty opacity-[0.72]">
+						{rule.body}
+					</p>
+				</div>
+			))
+		}
+	</div>
+</Base>

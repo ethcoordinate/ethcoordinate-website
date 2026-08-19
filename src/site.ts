@@ -7,7 +7,177 @@ import nixo from "./assets/team/nixo.jpg";
 import patricioWorthalter from "./assets/team/patricio-worthalter.jpg";
 import yorick from "./assets/team/yorick.jpg";
 import { routes } from "./routes";
-import type { SiteShape } from "./site-types";
+import type { MenuGroup, Product, SiteShape } from "./site-types";
+
+/* The three properties we run work on. The Products dropdown and the home
+   page "What we run" grid both read this array. The repetition is the point:
+   the menu and the section are one list, rendered twice. */
+const properties: readonly MenuGroup[] = [
+	{
+		name: "EthCoordinate",
+		rule: "accent",
+		note: "Programmes that live on this site.",
+		items: [
+			{
+				label: "Protocol economics",
+				note: "Issuance and rewards",
+				href: routes.research,
+			},
+			{ label: "Grants", note: "What we fund", href: routes.grants },
+		],
+		link: { label: "All products", href: routes.products },
+	},
+	{
+		name: "EthStaker",
+		rule: "ethstaker",
+		mark: "ethstaker",
+		note: "Every operational staking page, plus the tools we keep running.",
+		items: [
+			{
+				label: "Knowledge Base",
+				note: "Docs and FAQ",
+				href: "https://docs.ethstaker.org",
+				external: true,
+			},
+			{
+				label: "Eth Docker",
+				note: "Run a validator with Docker",
+				href: "https://ethdocker.com",
+				external: true,
+			},
+			{
+				label: "Wagyu Key Gen",
+				note: "Generate deposit keys",
+				href: routes.wagyuKeyGen,
+			},
+			{
+				label: "Rhino Review",
+				note: "Monthly staking newsletter",
+				href: routes.rhinoReview,
+			},
+			{
+				label: "Checkpoint sync",
+				note: "Public sync endpoints",
+				href: "https://ethstaker.org/checkpoint-sync",
+				external: true,
+			},
+			{ label: "Office hours", note: "Weekly validator call", href: routes.events },
+			{
+				label: "Staking Landscape Survey",
+				note: "Annual operator data",
+				href: routes.survey,
+			},
+			{ label: "Staking Gathering", note: "Our yearly event", href: routes.events },
+		],
+		link: {
+			label: "All EthStaker tools",
+			href: "https://ethstaker.org",
+			external: true,
+		},
+	},
+	{
+		name: "Forkcast",
+		rule: "forkcast",
+		mark: "forkcast",
+		note: "Tracks research and engineering on Ethereum’s core protocol.",
+		items: [
+			{
+				label: "Upgrades",
+				note: "What ships next",
+				href: "https://forkcast.org/upgrades",
+				external: true,
+			},
+			{
+				label: "EIP index",
+				note: "Every proposal, by status",
+				href: "https://forkcast.org/eips",
+				external: true,
+			},
+			{
+				label: "ACD notes",
+				note: "All Core Devs summaries",
+				href: "https://forkcast.org/acd",
+				external: true,
+			},
+			{
+				label: "Client status",
+				note: "Who implemented what",
+				href: "https://forkcast.org/clients",
+				external: true,
+			},
+		],
+		link: {
+			label: "Open forkcast.org",
+			href: "https://forkcast.org",
+			external: true,
+		},
+	},
+];
+
+/* The two kinds of event we run: the ones we show up to, and the recorded
+   programme on the EthStaker channel. */
+const youtube = "https://www.youtube.com/@EthStaker";
+const discord = "https://discord.com/invite/ethstaker";
+const reddit = "https://www.reddit.com/r/ethstaker/";
+
+const eventGroups: readonly MenuGroup[] = [
+	{
+		name: "Live events",
+		rule: "accent",
+		note: "Where we show up in person.",
+		items: [
+			{
+				label: "Staking Gathering",
+				note: "Our yearly operator event",
+				href: routes.stakingGathering,
+			},
+			{
+				label: "Workshops",
+				note: "Hands-on validator sessions",
+				href: routes.workshops,
+			},
+			{
+				label: "Office hours",
+				note: "Weekly validator call",
+				href: routes.officeHours,
+			},
+			{ label: "Where we speak", note: "Conferences and panels", href: routes.talks },
+		],
+		link: { label: "Full calendar", href: routes.events },
+	},
+	{
+		name: "On YouTube",
+		rule: "ethstaker",
+		note: "The EthStaker channel carries the recorded programme.",
+		items: [
+			{
+				label: "Hardfork events",
+				note: "Live on upgrade day",
+				href: youtube,
+				external: true,
+			},
+			{
+				label: "Community calls",
+				note: "Recorded every month",
+				href: youtube,
+				external: true,
+			},
+			{
+				label: "Tutorials",
+				note: "Setup and recovery walkthroughs",
+				href: youtube,
+				external: true,
+			},
+			{
+				label: "Past gatherings",
+				note: "Every talk, archived",
+				href: youtube,
+				external: true,
+			},
+		],
+		link: { label: "youtube.com/@EthStaker", href: youtube, external: true },
+	},
+];
 
 /** The only source of truth for site copy. Edit text here, not in components. */
 export const site = {
@@ -22,14 +192,35 @@ export const site = {
 		twitter: "@ethcoordinate",
 	},
 	home: "Back to top",
+	homeLink: "EthCoordinate home",
 	menu: "Menu",
 	menuClose: "Close menu",
+	/* One tier. `groups` holds the dropdown of an item; an empty list means
+	   the item has no dropdown. */
 	nav: [
-		{ href: routes.about, label: "About" },
-		{ href: routes.initiatives, label: "Initiatives" },
-		{ href: routes.team, label: "Team" },
-		{ href: routes.faq, label: "FAQ" },
+		{
+			key: "work",
+			label: "Our work",
+			href: routes.initiatives,
+			groups: [] as readonly MenuGroup[],
+		},
+		{
+			key: "products",
+			label: "Products",
+			href: routes.properties,
+			groups: properties,
+		},
+		{ key: "events", label: "Events", href: routes.events, groups: eventGroups },
+		{
+			key: "about",
+			label: "About",
+			href: routes.about,
+			groups: [] as readonly MenuGroup[],
+		},
 	],
+	navCta: { label: "Explore initiatives", href: routes.initiatives },
+	properties,
+	eventGroups,
 	hero: {
 		/* Figma sets one word per line. The newlines keep that shape. */
 		eyebrow: "AN\nETHEREUM\nCOORDINATION\nORG",
@@ -76,6 +267,21 @@ export const site = {
 				body: "We maintain the open-source tools and documentation used by participants of the consensus set.",
 			},
 		],
+	},
+	/* The labels of the product card. `tier` runs from 1, a product on its
+	   own domain, to 4, a product we only catalogue. */
+	product: {
+		tiers: {
+			1: "Own domain",
+			2: "On our sites",
+			3: "We maintain",
+			4: "Catalogued",
+		},
+		owners: {
+			org: "By EthCoordinate",
+			steward: "Steward’s project",
+			"third-party": "Third party",
+		},
 	},
 	team: {
 		number: "",
@@ -153,6 +359,39 @@ export const site = {
 			},
 		],
 	},
+	/* The community band. A number here is a claim about the org, so every
+	   one needs a source. */
+	community: {
+		number: "",
+		heading: "Join us",
+		intro:
+			"The community is open to everyone. Ask a question in Discord, or start a longer thread on Reddit.",
+		stats: [
+			{
+				value: "25,000",
+				label: "Discord members",
+				note: "Stewards and home stakers answer validator questions every day.",
+			},
+		],
+		/* The value is the length of `team.members`, so the number cannot
+		   drift from the list. The component fills it. */
+		teamStat: {
+			label: "People on the team",
+			note: "Plus the affiliates who join a single initiative.",
+		},
+		channels: [
+			{
+				label: "Discord",
+				note: "Ask a question and get an answer. Office hours run here every week.",
+				href: discord,
+			},
+			{
+				label: "Reddit",
+				note: "r/ethstaker holds the longer threads and the slower discussions.",
+				href: reddit,
+			},
+		],
+	},
 	faq: {
 		number: "",
 		heading: "FAQ",
@@ -226,12 +465,207 @@ export const site = {
 		emailHref: "mailto:team@ethcoordinate.com",
 		emailLabel: "team@ethcoordinate.com",
 	},
+	/* Our work → Staker support. The page explains the programme and hands
+	   the operational pages to ethstaker.org. */
+	stakerSupport: {
+		seo: {
+			title: "Staker support — EthCoordinate",
+			description:
+				"We maintain a safe, informed space for independent stakers to stay engaged with the network. The operational staking pages live on ethstaker.org.",
+		},
+		breadcrumb: [
+			{ label: "Home", href: routes.home },
+			{ label: "Our work", href: routes.initiatives },
+			{ label: "Staker support" },
+		],
+		number: "01.",
+		heading: "Staker support",
+		intro:
+			"We maintain a safe, informed space for independent stakers to stay engaged with the network. We answer questions, document the work, and keep the tools running.",
+		handoff: {
+			eyebrow: "Operational pages live on ethstaker.org",
+			heading: "EthStaker keeps every staking page",
+			body: "This page explains the programme. It does not repeat the guides. EthStaker keeps its own brand, its own dark mode and its own domain.",
+			cta: {
+				label: "Go to ethstaker.org",
+				href: "https://ethstaker.org",
+				external: true,
+			},
+			links: [
+				{
+					label: "Start staking",
+					note: "Choose a method",
+					href: "https://ethstaker.org/staking",
+					external: true,
+				},
+				{
+					label: "Run a validator",
+					note: "Hardware and software",
+					href: "https://ethstaker.org/staking-software",
+					external: true,
+				},
+				{
+					label: "Knowledge Base",
+					note: "Docs and FAQ",
+					href: "https://docs.ethstaker.org",
+					external: true,
+				},
+				{
+					label: "Get support",
+					note: "Discord and office hours",
+					href: "https://ethstaker.org/support",
+					external: true,
+				},
+			],
+		},
+		products: {
+			heading: "What we run",
+			aside: "Same card, two columns.",
+			cards: [
+				{
+					title: "Knowledge Base",
+					blurb:
+						"Documents staking from the first deposit to the exit. Maintained by documenters, edited in the open.",
+					area: "Staker support",
+					tier: 1,
+					ownerKind: "org",
+					external: true,
+					href: "https://docs.ethstaker.org",
+				},
+				{
+					title: "Eth Docker",
+					blurb:
+						"Installs and maintains a validator with Docker. Built and maintained by a steward, hosted on its own docs site.",
+					area: "Open-source tooling",
+					tier: 3,
+					owner: "Thorsten Behrens",
+					ownerKind: "steward",
+					external: true,
+					href: "https://ethdocker.com",
+				},
+				{
+					title: "Rhino Review",
+					blurb: "Summarises the staking month in one newsletter.",
+					area: "Staker support",
+					tier: 2,
+					ownerKind: "org",
+					href: routes.rhinoReview,
+				},
+				{
+					title: "Office hours",
+					blurb: "A weekly call where stewards answer validator questions live.",
+					area: "Staker support",
+					tier: 2,
+					ownerKind: "org",
+					href: routes.events,
+				},
+			] as readonly Product[],
+		},
+		answers: {
+			heading: "Where to get an answer",
+			columns: ["Route", "Use it for", "Who answers"],
+			rows: [
+				{
+					route: "Discord",
+					use: "A validator that is down, or a question you cannot search for.",
+					who: "Stewards and community",
+				},
+				{
+					route: "Knowledge Base",
+					use: "Setup, migration, exits and penalties, documented.",
+					who: "Documenters",
+				},
+				{
+					route: "Office hours",
+					use: "A walkthrough with someone watching your screen.",
+					who: "Stewards",
+				},
+			],
+		},
+		cta: {
+			eyebrow: "Open channel",
+			heading: "Running a validator and stuck?",
+			emailHref: "mailto:hello@ethcoordinate.org",
+			emailLabel: "hello@ethcoordinate.org",
+		},
+	},
+	/* Products → Forkcast. A bridge page: one screen, one destination, no
+	   operational content. */
+	forkcast: {
+		seo: {
+			title: "Forkcast — EthCoordinate",
+			description:
+				"We develop and steward Forkcast, the most-used platform for tracking research and engineering initiatives on Ethereum’s core protocol.",
+		},
+		breadcrumb: [
+			{ label: "Home", href: routes.home },
+			{ label: "Products", href: routes.properties },
+			{ label: "Forkcast" },
+		],
+		tier: "Tier 1 · own domain",
+		heading: "Forkcast",
+		body: "We develop and steward Forkcast, the most-used platform for tracking research and engineering initiatives on Ethereum’s core protocol.",
+		facts: [
+			{ key: "What it tracks", value: "Upgrades, EIPs and All Core Devs calls." },
+			{ key: "Who runs it", value: "We develop and steward it." },
+			{ key: "Where it lives", value: "forkcast.org, in the ethereum GitHub org." },
+			{ key: "What it keeps", value: "Its own brand, type and dark mode." },
+		],
+		cta: { label: "Open forkcast.org", href: "https://forkcast.org", external: true },
+		link: {
+			label: "Read the latest ACD notes",
+			href: "https://forkcast.org/acd",
+			external: true,
+		},
+		/* The frame shows Forkcast as it is. We do not restyle it. `shipped`
+		   picks the color of the status pill; `global.css` owns that color. */
+		frame: {
+			name: "Forkcast",
+			domain: "forkcast.org",
+			rows: [
+				{ name: "Glamsterdam", status: "Scheduled", meta: "12 EIPs", shipped: false },
+				{ name: "Fusaka", status: "Shipped", meta: "9 EIPs", shipped: true },
+				{ name: "Pectra", status: "Shipped", meta: "11 EIPs", shipped: true },
+			],
+			note: "Forkcast’s colours, type and scanline texture are unchanged. We frame it; we do not restyle it.",
+		},
+		linkback: {
+			heading: "How Forkcast links back",
+			body: "Forkcast’s own header and footer stay exactly as they are.",
+			prefix: "Developed and stewarded by",
+			name: "EthCoordinate",
+			domain: "ethcoordinate.org",
+			note: "One footer line is the whole ask. The products menu on our side is what makes Forkcast findable — not a strip on theirs.",
+		},
+		rules: [
+			{
+				number: "01.",
+				title: "One screen",
+				body: "A bridge page never scrolls past what one screen can hold.",
+			},
+			{
+				number: "02.",
+				title: "One destination",
+				body: "A single primary action. Everything else is a text link.",
+			},
+			{
+				number: "03.",
+				title: "No operational content",
+				body: "No guides, no tables of data. That lives on the product.",
+			},
+			{
+				number: "04.",
+				title: "Attribution first",
+				body: "Who runs it is above the fold, not in a footer.",
+			},
+		],
+	},
 	/* The social profiles of the org. The footer and the JSON-LD read this
 	   list. */
 	networks: [
 		{ key: "x", label: "X", href: "https://x.com/ethcoordinate" },
 		{ key: "telegram", label: "Telegram", href: "https://t.me/ethcoordinate" },
-		{ key: "discord", label: "Discord", href: "https://discord.com/invite/ethstaker" },
+		{ key: "discord", label: "Discord", href: discord },
 	],
 	footer: {
 		tagline: "Coordination is infrastructure.",

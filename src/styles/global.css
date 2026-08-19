@@ -11,6 +11,21 @@
 	--indigo-800: #222275;
 	--white: #ffffff;
 
+	/* Third party brands. A brand color fills or rules inside the frame of
+	   that brand. It never carries text, and it never flips with the theme.
+	   See docs/tokens.md. */
+	--ethstaker-blue: #0071bc;
+	--ethstaker-cyan: #00ffff;
+	--forkcast-from: #00d4ff;
+	--forkcast-to: #a855f7;
+	--forkcast-surface: #0b0e14;
+	--forkcast-ink: var(--white);
+	--forkcast-edge: rgb(0 212 255 / 0.28);
+	--forkcast-rule: rgb(255 255 255 / 0.1);
+	--forkcast-body: rgb(255 255 255 / 0.55);
+	--forkcast-strong: rgb(255 255 255 / 0.75);
+	--forkcast-scan: rgb(255 255 255 / 0.045);
+
 	/* Layer 2: semantic tokens. One value per role. These flip with the theme.
 	   See docs/tokens.md. */
 	--surface: var(--white);
@@ -110,6 +125,16 @@
 	--color-dash: var(--dash);
 	--color-cta-dash: var(--cta-dash);
 	--color-hero-base: var(--hero-base);
+	--color-ethstaker-blue: var(--ethstaker-blue);
+	--color-ethstaker-cyan: var(--ethstaker-cyan);
+	--color-forkcast-surface: var(--forkcast-surface);
+	--color-forkcast-ink: var(--forkcast-ink);
+	--color-forkcast-edge: var(--forkcast-edge);
+	--color-forkcast-rule: var(--forkcast-rule);
+	--color-forkcast-body: var(--forkcast-body);
+	--color-forkcast-strong: var(--forkcast-strong);
+	--color-forkcast-from: var(--forkcast-from);
+	--color-forkcast-to: var(--forkcast-to);
 	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -176,6 +201,84 @@
 		closest-side,
 		var(--glow),
 		transparent
+	);
+}
+
+/* The rule above a property name in the products menu. EthStaker and
+   EthCoordinate carry one color, Forkcast carries its own gradient. */
+@utility bg-forkcast-bar {
+	background-image: linear-gradient(
+		90deg,
+		var(--forkcast-from),
+		var(--forkcast-to)
+	);
+}
+
+/* The Forkcast wordmark, inside the Forkcast frame only. */
+@utility text-gradient-forkcast {
+	background-image: linear-gradient(
+		90deg,
+		var(--forkcast-from),
+		var(--forkcast-to)
+	);
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+
+/* The Forkcast mark, inside the Forkcast frame only. */
+@utility bg-forkcast-mark {
+	background-image: linear-gradient(
+		135deg,
+		var(--forkcast-from),
+		var(--forkcast-to)
+	);
+	box-shadow: 0 0 18px rgb(0 212 255 / 0.55);
+}
+
+/* The mark keeps its dark theme colors inside a frame that is dark in both
+   themes, such as the Forkcast footer on the bridge page. */
+@utility logo-on-dark {
+	--logo-ink: var(--blue-200);
+	--logo-glow: var(--ink-950);
+}
+
+/* The scanline texture of the Forkcast frame. */
+@utility bg-scanlines {
+	background-image: repeating-linear-gradient(
+		180deg,
+		var(--forkcast-scan) 0 1px,
+		transparent 1px 3px
+	);
+}
+
+/* The bar on the left edge of a product card. The dash tells the tier: solid
+   owns its domain, and the gaps grow as the tie to the product loosens. */
+@utility bg-tier-1 {
+	background-color: var(--accent);
+}
+
+@utility bg-tier-2 {
+	background-image: repeating-linear-gradient(
+		180deg,
+		var(--accent) 0 14px,
+		transparent 14px 24px
+	);
+}
+
+@utility bg-tier-3 {
+	background-image: repeating-linear-gradient(
+		180deg,
+		var(--accent) 0 6px,
+		transparent 6px 12px
+	);
+}
+
+@utility bg-tier-4 {
+	background-image: repeating-linear-gradient(
+		180deg,
+		var(--accent) 0 2px,
+		transparent 2px 8px
 	);
 }
 

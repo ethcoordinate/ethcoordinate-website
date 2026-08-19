@@ -1,0 +1,38 @@
+---
+/* The trail above the intro of a sub page. The last item is the page, so it
+   carries no link. */
+interface Props {
+	items: readonly { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav
+	class="px-4 pt-7 text-[12px] font-bold tracking-[1.2px] uppercase opacity-60 sm:px-10 lg:px-16"
+	aria-label="Breadcrumb"
+>
+	<ol class="mx-auto flex max-w-[1312px] flex-wrap items-center gap-2">
+		{
+			items.map((item, index) => (
+				<li class="flex items-center gap-2">
+					{index > 0 && (
+						<span class="opacity-50" aria-hidden="true">
+							/
+						</span>
+					)}
+					{item.href ? (
+						<a
+							href={item.href}
+							class="hover:text-accent press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+						>
+							{item.label}
+						</a>
+					) : (
+						<span aria-current="page">{item.label}</span>
+					)}
+				</li>
+			))
+		}
+	</ol>
+</nav>

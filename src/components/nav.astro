@@ -1,63 +1,132 @@
 ---
+/* One tier. Products and Events own a dropdown; the other two do not. See
+   docs/plans/nav-restructure.md. */
 import Logo from "./logo.astro";
+import PropertyColumn from "./property-column.astro";
 import { routes } from "../routes";
 import { site } from "../site";
+
+interface Props {
+	/* The `key` of the nav item that owns the current page. It carries the
+	   underline. */
+	active?: string;
+}
+
+const { active = "" } = Astro.props;
+
+/* The home page scrolls back up. Every other page goes home. */
+const onHome = Astro.url.pathname === routes.home;
+const logoHref = onHome ? routes.top : routes.home;
+
+/* Products opens onto EthCoordinate and the two properties under it, so the
+   middle track carries the longest list. Events opens onto two kinds of event
+   and an empty third track. */
+const columns = (key: string) =>
+	key === "events" ? "lg:grid-cols-[1fr_1fr_1.4fr]" : "lg:grid-cols-[1fr_1.2fr_1fr]";
 ---
 
 <header
 	class="border-subtle bg-surface sticky top-0 z-50 border-b transition-colors duration-200"
 >
-	<nav
-		class="flex h-[var(--nav-height)] items-center justify-between px-4 sm:gap-8 sm:px-10 lg:px-16"
-		aria-label={site.name}
-	>
-		<a
-			href={routes.top}
-			class="press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+	<div id="nav-shell" class="relative">
+		<nav
+			class="flex h-[var(--nav-height)] items-center gap-8 px-4 sm:px-10 lg:gap-11 lg:px-16"
+			aria-label={site.name}
 		>
-			<span class="sr-only">{site.home}</span>
-			<Logo class="h-8 w-auto sm:h-9" />
-		</a>
-		<ul class="hidden items-center gap-6 text-[15px] sm:flex sm:gap-10">
-			{
-				site.nav.map((link) => (
-					<li>
-						<a
-							href={link.href}
-							class="hover:text-accent press focus-visible:outline-accent inline-block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
-						>
-							{link.label}
-						</a>
-					</li>
-				))
-			}
-		</ul>
-		<button
-			id="nav-menu-button"
-			type="button"
-			popovertarget="nav-menu"
-			aria-controls="nav-menu"
-			aria-expanded="false"
-			data-label-open={site.menu}
-			data-label-close={site.menuClose}
-			class="hover:text-accent press focus-visible:outline-accent -mr-3 cursor-pointer rounded-sm p-3 focus-visible:outline-2 focus-visible:outline-offset-2 sm:hidden"
-		>
-			<span class="sr-only">{site.menu}</span>
-			{/* Figma draws the menu as two bars. They cross into an X on open. */}
-			<span class="relative block size-5" aria-hidden="true">
-				<span class="bar absolute inset-x-[3px] top-[6.5px] h-[1.5px] rounded-full bg-current"
-				></span>
-				<span class="bar absolute inset-x-[3px] top-[12px] h-[1.5px] rounded-full bg-current"
-				></span>
-			</span>
-		</button>
-	</nav>
+			<a
+				href={logoHref}
+				class="press focus-visible:outline-accent inline-block shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+			>
+				<span class="sr-only">{onHome ? site.home : site.homeLink}</span>
+				<Logo class="h-6 w-auto sm:h-[26px]" />
+			</a>
 
-	{/* The popover closes on Escape and on a tap outside. Both are native. */}
+			<ul class="hidden items-center gap-7 lg:flex">
+				{
+					site.nav.map((link) => (
+						<li>
+							<a
+								href={link.href}
+								data-menu={link.groups.length > 0 ? link.key : ""}
+								aria-expanded={link.groups.length > 0 ? "false" : undefined}
+								aria-controls={
+									link.groups.length > 0 ? `nav-panel-${link.key}` : undefined
+								}
+								class:list={[
+									"hover:text-accent aria-expanded:text-accent focus-visible:outline-accent flex items-center gap-[5px] border-b-2 pb-0.5 text-[13px] font-bold tracking-[1px] whitespace-nowrap uppercase transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4",
+									link.key === active ? "border-accent" : "border-transparent",
+								]}
+							>
+								<span>{link.label}</span>
+								{/* The caret keeps its box on an item without a dropdown, so
+								   every label sits on the same baseline. */}
+								<span
+									class:list={[
+										"text-[9px]",
+										link.groups.length > 0 ? "opacity-70" : "opacity-0",
+									]}
+									aria-hidden="true"
+								>
+									▾
+								</span>
+							</a>
+
+							{link.groups.length > 0 && (
+								<div
+									id={`nav-panel-${link.key}`}
+									data-panel={link.key}
+									class="nav-panel border-subtle bg-surface absolute inset-x-0 top-full z-40 border-b"
+								>
+									<div class:list={["grid px-16", columns(link.key)]}>
+										{link.groups.map((group) => (
+											<PropertyColumn group={group} class="px-9 pt-7 pb-[30px]" />
+										))}
+									</div>
+								</div>
+							)}
+						</li>
+					))
+				}
+			</ul>
+
+			<a
+				href={site.navCta.href}
+				class="bg-cta text-cta-body press focus-visible:outline-accent ms-auto hidden rounded-full px-[18px] py-[11px] text-[12px] font-bold uppercase hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-4 lg:inline-block"
+			>
+				{site.navCta.label}
+			</a>
+
+			<button
+				id="nav-menu-button"
+				type="button"
+				popovertarget="nav-menu"
+				aria-controls="nav-menu"
+				aria-expanded="false"
+				data-label-open={site.menu}
+				data-label-close={site.menuClose}
+				class="hover:text-accent press focus-visible:outline-accent ms-auto -mr-3 cursor-pointer rounded-sm p-3 focus-visible:outline-2 focus-visible:outline-offset-2 lg:hidden"
+			>
+				<span class="sr-only">{site.menu}</span>
+				{/* Figma draws the menu as two bars. They cross into an X on open. */}
+				<span class="relative block size-5" aria-hidden="true">
+					<span
+						class="bar absolute inset-x-[3px] top-[6.5px] h-[1.5px] rounded-full bg-current"></span>
+					<span
+						class="bar absolute inset-x-[3px] top-[12px] h-[1.5px] rounded-full bg-current"
+					></span>
+				</span>
+			</button>
+		</nav>
+	</div>
+
+	{/* The popover closes on Escape and on a tap outside. Both are native.
+	   The handoff does not design the phone menu, so the bar keeps the one it
+	   ships today. Products points at "What we run", which holds the same
+	   list as the dropdown. */}
 	<div
 		id="nav-menu"
 		popover
-		class="border-subtle bg-surface text-body fixed inset-x-0 top-[var(--nav-height)] bottom-auto m-0 w-auto rounded-none border-0 border-b p-0 sm:hidden"
+		class="border-subtle bg-surface text-body fixed inset-x-0 top-[var(--nav-height)] bottom-auto m-0 w-auto rounded-none border-0 border-b p-0 lg:hidden"
 	>
 		<ul>
 			{
@@ -65,18 +134,51 @@ import { site } from "../site";
 					<li class="border-subtle border-t first:border-t-0">
 						<a
 							href={link.href}
-							class="hover:text-accent press focus-visible:outline-accent block px-4 py-4 text-[15px] focus-visible:outline-2 focus-visible:-outline-offset-2"
+							class="hover:text-accent press focus-visible:outline-accent block px-4 py-4 text-[15px] focus-visible:outline-2 focus-visible:-outline-offset-2 sm:px-10"
 						>
 							{link.label}
 						</a>
 					</li>
 				))
 			}
+			<li class="border-subtle border-t">
+				<a
+					href={site.navCta.href}
+					class="hover:text-accent press focus-visible:outline-accent block px-4 py-4 text-[15px] font-bold uppercase focus-visible:outline-2 focus-visible:-outline-offset-2 sm:px-10"
+				>
+					{site.navCta.label}
+				</a>
+			</li>
 		</ul>
 	</div>
 </header>
 
 <style>
+	/* The panel overlays the page, so it never pushes the content down. */
+	.nav-panel {
+		display: none;
+	}
+
+	.nav-panel.is-open {
+		display: block;
+		animation: panel-in 180ms var(--ease-out);
+	}
+
+	/* The phone menu is the popover above, so the panel stays closed below the
+	   one breakpoint that carries this design. */
+	@media (width < 64rem) {
+		.nav-panel.is-open {
+			display: none;
+		}
+	}
+
+	@keyframes panel-in {
+		from {
+			opacity: 0;
+			translate: 0 -4px;
+		}
+	}
+
 	/* The menu slides down and fades in. `allow-discrete` holds the element on
 	   screen while it leaves, so the exit plays too. */
 	#nav-menu {
@@ -123,10 +225,82 @@ import { site } from "../site";
 		.bar {
 			transition-duration: 1ms;
 		}
+
+		.nav-panel.is-open {
+			animation: none;
+		}
 	}
 </style>
 
 <script>
+	const shell = document.getElementById("nav-shell");
+	const triggers = shell
+		? Array.from(shell.querySelectorAll<HTMLElement>("[data-menu]"))
+		: [];
+	const panels = shell
+		? Array.from(shell.querySelectorAll<HTMLElement>("[data-panel]"))
+		: [];
+	const desktop = matchMedia("(width >= 64rem)");
+
+	/* One key is open at a time. An empty key closes every panel. Hovering an
+	   item without a dropdown therefore closes the open one. */
+	const open = (key: string) => {
+		panels.forEach((panel) =>
+			panel.classList.toggle("is-open", panel.dataset.panel === key),
+		);
+		triggers.forEach((trigger) => {
+			if (trigger.dataset.menu) {
+				trigger.setAttribute(
+					"aria-expanded",
+					String(trigger.dataset.menu === key),
+				);
+			}
+		});
+	};
+
+	const close = () => open("");
+
+	for (const trigger of triggers) {
+		const key = trigger.dataset.menu ?? "";
+
+		trigger.addEventListener("pointerenter", () => {
+			if (desktop.matches) open(key);
+		});
+
+		/* Keyboard focus opens the panel, so its links follow the trigger in
+		   tab order. Enter still follows the link. */
+		trigger.addEventListener("focus", () => {
+			if (desktop.matches) open(key);
+		});
+
+		trigger.addEventListener("keydown", (event) => {
+			if (!key || !desktop.matches) return;
+			if (event.key === " " || event.key === "ArrowDown") {
+				event.preventDefault();
+				open(key);
+			}
+		});
+	}
+
+	/* The pointer leaves the bar and the panel together, because both sit
+	   inside the shell. */
+	shell?.addEventListener("pointerleave", close);
+
+	shell?.addEventListener("keydown", (event) => {
+		if (event.key !== "Escape") return;
+		const openTrigger = triggers.find(
+			(trigger) => trigger.getAttribute("aria-expanded") === "true",
+		);
+		close();
+		openTrigger?.focus();
+	});
+
+	shell?.addEventListener("focusout", (event) => {
+		if (!shell.contains(event.relatedTarget as Node)) close();
+	});
+
+	desktop.addEventListener("change", close);
+
 	const menu = document.getElementById("nav-menu");
 	const button = document.getElementById("nav-menu-button");
 	const label = button?.querySelector("span");
