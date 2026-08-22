@@ -1,54 +1,48 @@
-# EthCoordinate 🌐
+# EthCoordinate website
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/b7e0849f-bfcb-4e2b-b1f6-99c693025c0a/deploy-status)](https://app.netlify.com/projects/ethcoordinate/deploys)
 
-Marketing site for EthCoordinate. Astro 7 + Tailwind 4, deployed as a static
-site on Netlify. A push to `main` syncs the `dev` branch, and Netlify deploys
-`dev` to dev.ethcoordinate.org.
+The EthCoordinate website brings Ethereum governance resources together with
+EthCoordinate's initiatives, team, staking guidance, community, and
+organizational information.
 
-## 🚀 Setup
+## Run locally
 
-```sh
-bun install
-bun run dev   # http://localhost:4321
+```bash
+npm ci
+npm run dev
 ```
 
-The package manager is bun. Node 22.12 or later.
+Open [http://localhost:3000](http://localhost:3000).
 
-## 📁 Layout
+An optional `GITHUB_TOKEN` increases the rate limit for live data loaded from
+`ethereum/pm` and `ethereum/forkcast`. The site falls back gracefully when the
+GitHub API is unavailable.
 
-```text
-/
-├── public/             static assets
-├── src/
-│   ├── components/     .astro components, kebab-case file names
-│   ├── icons/          svg sources for the sprite
-│   ├── pages/          one file per route
-│   ├── styles/         global.css, the only source of truth for color
-│   └── site.ts         the only source of truth for copy
-├── docs/
-│   ├── plans/          one plan per task
-│   ├── solutions/      one file per solved problem
-│   └── tokens.md       color and font tokens
-└── astro.config.mjs
+## Useful commands
+
+```bash
+npm run lint
+npm run build
+npm run start
 ```
 
-Copy lives in `src/site.ts`. Color lives in `src/styles/global.css`. Do not
-write literal text or hex values in a component.
+## Content map
 
-## 🧞 Commands
+- `/initiatives/staker-support`: direct handoff to canonical EthStaker support
+- `/pm-repo` and `/pm-repo/breakouts`: Ethereum governance coordination
+- `/guides/**`: EIP championing and breakout-room guides
+- `/forkcast`: product overview plus the full upgrade-governance explainer
+- `/about` and `/team`: organization, community, FAQ, and current team
+- `/blog`: updates from the team
 
-| Command            | Action                                        |
-| :----------------- | :-------------------------------------------- |
-| `bun install`      | Install dependencies                          |
-| `bun run dev`      | Start the dev server at `localhost:4321`      |
-| `bun run build`    | Build the site to `./dist/`                   |
-| `bun run preview`  | Build, then serve the static output           |
-| `bun run lint`     | oxlint and Tailwind class order check         |
-| `bun run lint:fix` | Autofix lint issues and sort Tailwind classes |
+Shared EthCoordinate copy and destination data live in `src/data/site.ts`.
 
-## 🤖 Agents
+## Deploying
 
-`AGENTS.md` holds the rules for this repo. `CLAUDE.md` is a symlink to it.
-Skills live in `.agents/skills/` and are committed. `skills-lock.json` records
-their source.
+Netlify builds this repo. `netlify.toml` holds the build command and the
+publish directory. `.nvmrc` pins Node 22. A push to `main` syncs the `dev`
+branch, which Netlify deploys to dev.ethcoordinate.org.
+
+Set `GITHUB_TOKEN` in the Netlify environment variables. Without it the live
+`ethereum/pm` and `ethereum/forkcast` data falls back to placeholders.

@@ -1,0 +1,6 @@
+# Default owners for everything in the repo
+* @wolovim @dionysuzx @Buttaa
+
+# Critical files - dependency changes require owner review
+package.json @wolovim @dionysuzx @Buttaa
+package-lock.json @wolovim @dionysuzx @Buttaa

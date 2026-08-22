@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forkcast - Ethereum Upgrade Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       V7 TERMINAL REFINED — applied to Forkcast
+       Exact same palette, backgrounds, overlays, and type system
+       as 07-terminal-refined.html (Protocol Support v7).
+       Content/architecture matches real forkcast.org homepage.
+       ================================================================ */
+
+    :root {
+      /* Core palette — Blue dominant with purple accent (v7 exact) */
+      --blue: #00D4FF;
+      --blue-light: #5CE1FF;
+      --blue-muted: #0088AA;
+      --blue-dim: #004466;
+
+      --purple: #A855F7;
+      --purple-light: #C084FC;
+      --purple-muted: #7C3AED;
+
+      --pink: #F472B6;
+
+      /* Semantic colors for badges */
+      --emerald: #34D399;
+      --amber: #FBBF24;
+      --sky: #38BDF8;
+      --orange: #FB923C;
+      --red: #F87171;
+
+      /* Backgrounds — v7 exact */
+      --bg-void: #030308;
+      --bg-deep: #0A0A12;
+      --bg-surface: #12121A;
+      --bg-elevated: #1A1A24;
+
+      /* Text — v7 exact */
+      --text-bright: #F0F6FF;
+      --text-primary: #00D4FF;
+      --text-secondary: #7DD3FC;
+      --text-muted: #3B82A0;
+      --text-dim: #1E3A5F;
+
+      /* Typography — v7 exact */
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 15px; }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* === V7 OVERLAYS (exact from 07-terminal-refined) === */
+    .scanlines {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px, transparent 2px,
+        rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+      );
+      pointer-events: none; z-index: 9999;
+    }
+
+    .vignette {
+      position: fixed; inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 0%, transparent 50%,
+        rgba(0,0,0,0.3) 100%
+      );
+      pointer-events: none; z-index: 9998;
+    }
+
+    .ambient-glow {
+      position: fixed; top: 0; left: 0; right: 0; height: 400px;
+      background: radial-gradient(
+        ellipse 80% 60% at 50% -10%,
+        rgba(0,212,255,0.08) 0%,
+        transparent 60%
+      );
+      pointer-events: none; z-index: 1;
+    }
+
+    .matrix-rain {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 2; opacity: 0.4;
+    }
+
+    .rain-column {
+      position: absolute; top: -100%; font-size: 10px;
+      color: var(--blue);
+      writing-mode: vertical-rl; text-orientation: upright;
+      animation: rain-fall linear infinite; opacity: 0.3;
+    }
+
+    @keyframes rain-fall {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(200vh); }
+    }
+
+    /* === HEADER (Forkcast: logo left, theme toggle right) === */
+    header {
+      position: relative; z-index: 10;
+      max-width: 1100px; margin: 0 auto;
+      padding: 1.5rem 2rem 0;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .logo {
+      display: flex; align-items: center;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .logo:hover { opacity: 0.8; }
+
+    .logo-gradient {
+      height: 24px;
+      width: 160px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      -webkit-mask-image: url('https://raw.githubusercontent.com/ethereum/forkcast/main/public/forkcast-logo.svg');
+      mask-image: url('https://raw.githubusercontent.com/ethereum/forkcast/main/public/forkcast-logo.svg');
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: left center;
+      mask-position: left center;
+    }
+
+    .theme-toggle {
+      width: 36px; height: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .theme-toggle:hover {
+      border-color: var(--blue-muted);
+      color: var(--blue);
+    }
+
+    /* === MAIN === */
+    main {
+      position: relative; z-index: 10;
+      padding: 2rem 2rem 4rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    /* === HERO (Forkcast: title + tagline, centered) === */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 3.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      color: var(--text-bright);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 strong {
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    /* === SECTION DIVIDER (v7 exact) === */
+    .divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 2.5rem 0 1.5rem;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--text-dim), transparent);
+    }
+    .divider-line:last-child {
+      background: linear-gradient(90deg, transparent, var(--text-dim));
+    }
+    .divider-text {
+      font-size: 0.65rem; font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.2em;
+    }
+
+    /* === SECTION LINK ("Browse all EIPs -->", "View all calls -->") === */
+    .section-link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--blue);
+      text-decoration: none;
+      transition: color 0.2s;
+      margin-top: 1rem;
+    }
+    .section-link:hover { color: var(--blue-light); }
+    .section-link::after { content: ' \2192'; }
+
+    /* === UPGRADES CAROUSEL (Forkcast: 3-col carousel) === */
+    .upgrades-carousel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upgrades-track {
+      display: flex; gap: 1rem;
+      transition: transform 0.4s ease;
+    }
+
+    .upgrade-card {
+      flex: 0 0 calc(33.333% - 0.667rem);
+      min-width: 0;
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 1.25rem;
+      transition: all 0.25s ease;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+
+    .upgrade-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+
+    .upgrade-card:hover {
+      border-color: var(--blue-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0,212,255,0.1);
+    }
+    .upgrade-card:hover::before { opacity: 1; }
+
+    .upgrade-card.disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .upgrade-card.disabled:hover {
+      transform: none;
+      border-color: var(--text-dim);
+      box-shadow: none;
+    }
+    .upgrade-card.disabled::before { display: none; }
+
+    .upgrade-card-name {
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.35rem;
+    }
+
+    .upgrade-card-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .upgrade-card-tagline {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Status badges — Forkcast statuses styled in v7 */
+    .badge {
+      display: inline-block;
+      font-size: 0.6rem; font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-live {
+      background: rgba(52,211,153,0.25);
+      color: var(--emerald);
+      box-shadow: 0 0 8px rgba(52,211,153,0.15);
+      border: 1px solid rgba(52,211,153,0.3);
+    }
+    .badge-upcoming {
+      background: rgba(0,212,255,0.25);
+      color: var(--blue-light);
+      border: 1px solid rgba(0,212,255,0.3);
+    }
+    .badge-planning {
+      background: rgba(168,85,247,0.25);
+      color: var(--purple-light);
+      border: 1px solid rgba(168,85,247,0.3);
+    }
+    .badge-research {
+      background: rgba(251,146,60,0.25);
+      color: var(--orange);
+      border: 1px solid rgba(251,146,60,0.3);
+    }
+
+    /* Carousel nav */
+    .carousel-nav {
+      display: flex; justify-content: center; gap: 0.5rem;
+      margin-top: 1.25rem;
+    }
+    .carousel-btn {
+      width: 32px; height: 32px;
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      font-family: var(--font-mono);
+    }
+    .carousel-btn:hover {
+      border-color: var(--blue-muted);
+      color: var(--blue);
+    }
+    .carousel-dots {
+      display: flex; align-items: center; gap: 0.4rem; margin: 0 0.5rem;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .carousel-dot.active {
+      background: var(--blue);
+      box-shadow: 0 0 8px var(--blue);
+    }
+
+    @media (max-width: 800px) {
+      .upgrade-card { flex: 0 0 100%; }
+    }
+
+    /* === RECENTLY UPDATED EIPs (Forkcast: 2x2 grid of EIP cards) === */
+    .eips-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 700px) {
+      .eips-grid { grid-template-columns: 1fr; }
+    }
+
+    .eip-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 1.25rem;
+      transition: all 0.25s ease;
+      position: relative;
+      cursor: pointer;
+    }
+    .eip-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .eip-card:hover {
+      border-color: var(--blue-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0,212,255,0.1);
+    }
+    .eip-card:hover::before { opacity: 1; }
+
+    .eip-card-header {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .eip-card-number {
+      font-size: 0.9rem; font-weight: 600;
+      color: var(--text-bright);
+    }
+    .eip-card-fork {
+      font-size: 0.65rem; font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-elevated);
+      padding: 0.1rem 0.4rem;
+      border-radius: 3px;
+    }
+    .eip-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Inclusion stage badges */
+    .badge-included {
+      background: rgba(52,211,153,0.25);
+      color: var(--emerald);
+      border: 1px solid rgba(52,211,153,0.3);
+    }
+    .badge-scheduled {
+      background: rgba(251,191,36,0.25);
+      color: var(--amber);
+      border: 1px solid rgba(251,191,36,0.3);
+    }
+    .badge-considered {
+      background: rgba(59,130,160,0.2);
+      color: var(--text-secondary);
+      border: 1px solid rgba(59,130,160,0.25);
+    }
+    .badge-proposed {
+      background: rgba(59,130,160,0.15);
+      color: var(--text-secondary);
+      border: 1px solid rgba(59,130,160,0.2);
+    }
+    .badge-declined {
+      background: rgba(248,113,113,0.25);
+      color: var(--red);
+      border: 1px solid rgba(248,113,113,0.3);
+    }
+
+    /* === RECENT PROTOCOL CALLS (Forkcast: list with type badges) === */
+    .calls-list {
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+
+    .call-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      display: flex; align-items: center; gap: 1rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .call-item:hover {
+      border-color: var(--blue-muted);
+      background: var(--bg-elevated);
+    }
+
+    .call-type-badge {
+      font-size: 0.6rem; font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      min-width: 42px;
+      text-align: center;
+    }
+    .call-type-acde {
+      background: rgba(0,212,255,0.15);
+      color: var(--blue);
+    }
+    .call-type-acdc {
+      background: rgba(168,85,247,0.15);
+      color: var(--purple-light);
+    }
+    .call-type-acdt {
+      background: rgba(56,189,248,0.15);
+      color: var(--sky);
+    }
+    .call-type-breakout {
+      background: rgba(251,146,60,0.15);
+      color: var(--orange);
+    }
+
+    .call-title {
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--text-bright);
+      flex: 1;
+    }
+    .call-date {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* === PLANNING TOOLS (Forkcast: 4-card grid) === */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 800px) {
+      .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+
+    .tool-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all 0.25s ease;
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      color: inherit;
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .tool-card:hover {
+      border-color: var(--blue-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0,212,255,0.1);
+    }
+    .tool-card:hover::before { opacity: 1; }
+
+    .tool-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      opacity: 0.8;
+    }
+    .tool-name {
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.25rem;
+    }
+    .tool-desc {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* === FOOTER (Forkcast: EF Protocol Support + GitHub link) === */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--text-dim);
+      text-align: center;
+    }
+    .footer-brand {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .footer-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--blue); }
+    .footer-link svg { width: 14px; height: 14px; }
+
+    /* Selection — v7 exact */
+    ::selection { background: var(--purple); color: white; }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div class="ambient-glow"></div>
+  <div class="matrix-rain" id="matrix"></div>
+
+  <!-- HEADER — Forkcast: Logo (left) + Theme Toggle (right) -->
+  <header>
+    <a href="/" class="logo" aria-label="Forkcast">
+      <div class="logo-gradient"></div>
+    </a>
+    <button class="theme-toggle" title="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main>
+
+    <!-- HERO — "Ethereum Upgrade Tracker" + tagline -->
+    <section class="hero">
+      <h1><strong>Ethereum Upgrade Tracker</strong></h1>
+      <p class="hero-tagline">See what's on the horizon and how it impacts you.</p>
+    </section>
+
+    <!-- SECTION 1: UPGRADES CAROUSEL -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Network Upgrades</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section class="upgrades-carousel">
+      <div class="upgrades-track" id="upgradesTrack">
+        <a class="upgrade-card disabled">
+          <span class="badge badge-live">Live</span>
+          <div class="upgrade-card-name">Shapella</div>
+          <div class="upgrade-card-date">Apr 12, 2023</div>
+          <div class="upgrade-card-tagline">Enabling staking withdrawals and completing the transition to proof-of-stake.</div>
+        </a>
+        <a class="upgrade-card disabled">
+          <span class="badge badge-live">Live</span>
+          <div class="upgrade-card-name">Dencun</div>
+          <div class="upgrade-card-date">Mar 13, 2024</div>
+          <div class="upgrade-card-tagline">Proto-danksharding brings cheaper Layer 2 transactions through blob data.</div>
+        </a>
+        <a href="/upgrade/pectra" class="upgrade-card">
+          <span class="badge badge-live">Live</span>
+          <div class="upgrade-card-name">Pectra</div>
+          <div class="upgrade-card-date">May 7, 2025</div>
+          <div class="upgrade-card-tagline">Account abstraction, validator upgrades, and 2x blob throughput.</div>
+        </a>
+        <a href="/upgrade/fusaka" class="upgrade-card">
+          <span class="badge badge-live">Live</span>
+          <div class="upgrade-card-name">Fusaka</div>
+          <div class="upgrade-card-date">Dec 3, 2025</div>
+          <div class="upgrade-card-tagline">PeerDAS enables nodes to specialize in storing data subsets.</div>
+        </a>
+        <a href="/upgrade/glamsterdam" class="upgrade-card">
+          <span class="badge badge-upcoming">Upcoming</span>
+          <div class="upgrade-card-name">Glamsterdam</div>
+          <div class="upgrade-card-date">2026</div>
+          <div class="upgrade-card-tagline">Block-level access lists and enshrined proposer-builder separation.</div>
+        </a>
+        <a href="/upgrade/hegota" class="upgrade-card">
+          <span class="badge badge-planning">Planning</span>
+          <div class="upgrade-card-name">Hegota</div>
+          <div class="upgrade-card-date">TBD</div>
+          <div class="upgrade-card-tagline">Early-stage post-Glamsterdam upgrade in research and scoping phase.</div>
+        </a>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" id="carouselPrev">&#8592;</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+          <div class="carousel-dot" data-index="3"></div>
+        </div>
+        <button class="carousel-btn" id="carouselNext">&#8594;</button>
+      </div>
+    </section>
+
+    <!-- SECTION 2: RECENTLY UPDATED EIPs -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Recently Updated EIPs</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section>
+      <div class="eips-grid">
+        <div class="eip-card">
+          <div class="eip-card-header">
+            <span class="eip-card-number">EIP-7702</span>
+            <span class="badge badge-included">Included</span>
+            <span class="eip-card-fork">Pectra</span>
+          </div>
+          <div class="eip-card-desc">Set EOA account code for transaction execution, enabling smart account features for all Ethereum users.</div>
+        </div>
+        <div class="eip-card">
+          <div class="eip-card-header">
+            <span class="eip-card-number">EIP-7594</span>
+            <span class="badge badge-included">Included</span>
+            <span class="eip-card-fork">Fusaka</span>
+          </div>
+          <div class="eip-card-desc">PeerDAS — Peer Data Availability Sampling for scalable data availability on the consensus layer.</div>
+        </div>
+        <div class="eip-card">
+          <div class="eip-card-header">
+            <span class="eip-card-number">EIP-7692</span>
+            <span class="badge badge-included">Included</span>
+            <span class="eip-card-fork">Fusaka</span>
+          </div>
+          <div class="eip-card-desc">EVM Object Format (EOF) Meta — a comprehensive upgrade to the EVM bytecode format and execution model.</div>
+        </div>
+        <div class="eip-card">
+          <div class="eip-card-header">
+            <span class="eip-card-number">EIP-7251</span>
+            <span class="badge badge-included">Included</span>
+            <span class="eip-card-fork">Pectra</span>
+          </div>
+          <div class="eip-card-desc">Increase the MAX_EFFECTIVE_BALANCE to allow validators to stake more than 32 ETH.</div>
+        </div>
+      </div>
+      <a href="/eips" class="section-link">Browse all EIPs</a>
+    </section>
+
+    <!-- SECTION 3: RECENT PROTOCOL CALLS -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Recent Protocol Calls</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section>
+      <div class="calls-list">
+        <div class="call-item">
+          <span class="call-type-badge call-type-acde">ACDE</span>
+          <span class="call-title">All Core Devs - Execution #210</span>
+          <span class="call-date">Jan 30, 2026</span>
+        </div>
+        <div class="call-item">
+          <span class="call-type-badge call-type-acdc">ACDC</span>
+          <span class="call-title">All Core Devs - Consensus #148</span>
+          <span class="call-date">Jan 23, 2026</span>
+        </div>
+        <div class="call-item">
+          <span class="call-type-badge call-type-acdt">ACDT</span>
+          <span class="call-title">All Core Devs - Testing #52</span>
+          <span class="call-date">Jan 20, 2026</span>
+        </div>
+        <div class="call-item">
+          <span class="call-type-badge call-type-breakout">EPBS</span>
+          <span class="call-title">ePBS Breakout #18</span>
+          <span class="call-date">Jan 17, 2026</span>
+        </div>
+        <div class="call-item">
+          <span class="call-type-badge call-type-acde">ACDE</span>
+          <span class="call-title">All Core Devs - Execution #209</span>
+          <span class="call-date">Jan 16, 2026</span>
+        </div>
+      </div>
+      <a href="/calls" class="section-link">View all calls</a>
+    </section>
+
+    <!-- SECTION 4: PLANNING TOOLS -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Planning Tools</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section>
+      <div class="tools-grid">
+        <a href="/schedule" class="tool-card">
+          <span class="tool-icon">&#x1F4C5;</span>
+          <div class="tool-name">Schedule</div>
+          <div class="tool-desc">ACD planning sandbox — fork timeline tool</div>
+        </a>
+        <a href="/priority" class="tool-card">
+          <span class="tool-icon">&#x1F4CA;</span>
+          <div class="tool-name">Client Priority</div>
+          <div class="tool-desc">Aggregated client team stances</div>
+        </a>
+        <a href="/complexity" class="tool-card">
+          <span class="tool-icon">&#x1F9EA;</span>
+          <div class="tool-name">Test Complexity</div>
+          <div class="tool-desc">STEEL team test assessments</div>
+        </a>
+        <a href="/devnets" class="tool-card">
+          <span class="tool-icon">&#x1F310;</span>
+          <div class="tool-name">Devnet Tracker</div>
+          <div class="tool-desc">Combined devnet metrics</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER — "Ethereum Foundation Protocol Support" + GitHub -->
+    <footer>
+      <div class="footer-brand">Ethereum Foundation Protocol Support · <a href="mailto:protocolsupport@ethereum.org" style="color: var(--blue); text-decoration: none;">protocolsupport@ethereum.org</a></div>
+      <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.5rem;">
+        <a href="https://github.com/ethereum/forkcast" class="footer-link" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Source Code
+        </a>
+        <a href="https://www.youtube.com/@EthereumProtocol" class="footer-link" target="_blank" rel="noopener">
+          Protocol YouTube
+        </a>
+        <a href="https://discord.gg/a4gm9nT3Ty" class="footer-link" target="_blank" rel="noopener">
+          R&D Discord
+        </a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // V7 matrix rain — blue/purple (matching 07-terminal-refined exactly)
+    const matrix = document.getElementById('matrix');
+    const chars = '01\u30A2\u30A4\u30A6\u30A8\u30AA\u30AB\u30AD\u30AF\u30B1\u30B3\u30B5\u30B7\u30B9\u30BB\u30BD\u30BF\u30C1\u30C4\u30C6\u30C8';
+    const columns = Math.floor(window.innerWidth / 30);
+
+    for (let i = 0; i < columns; i++) {
+      const column = document.createElement('div');
+      column.className = 'rain-column';
+      column.style.left = (i * 30 + Math.random() * 15) + 'px';
+      column.style.animationDuration = (8 + Math.random() * 12) + 's';
+      column.style.animationDelay = (Math.random() * 10) + 's';
+      column.style.color = Math.random() > 0.7 ? 'var(--purple)' : 'var(--blue)';
+      column.style.opacity = 0.1 + Math.random() * 0.2;
+
+      let text = '';
+      for (let j = 0; j < 30; j++) {
+        text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+      }
+      column.textContent = text;
+      matrix.appendChild(column);
+    }
+
+    // Carousel (Forkcast: 3-visible, navigable)
+    const track = document.getElementById('upgradesTrack');
+    const prevBtn = document.getElementById('carouselPrev');
+    const nextBtn = document.getElementById('carouselNext');
+    const dots = document.querySelectorAll('.carousel-dot');
+    let currentSlide = 0;
+    const totalCards = 6;
+    const visibleCards = window.innerWidth > 800 ? 3 : 1;
+    const maxSlide = totalCards - visibleCards;
+
+    function updateCarousel() {
+      const cardWidth = track.children[0].offsetWidth + 16;
+      track.style.transform = 'translateX(-' + (currentSlide * cardWidth) + 'px)';
+      dots.forEach(function(dot, i) {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    prevBtn.addEventListener('click', function() {
+      currentSlide = Math.max(0, currentSlide - 1);
+      updateCarousel();
+    });
+
+    nextBtn.addEventListener('click', function() {
+      currentSlide = Math.min(maxSlide, currentSlide + 1);
+      updateCarousel();
+    });
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        currentSlide = Math.min(parseInt(dot.dataset.index), maxSlide);
+        updateCarousel();
+      });
+    });
+  </script>
+</body>
+</html>

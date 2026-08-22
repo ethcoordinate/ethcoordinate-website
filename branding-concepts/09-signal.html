@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /*
+      v9 — "Signal"
+      Creative direction: The octopus as a signal source.
+      Concentric rings radiate outward. Radical restraint.
+      Think Linear meets Stripe meets Apple.
+      Near-black canvas. One gradient accent. Massive type.
+      Depth through layering, not decoration.
+    */
+
+    :root {
+      --bg: #08080C;
+      --bg-1: #0C0C12;
+      --bg-2: #111118;
+      --bg-3: #16161F;
+      --bg-4: #1C1C28;
+      --text-0: #FFFFFF;
+      --text-1: #E8E8ED;
+      --text-2: #A0A0B0;
+      --text-3: #5C5C72;
+      --text-4: #32324A;
+      --accent: #6C63FF;
+      --accent-bright: #8B83FF;
+      --accent-dim: #4840CC;
+      --cyan: #00D4FF;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-2);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--accent); color: white; }
+
+    /* === NOISE OVERLAY === */
+    .noise {
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* === SIGNAL RINGS (background decoration) === */
+    .signal-rings {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200vmax; height: 200vmax;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1px solid var(--text-4);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.15;
+    }
+    .ring:nth-child(1) { width: 300px; height: 300px; opacity: 0.25; }
+    .ring:nth-child(2) { width: 600px; height: 600px; opacity: 0.15; }
+    .ring:nth-child(3) { width: 1000px; height: 1000px; opacity: 0.08; }
+    .ring:nth-child(4) { width: 1500px; height: 1500px; opacity: 0.04; }
+
+    /* Pulsing ring */
+    .ring-pulse {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 100px; height: 100px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: ring-expand 4s ease-out infinite;
+      opacity: 0;
+    }
+    @keyframes ring-expand {
+      0% { width: 100px; height: 100px; opacity: 0.4; }
+      100% { width: 1200px; height: 1200px; opacity: 0; }
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 clamp(1.5rem, 4vw, 3rem);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      height: 64px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 0.9rem;
+      color: var(--text-0);
+      letter-spacing: -0.02em;
+      display: flex; align-items: center; gap: 0.75rem;
+      text-decoration: none;
+    }
+    .nav-octo {
+      width: 26px; height: 26px;
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-1); }
+    .nav-cta {
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--text-0) !important;
+      background: var(--accent);
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: var(--accent-bright); }
+
+    /* === HERO === */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Octopus as subtle watermark */
+    .hero-watermark {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -48%);
+      width: clamp(400px, 50vw, 700px);
+      filter: brightness(0) invert(1);
+      opacity: 0.025;
+      pointer-events: none;
+    }
+
+    /* Gradient orb behind hero */
+    .hero-orb {
+      position: absolute;
+      top: 30%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, rgba(0,212,255,0.04) 40%, transparent 70%);
+      pointer-events: none;
+      filter: blur(60px);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--text-0);
+      margin-bottom: 2rem;
+      position: relative; z-index: 1;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--accent-bright) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      font-weight: 400;
+      color: var(--text-2);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+      position: relative; z-index: 1;
+    }
+
+    .hero-actions {
+      display: flex; gap: 1rem;
+      position: relative; z-index: 1;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem; font-weight: 600;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      border: none; cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 0 1px rgba(108,99,255,0.5), 0 4px 20px rgba(108,99,255,0.25);
+    }
+    .btn-primary:hover {
+      background: var(--accent-bright);
+      box-shadow: 0 0 0 1px rgba(108,99,255,0.7), 0 8px 40px rgba(108,99,255,0.35);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-2);
+      border: 1px solid var(--text-4);
+    }
+    .btn-ghost:hover {
+      border-color: var(--text-3);
+      color: var(--text-1);
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* === SECTIONS (scroll-triggered) === */
+    .section {
+      padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 4vw, 3rem);
+      max-width: 1200px; margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    .section-head {
+      margin-bottom: 4rem;
+    }
+    .section-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--text-0);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    /* Fade-in on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === CARDS WITH 3D TILT === */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 800px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    .card-3d {
+      perspective: 800px;
+    }
+    .card-inner {
+      background: var(--bg-2);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+    }
+    .card-3d:hover .card-inner {
+      border-color: rgba(108,99,255,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(108,99,255,0.1);
+      transform: translateY(-4px);
+    }
+
+    /* Gradient shimmer on card hover */
+    .card-inner::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .card-3d:hover .card-inner::before { opacity: 1; }
+
+    /* Card glow */
+    .card-inner::after {
+      content: '';
+      position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at center, rgba(108,99,255,0.06) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .card-3d:hover .card-inner::after { opacity: 1; }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+      font-size: 1.2rem;
+      background: rgba(108,99,255,0.1);
+      border: 1px solid rgba(108,99,255,0.15);
+    }
+    .card-title {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text-0);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .card-action {
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--accent-bright);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      transition: gap 0.2s;
+    }
+    .card-action:hover { gap: 0.6rem; }
+    .card-action::after { content: '\2192'; }
+
+    /* === FULL-WIDTH DIVIDER STAT === */
+    .stat-divider {
+      text-align: center;
+      padding: 6rem 2rem;
+      position: relative; z-index: 1;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      background: linear-gradient(180deg, transparent, rgba(108,99,255,0.02), transparent);
+    }
+    .stat-row {
+      display: flex; justify-content: center; gap: clamp(3rem, 8vw, 6rem);
+      max-width: 900px; margin: 0 auto;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+      background: linear-gradient(135deg, var(--text-0) 0%, var(--text-2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* === RESOURCES (minimal list) === */
+    .resource-list {
+      display: flex; flex-direction: column;
+    }
+    .resource-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      text-decoration: none;
+      transition: all 0.2s;
+      gap: 2rem;
+    }
+    .resource-item:first-child { border-top: 1px solid rgba(255,255,255,0.04); }
+    .resource-item:hover { padding-left: 0.75rem; }
+    .resource-item:hover .resource-name { color: var(--text-0); }
+    .resource-item:hover .resource-arrow { opacity: 1; transform: translateX(0); }
+
+    .resource-name {
+      font-size: 1.05rem; font-weight: 600;
+      color: var(--text-1);
+      transition: color 0.2s;
+    }
+    .resource-desc {
+      font-size: 0.85rem; color: var(--text-3);
+      flex: 1;
+    }
+    .resource-arrow {
+      font-size: 1.1rem; color: var(--accent);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: all 0.25s;
+    }
+
+    /* === TEAM === */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    @media (max-width: 700px) {
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .team-member {
+      background: var(--bg-1);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+    .team-member:hover { background: var(--bg-2); }
+    .team-name {
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--text-0);
+      margin-bottom: 0.3rem;
+    }
+    .team-links {
+      display: flex; gap: 0.75rem;
+    }
+    .team-links a {
+      font-family: var(--font-mono);
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--text-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .team-links a:hover { color: var(--accent-bright); }
+
+    /* === CTA SECTION === */
+    .cta-section {
+      text-align: center;
+      padding: 8rem 2rem;
+      position: relative; z-index: 1;
+    }
+    .cta-section h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      color: var(--text-0);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .cta-section p {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      max-width: 450px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* === FOOTER === */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 3rem clamp(1.5rem, 4vw, 3rem);
+      max-width: 1200px; margin: 0 auto;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .footer-brand {
+      font-weight: 700; font-size: 0.9rem;
+      color: var(--text-1);
+      margin-bottom: 0.5rem;
+    }
+    .footer-sub {
+      font-size: 0.8rem; color: var(--text-3);
+      max-width: 280px; line-height: 1.6;
+    }
+    .footer-col h4 {
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+    .footer-col a {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-2);
+      text-decoration: none;
+      margin-bottom: 0.4rem;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text-0); }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.75rem;
+      color: var(--text-4);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .stat-row { flex-direction: column; gap: 2rem; }
+      .hero-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="noise"></div>
+
+  <!-- Signal rings -->
+  <div class="signal-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring-pulse"></div>
+  </div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">
+        <img src="../public/ps_logo_octo_icon_grey.png" alt="" class="nav-octo" />
+        Protocol Support
+      </a>
+      <ul class="nav-links">
+        <li><a href="#">PM Repo</a></li>
+        <li><a href="#">Breakouts</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#" class="nav-cta">Contribute</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-orb"></div>
+    <img src="../public/ps_logo_octo_solo.png" alt="" class="hero-watermark" />
+
+    <div class="hero-eyebrow">Ethereum Foundation</div>
+    <h1><span class="gradient">Protocol</span><br>Support</h1>
+    <p class="hero-sub">
+      The coordination layer for Ethereum core development. We run AllCoreDevs,
+      facilitate breakouts, and help you navigate the protocol.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/ethereum/pm" class="btn btn-primary" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        Explore PM Repo
+      </a>
+      <a href="#features" class="btn btn-ghost">Learn More</a>
+    </div>
+  </section>
+
+  <!-- Stats Divider -->
+  <div class="stat-divider reveal">
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">ACD Meetings</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Breakout Series</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Team Members</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Tentacles</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="section-head reveal">
+      <div class="section-tag">Core Systems</div>
+      <h2 class="section-title">Everything starts<br>at the PM repo</h2>
+      <p class="section-desc">
+        The ethereum/pm repository is where Ethereum protocol governance
+        happens in the open. Here's what's inside.
+      </p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card-3d reveal">
+        <div class="card-inner">
+          <div class="card-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+          </div>
+          <div class="card-title">PM Repository</div>
+          <p class="card-desc">Central hub for call scheduling, meeting notes, and protocol coordination. This is where it all happens.</p>
+          <a href="https://github.com/ethereum/pm" class="card-action" target="_blank">View on GitHub</a>
+        </div>
+      </div>
+
+      <div class="card-3d reveal">
+        <div class="card-inner">
+          <div class="card-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="card-title">Breakout Rooms</div>
+          <p class="card-desc">Focused sessions on EOF, Verkle, ePBS, and more. View active series or schedule your own breakout call.</p>
+          <a href="https://github.com/ethereum/pm/blob/master/Breakout-Room-Meetings/active-breakout-series.md" class="card-action" target="_blank">Active Series</a>
+        </div>
+      </div>
+
+      <div class="card-3d reveal">
+        <div class="card-inner">
+          <div class="card-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <div class="card-title">Champion an EIP</div>
+          <p class="card-desc">Guide to shepherding a proposal from draft to protocol inclusion. Start here if you want to submit an EIP.</p>
+          <a href="https://github.com/ethereum/pm/blob/master/processes/2026_championing_an_EIP.md" class="card-action" target="_blank">Read the Guide</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section class="section">
+    <div class="section-head reveal">
+      <div class="section-tag">Resources</div>
+      <h2 class="section-title">Essential links</h2>
+      <p class="section-desc">
+        The tools, communities, and documentation that power Ethereum protocol development.
+      </p>
+    </div>
+
+    <div class="resource-list reveal">
+      <a href="https://forkcast.org" target="_blank" class="resource-item">
+        <span class="resource-name">Forkcast</span>
+        <span class="resource-desc">Track upgrades, EIPs, and protocol calls</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+      <a href="https://epf.wiki" target="_blank" class="resource-item">
+        <span class="resource-name">EPF Wiki</span>
+        <span class="resource-desc">Protocol internals documentation</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+      <a href="https://www.youtube.com/@EthereumProtocol" target="_blank" class="resource-item">
+        <span class="resource-name">Ethereum Protocol YouTube</span>
+        <span class="resource-desc">ACD call recordings and breakouts</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+      <a href="https://discord.gg/a4gm9nT3Ty" target="_blank" class="resource-item">
+        <span class="resource-name">R&D Discord</span>
+        <span class="resource-desc">Async discussion with core devs</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+      <a href="https://github.com/ethereum/pm/issues?q=label%3AEIPOfficeHr" target="_blank" class="resource-item">
+        <span class="resource-name">EIP Office Hours</span>
+        <span class="resource-desc">Get feedback on your EIP proposal</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+      <a href="https://ethereum.org/governance" target="_blank" class="resource-item">
+        <span class="resource-name">Ethereum Governance</span>
+        <span class="resource-desc">How protocol decisions are made</span>
+        <span class="resource-arrow">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section">
+    <div class="section-head reveal">
+      <div class="section-tag">Team</div>
+      <h2 class="section-title">The people behind<br>the octopus</h2>
+    </div>
+
+    <div class="team-grid reveal">
+      <div class="team-member">
+        <div class="team-name">Nixo</div>
+        <div class="team-links">
+          <a href="https://x.com/nixorokish" target="_blank">@nixorokish</a>
+          <a href="https://github.com/nixorokish" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-name">Josh Davis</div>
+        <div class="team-links">
+          <a href="https://x.com/joshdavislight" target="_blank">@joshdavislight</a>
+          <a href="https://github.com/joshdavislight" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-name">Marc Garreau</div>
+        <div class="team-links">
+          <a href="https://x.com/wolovim" target="_blank">@wolovim</a>
+          <a href="https://github.com/wolovim" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-name">Mario Havel</div>
+        <div class="team-links">
+          <a href="https://x.com/TMIYChao" target="_blank">@TMIYChao</a>
+          <a href="https://github.com/taxmeifyoucan" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-name">Butta</div>
+        <div class="team-links">
+          <a href="https://x.com/Butta_eth" target="_blank">@Butta_eth</a>
+          <a href="https://github.com/Buttaa" target="_blank">GitHub</a>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-name">Dionysuz</div>
+        <div class="team-links">
+          <a href="https://x.com/dionysuzx" target="_blank">@dionysuzx</a>
+          <a href="https://github.com/dionysuzx" target="_blank">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section reveal">
+    <h2>Ready to contribute?</h2>
+    <p>
+      Whether you're proposing an EIP, joining a fellowship, or just getting
+      oriented — we're here to help.
+    </p>
+    <div class="hero-actions" style="justify-content: center;">
+      <a href="https://github.com/ethereum/pm/blob/master/processes/2026_championing_an_EIP.md" class="btn btn-primary" target="_blank">Champion an EIP</a>
+      <a href="mailto:protocolsupport@ethereum.org" class="btn btn-ghost">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">Protocol Support</div>
+        <p class="footer-sub">
+          An Ethereum Foundation team coordinating protocol development
+          and helping contributors navigate the ecosystem.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <a href="#">PM Repository</a>
+        <a href="#">Breakout Calls</a>
+        <a href="#">Resources</a>
+        <a href="#">Team</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="https://forkcast.org" target="_blank">Forkcast</a>
+        <a href="https://epf.wiki" target="_blank">EPF Wiki</a>
+        <a href="https://www.youtube.com/@EthereumProtocol" target="_blank">Protocol YouTube</a>
+        <a href="https://discord.gg/a4gm9nT3Ty" target="_blank">R&D Discord</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Community</h4>
+        <a href="https://github.com/ethereum/pm" target="_blank">GitHub</a>
+        <a href="https://jobs.ashbyhq.com/ethereum-foundation" target="_blank">EF Jobs</a>
+        <a href="mailto:protocolsupport@ethereum.org">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      Ethereum Foundation &middot; Protocol Support Team
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    reveals.forEach(function(el) { revealObserver.observe(el); });
+
+    // Stagger card reveals
+    document.querySelectorAll('.card-grid').forEach(function(grid) {
+      const cards = grid.querySelectorAll('.card-3d');
+      const cardObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            cards.forEach(function(card, i) {
+              setTimeout(function() {
+                card.classList.add('visible');
+              }, i * 120);
+            });
+            cardObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      cardObserver.observe(grid);
+    });
+
+    // 3D card tilt on mouse
+    document.querySelectorAll('.card-3d').forEach(function(card) {
+      card.addEventListener('mousemove', function(e) {
+        var inner = card.querySelector('.card-inner');
+        var rect = card.getBoundingClientRect();
+        var x = (e.clientX - rect.left) / rect.width;
+        var y = (e.clientY - rect.top) / rect.height;
+        var rotateX = (0.5 - y) * 8;
+        var rotateY = (x - 0.5) * 8;
+        inner.style.transform = 'translateY(-4px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+      });
+      card.addEventListener('mouseleave', function() {
+        var inner = card.querySelector('.card-inner');
+        inner.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support - Blueprint Architect Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg-deep: #0A1628;
+      --color-bg-base: #0F1D32;
+      --color-bg-surface: #152642;
+      --color-bg-elevated: #1C3254;
+      --color-primary: #4DA3FF;
+      --color-primary-light: #7DBFFF;
+      --color-primary-muted: #2D5A8A;
+      --color-accent: #FF6B4A;
+      --color-accent-secondary: #FFB84D;
+      --color-text-primary: #E8F1FF;
+      --color-text-secondary: #A3C4E8;
+      --color-text-muted: #5C7A9E;
+      --color-grid: rgba(77, 163, 255, 0.12);
+      --color-annotation: #4DA3FF;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-bg-deep);
+      color: var(--color-text-primary);
+      font-family: var(--font-display);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Blueprint Grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Measurement marks on edges */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background-image: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 1.9rem,
+        var(--color-primary-muted) 1.9rem,
+        var(--color-primary-muted) 2rem
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: rgba(10, 22, 40, 0.95);
+      border-bottom: 1px solid var(--color-primary-muted);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo::before {
+      content: '//';
+      color: var(--color-primary-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Main Content */
+    main {
+      position: relative;
+      z-index: 10;
+      padding-top: 80px;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    .hero-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Blueprint annotation line */
+    .annotation-line {
+      position: absolute;
+      top: 30%;
+      right: 10%;
+      width: 200px;
+      height: 1px;
+      background: var(--color-primary-muted);
+    }
+
+    .annotation-line::before {
+      content: 'REV 2.0';
+      position: absolute;
+      right: 0;
+      top: -20px;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-primary-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .annotation-line::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--color-primary-muted);
+      border-radius: 50%;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-label::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--color-primary);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    h1 span {
+      display: block;
+    }
+
+    h1 span:last-child {
+      color: var(--color-primary);
+    }
+
+    /* Dimension annotation on headline */
+    h1::after {
+      content: '← 960px →';
+      position: absolute;
+      bottom: -2rem;
+      left: 0;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-primary-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-description {
+      max-width: 500px;
+      color: var(--color-text-secondary);
+      font-size: 1.125rem;
+      margin-bottom: 3rem;
+      margin-top: 3rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 1rem 2rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: var(--color-bg-deep);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-light);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-primary-muted);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    /* Cards Section */
+    .section {
+      padding: 6rem 2rem;
+    }
+
+    .section-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-header::before {
+      content: '//';
+      font-family: var(--font-mono);
+      color: var(--color-primary-muted);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--color-primary-muted), transparent);
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-primary-muted);
+      padding: 2rem;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    /* Registration marks */
+    .card::before {
+      content: '+';
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-primary-muted);
+    }
+
+    .card::after {
+      content: '+';
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-primary-muted);
+    }
+
+    /* Dashed outline */
+    .card-outline {
+      position: absolute;
+      inset: -6px;
+      border: 1px dashed var(--color-primary-muted);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .card-number {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-primary-muted);
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--color-text-primary);
+    }
+
+    .card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* About Section */
+    .about {
+      background: var(--color-bg-base);
+      position: relative;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-content h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-content p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    /* Blueprint Octopus Illustration Placeholder */
+    .blueprint-illustration {
+      aspect-ratio: 1;
+      border: 1px dashed var(--color-primary-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background:
+        linear-gradient(var(--color-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+      background-size: 1rem 1rem;
+    }
+
+    .blueprint-illustration::before {
+      content: 'OCTOPUS_ARCHITECT.DWG';
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-primary-muted);
+    }
+
+    .blueprint-illustration svg {
+      width: 200px;
+      height: 200px;
+      stroke: var(--color-primary);
+      fill: none;
+      stroke-width: 1;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--color-primary-muted);
+    }
+
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Coordinate marker */
+    .coord-marker {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--color-primary-muted);
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">PROTOCOL_SUPPORT</div>
+      <ul class="nav-links">
+        <li><a href="#">PM Repo</a></li>
+        <li><a href="#">Breakouts</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="annotation-line"></div>
+      <div class="hero-inner">
+        <div class="hero-label">Ethereum Foundation</div>
+        <h1>
+          <span>Ethereum</span>
+          <span>Protocol Support</span>
+        </h1>
+        <p class="hero-description">
+          Building the coordination infrastructure for Ethereum's protocol development. We architect the processes that keep AllCoreDevs aligned.
+        </p>
+        <div class="hero-cta">
+          <a href="#" class="btn btn-primary">View Specifications</a>
+          <a href="#" class="btn btn-outline">Read Documentation</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2>Core Systems</h2>
+        </div>
+        <div class="cards-grid">
+          <div class="card">
+            <div class="card-outline"></div>
+            <div class="card-number">SYS_001</div>
+            <h3>PM Repository</h3>
+            <p>Central coordination hub for Ethereum protocol meetings, agendas, and technical discussions.</p>
+          </div>
+          <div class="card">
+            <div class="card-outline"></div>
+            <div class="card-number">SYS_002</div>
+            <h3>Breakout Rooms</h3>
+            <p>Focused technical sessions for deep-dive discussions on specific protocol topics.</p>
+          </div>
+          <div class="card">
+            <div class="card-outline"></div>
+            <div class="card-number">SYS_003</div>
+            <h3>EIP Coordination</h3>
+            <p>Supporting proposals through the improvement process from draft to final.</p>
+          </div>
+          <div class="card">
+            <div class="card-outline"></div>
+            <div class="card-number">SYS_004</div>
+            <h3>Documentation</h3>
+            <p>Maintaining comprehensive records of meetings, decisions, and protocol changes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about">
+      <div class="section-inner">
+        <div class="about-grid">
+          <div class="about-content">
+            <h2>What is Protocol Support?</h2>
+            <p>
+              Protocol Support is an Ethereum Foundation team dedicated to facilitating the protocol development process. We serve as a bridge between various stakeholders in the ecosystem.
+            </p>
+            <p>
+              Our mascot, the octopus, represents our many arms reaching into different areas of Ethereum development—from coordinating AllCoreDevs meetings to helping newcomers navigate protocol governance.
+            </p>
+          </div>
+          <div class="blueprint-illustration">
+            <svg viewBox="0 0 100 100">
+              <!-- Simplified octopus blueprint -->
+              <ellipse cx="50" cy="35" rx="20" ry="15"/>
+              <circle cx="43" cy="32" r="3"/>
+              <circle cx="57" cy="32" r="3"/>
+              <!-- Tentacles -->
+              <path d="M30 45 Q20 60 15 80"/>
+              <path d="M35 48 Q30 65 25 85"/>
+              <path d="M42 50 Q40 70 38 90"/>
+              <path d="M50 50 Q50 70 50 90"/>
+              <path d="M58 50 Q60 70 62 90"/>
+              <path d="M65 48 Q70 65 75 85"/>
+              <path d="M70 45 Q80 60 85 80"/>
+              <!-- Hard hat -->
+              <path d="M30 28 L70 28 L65 20 L35 20 Z"/>
+              <line x1="35" y1="20" x2="35" y2="15"/>
+              <line x1="65" y1="20" x2="65" y2="15"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-text">© 2024 Ethereum Foundation — Protocol Support</div>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">Discord</a>
+        <a href="#">Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="coord-marker">X: 0.00 Y: 0.00</div>
+
+  <script>
+    // Update coordinate marker on mouse move
+    document.addEventListener('mousemove', (e) => {
+      const marker = document.querySelector('.coord-marker');
+      const x = (e.clientX / window.innerWidth * 100).toFixed(2);
+      const y = (e.clientY / window.innerHeight * 100).toFixed(2);
+      marker.textContent = `X: ${x} Y: ${y}`;
+    });
+  </script>
+</body>
+</html>
