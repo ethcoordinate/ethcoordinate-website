@@ -52,7 +52,6 @@ export default function Footer() {
         <span>© 2026 EthCoordinate</span>
         <div className="footer-links">
           <a href={organization.social.x} target="_blank" rel="noopener noreferrer">X</a>
-          <a href={organization.social.telegram} target="_blank" rel="noopener noreferrer">Telegram</a>
           <a href={organization.social.discord} target="_blank" rel="noopener noreferrer">Discord</a>
           <a href={organization.social.github} target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>

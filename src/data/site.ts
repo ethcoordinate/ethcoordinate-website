@@ -99,7 +99,6 @@ export const organization = {
   ],
   social: {
     x: "https://x.com/ethcoordinate",
-    telegram: "https://t.me/ethcoordinate",
     discord: "https://discord.com/invite/ethstaker",
     reddit: "https://www.reddit.com/r/ethstaker/",
     github: "https://github.com/ethcoordinate",
