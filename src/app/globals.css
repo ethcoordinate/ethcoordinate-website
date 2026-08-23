@@ -167,16 +167,13 @@ body {
   background: var(--color-bg-elevated);
   border-bottom: 1px solid var(--color-border);
 }
-.terminal-dot { width: 8px; height: 8px; border-radius: 50%; }
-.terminal-dot.r { background: #FF5F57; }
-.terminal-dot.y { background: #FFBD2E; }
-.terminal-dot.g { background: #28CA41; }
-.terminal-title { margin-left: auto; font-size: 0.7rem; color: var(--color-text-muted); }
+.terminal-title { font-size: 0.7rem; color: var(--color-text-muted); }
 .terminal-body { padding: 1rem; font-size: 0.875rem; }
 .t-line { display: flex; margin-bottom: 0.2rem; }
 .t-prompt { color: var(--color-purple); margin-right: 0.5rem; }
 .t-cmd { color: var(--color-text-bright); }
-.t-out { color: var(--color-text-muted); padding-left: 1.2rem; }
+.t-out { display: flex; gap: 0.75rem; color: var(--color-text-muted); padding-left: 1.2rem; }
+.t-tag { flex: 0 0 4.5rem; color: var(--color-text-dim); }
 .cursor {
   display: inline-block; width: 7px; height: 13px;
   background: var(--color-blue);

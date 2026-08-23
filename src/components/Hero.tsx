@@ -1,15 +1,16 @@
 import Image from "next/image";
 import heroMark from "@/assets/hero-mark.webp";
+import StatusConsole, { type ConsoleLine } from "@/components/StatusConsole";
 
 interface HeroProps {
-  updates?: string[];
+  updates?: readonly ConsoleLine[];
 }
 
 export default function Hero({ updates }: HeroProps) {
-  const lines = updates && updates.length > 0 ? updates : [
-    "Governance operations are public",
-    "Staker support is online",
-    "Five initiatives are active",
+  const lines: readonly ConsoleLine[] = updates && updates.length > 0 ? updates : [
+    { tag: "acd", text: "Governance operations are public" },
+    { tag: "stakers", text: "Staker support is online" },
+    { tag: "org", text: "Five initiatives are active" },
   ];
   return (
     <section className="relative flex items-center justify-center text-center hero-section ethcoord-hero">
@@ -45,21 +46,7 @@ export default function Hero({ updates }: HeroProps) {
           engagement, and maintaining home staking tooling & software.
         </p>
 
-        <div className="terminal">
-          <div className="terminal-bar">
-            <div className="terminal-dot r" />
-            <div className="terminal-dot y" />
-            <div className="terminal-dot g" />
-            <span className="terminal-title">ethcoordinate — zsh</span>
-          </div>
-          <div className="terminal-body">
-            <div className="t-line"><span className="t-prompt">&rarr;</span><span className="t-cmd">./coordinate --current</span></div>
-            {lines.map((line, i) => (
-              <div key={i} className="t-out">{"\u2713"} {line}</div>
-            ))}
-            <div className="t-line"><span className="t-prompt">&rarr;</span><span className="cursor" /></div>
-          </div>
-        </div>
+        <StatusConsole lines={lines} />
       </div>
     </section>
   );

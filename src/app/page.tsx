@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import FloatingOcto from "@/components/FloatingOcto";
 import InitiativesDiagram from "@/components/InitiativesDiagram";
+import { type ConsoleLine } from "@/components/StatusConsole";
 import { communityLinks } from "@/data/site";
 import {
   getForkcastUpgrades,
@@ -21,10 +22,10 @@ export default async function Home() {
     getForkcastUpgrades(),
   ]);
   const heroUpdates = [
-    callSummary,
-    eipChange,
-    "Staker support and community channels are open",
-  ].filter((item): item is string => Boolean(item));
+    callSummary ? { tag: "acd", text: callSummary } : null,
+    eipChange ? { tag: "eip", text: eipChange } : null,
+    { tag: "stakers", text: "Support and community channels are open" },
+  ].filter((item): item is ConsoleLine => item !== null);
   const done = upgrades.filter((u) => u.status === "done").pop();
   const active = upgrades.find((u) => u.status === "active");
   const planned = upgrades.find((u) => u.status === "planned");
