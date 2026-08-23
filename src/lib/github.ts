@@ -185,11 +185,30 @@ export const getForkcastUpgrades = unstable_cache(
 
       const upgrades: ForkcastUpgrade[] = [];
       let cur: Partial<ForkcastUpgrade & { disabled: boolean }> = {};
+      // Brace depth. Each upgrade is a depth-1 object; deeper objects (client team
+      // perspectives, for example) belong to it but carry none of its fields. Without the
+      // depth check a nested "{" started a new entry and dropped the upgrade around it.
+      let depth = 0;
 
       for (const line of text.split("\n")) {
         const trimmed = line.trim();
-        if (trimmed === "{") { cur = {}; continue; }
-        if (trimmed.startsWith("}")) {
+        const opens = (trimmed.match(/\{/g) ?? []).length;
+        const closes = (trimmed.match(/\}/g) ?? []).length;
+        if (depth === 0 && opens > closes) cur = {};
+        if (depth === 1) {
+          const m = trimmed.match(/^(\w+):\s*'([^']*)'/);
+          if (m) {
+            const [, key, val] = m;
+            if (key === "id" || key === "name" || key === "status" || key === "activationDate") {
+              (cur as Record<string, string>)[key] = val;
+            }
+          }
+          if (trimmed.startsWith("disabled:")) {
+            cur.disabled = trimmed.includes("true");
+          }
+        }
+        depth = Math.max(0, depth + opens - closes);
+        if (depth === 0 && closes > opens) {
           if (cur.id && cur.name && !cur.disabled) {
             const statusMap: Record<string, ForkcastUpgrade["status"]> = {
               Live: "done", Upcoming: "active", Planning: "planned", Research: "planned",
@@ -202,17 +221,6 @@ export const getForkcastUpgrades = unstable_cache(
             });
           }
           cur = {};
-          continue;
-        }
-        const m = trimmed.match(/^(\w+):\s*'([^']*)'/);
-        if (m) {
-          const [, key, val] = m;
-          if (key === "id" || key === "name" || key === "status" || key === "activationDate") {
-            (cur as Record<string, string>)[key] = val;
-          }
-        }
-        if (trimmed.startsWith("disabled:")) {
-          cur.disabled = trimmed.includes("true");
         }
       }
 
