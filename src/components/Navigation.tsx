@@ -26,7 +26,7 @@ const navLinks: readonly NavItem[] = [
     activePrefixes: ["/initiatives", "/forkcast", "/products/forkcast"],
     children: [
       { href: "/initiatives/staker-support", label: "Staker support", note: "Guidance, tools, and community" },
-      { href: "/pm-repo", label: "Protocol coordination", note: "Open governance operations" },
+      { href: "/initiatives/protocol-coordination", label: "Protocol coordination", note: "Calls, breakouts, and EIP support" },
       { href: "/forkcast", label: "Forkcast", note: "Upgrades, EIPs, calls, and decisions" },
     ],
   },

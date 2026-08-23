@@ -30,6 +30,7 @@ npm run start
 ## Content map
 
 - `/initiatives/staker-support`: direct handoff to canonical EthStaker support
+- `/initiatives/protocol-coordination`: how EthCoordinate facilitates core protocol work
 - `/pm-repo` and `/pm-repo/breakouts`: Ethereum governance coordination
 - `/guides/**`: EIP championing and breakout-room guides
 - `/forkcast`: product overview plus the full upgrade-governance explainer
