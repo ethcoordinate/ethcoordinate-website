@@ -96,22 +96,6 @@ export default function ProtocolCoordinationPage() {
           </div>
         </section>
 
-        {/* How we work */}
-        <section className="section">
-          <div className="card">
-            <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--color-text-bright)", marginBottom: "1rem" }}>
-              Coordination, Not Control
-            </h3>
-            <div style={{ color: "var(--color-text-body)", fontSize: "0.95rem", lineHeight: 1.7 }}>
-              <ul style={{ listStyle: "disc", paddingLeft: "1.5rem", marginBottom: "0.75rem" }}>
-                <li>We make shared work easier to understand and advance without trying to own Ethereum&apos;s roadmap. We avoid taking positions on roadmap items or primary research.</li>
-                <li><strong style={{ color: "var(--color-text-bright)" }}>Credible neutrality</strong> is one of Ethereum&apos;s defining features. Where a member is exposed to a conflict in any initiative, ACD included, a mechanism is set up so the neutrality of the outcome is not in question.</li>
-                <li>Public by default: the calls are streamed and recorded, the notes are committed to ethereum/pm, and Forkcast tracks the outcomes.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
         {/* Get involved */}
         <section className="section">
           <h2 className="section-title">Get Involved</h2>
