@@ -44,13 +44,12 @@ const navLinks: readonly NavItem[] = [
   {
     href: "/about",
     label: "About",
-    activePrefixes: ["/about", "/team", "/blog"],
+    activePrefixes: ["/about", "/team"],
     children: [
       { href: "/about", label: "About EthCoordinate", note: "Story, principles, community, FAQ" },
       { href: "/team", label: "Team", note: "People behind the work" },
       { href: "/about#community", label: "Community", note: "Discord, Reddit, and live programmes" },
       { href: "/about#faq", label: "FAQ", note: "Funding, neutrality, and scope" },
-      { href: "/blog", label: "Updates", note: "News and coordination notes" },
     ],
   },
 ];

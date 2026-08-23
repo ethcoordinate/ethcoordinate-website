@@ -34,7 +34,6 @@ npm run start
 - `/guides/**`: EIP championing and breakout-room guides
 - `/forkcast`: product overview plus the full upgrade-governance explainer
 - `/about` and `/team`: organization, community, FAQ, and current team
-- `/blog`: updates from the team
 
 Shared EthCoordinate copy and destination data live in `src/data/site.ts`.
 

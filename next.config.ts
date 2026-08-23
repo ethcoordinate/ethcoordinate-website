@@ -1,12 +1,10 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   outputFileTracingRoot: projectRoot,
   turbopack: {
     root: projectRoot,
@@ -34,8 +32,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withMDX = createMDX({
-  extension: /\.mdx?$/,
-});
-
-export default withMDX(nextConfig);
+export default nextConfig;

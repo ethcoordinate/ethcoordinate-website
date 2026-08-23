@@ -50,11 +50,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    types: {
-      "application/rss+xml": "/feed.xml",
-    },
-  },
   twitter: {
     card: "summary_large_image",
     site: "@ethcoordinate",
