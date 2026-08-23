@@ -37,8 +37,8 @@ const navLinks: readonly NavItem[] = [
     children: [
       { href: "/pm-repo", label: "PM repository", note: "Calls, agendas, and coordination" },
       { href: "/pm-repo/breakouts", label: "Breakout rooms", note: "Focused protocol discussions" },
-      { href: "/guides", label: "Participation guides", note: "EIPs, proposals, and breakouts" },
       { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
+      { href: "/guides/breakout", label: "Run a breakout call", note: "Propose, schedule, and host one" },
     ],
   },
   {
