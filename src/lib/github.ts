@@ -238,13 +238,16 @@ export const getLatestCallSummary = unstable_cache(
         fetchFromGitHub<GitHubFile[]>("/repos/ethereum/forkcast/contents/public/artifacts/acde").catch(() => []),
         fetchFromGitHub<GitHubFile[]>("/repos/ethereum/forkcast/contents/public/artifacts/acdc").catch(() => []),
       ]);
+      // Call folders are named <date>_<number>. The same directory holds a "plan" folder,
+      // which would otherwise sort last and win.
+      const isCall = (f: GitHubFile) => f.type === "dir" && /^\d{4}-\d{2}-\d{2}_\d+$/.test(f.name);
       const all = [
-        ...acde.filter(f => f.type === "dir").map(f => ({ name: f.name, type: "ACDE" })),
-        ...acdc.filter(f => f.type === "dir").map(f => ({ name: f.name, type: "ACDC" })),
+        ...acde.filter(isCall).map(f => ({ name: f.name, type: "ACDE" })),
+        ...acdc.filter(isCall).map(f => ({ name: f.name, type: "ACDC" })),
       ].sort((a, b) => b.name.localeCompare(a.name));
       if (all.length === 0) return null;
       const latest = all[0];
-      const num = latest.name.split("_")[1] ?? "";
+      const num = latest.name.split("_")[1];
       return `${latest.type} #${num} call summary published`;
     } catch {
       return null;
