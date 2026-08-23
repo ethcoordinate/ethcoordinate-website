@@ -62,7 +62,6 @@ export default function StakerSupportPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <p className="page-eyebrow">Initiative 01 · Home staking</p>
           <h1 className="page-title">Staker support</h1>
           <p className="page-desc">
             We maintain a safe, informed space for independent stakers to stay

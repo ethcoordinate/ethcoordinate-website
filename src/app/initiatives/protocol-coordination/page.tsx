@@ -66,7 +66,6 @@ export default function ProtocolCoordinationPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <p className="page-eyebrow">Initiative 02 · Core protocol</p>
           <h1 className="page-title">Protocol coordination</h1>
           <p className="page-desc">
             We facilitate coordination around core protocol development and its
