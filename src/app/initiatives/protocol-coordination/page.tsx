@@ -4,14 +4,10 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
 import Card from "@/components/Card";
-import StatusConsole, { type ConsoleLine } from "@/components/StatusConsole";
 import {
   CalendarIcon, UsersIcon, FileTextIcon,
   YouTubeIcon, GitHubIcon, DiscordIcon,
 } from "@/components/Icons";
-import { getForkcastUpgrades, getLatestCallSummary, getLatestEipChange } from "@/lib/github";
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Protocol coordination",
@@ -64,22 +60,7 @@ const getInvolved = [
   },
 ];
 
-export default async function ProtocolCoordinationPage() {
-  const [callSummary, eipChange, upgrades] = await Promise.all([
-    getLatestCallSummary(),
-    getLatestEipChange(),
-    getForkcastUpgrades(),
-  ]);
-  const active = upgrades.find((u) => u.status === "active");
-  const signal = [
-    callSummary ? { tag: "acd", text: callSummary } : null,
-    eipChange ? { tag: "eip", text: eipChange } : null,
-    active ? { tag: "fork", text: `${active.name} is the active upgrade` } : null,
-  ].filter((line): line is ConsoleLine => line !== null);
-  const lines: readonly ConsoleLine[] = signal.length > 0
-    ? signal
-    : [{ tag: "forkcast", text: "Live data is unavailable right now" }];
-
+export default function ProtocolCoordinationPage() {
   return (
     <>
       <Navigation />
@@ -99,20 +80,12 @@ export default async function ProtocolCoordinationPage() {
             <a href="https://github.com/ethereum/pm" target="_blank" rel="noopener noreferrer" className="card-btn" style={{ marginTop: 0 }}>
               ethereum/pm on GitHub <span>{"↗"}</span>
             </a>
+            <Link href="/forkcast" className="card-btn" style={{ marginTop: 0 }}>
+              Explore Forkcast <span>&rarr;</span>
+            </Link>
           </div>
         </div>
         <div className="page-divider" />
-
-        {/* Live signal */}
-        <section className="section">
-          <h2 className="section-title">Live Signal</h2>
-          <p style={{ color: "var(--color-text-body)", fontSize: "0.95rem", marginBottom: "1.25rem" }}>
-            The most recent output of the process, read from Forkcast: the
-            tracker for upgrades, EIPs, calls, and decisions.
-          </p>
-          <StatusConsole lines={lines} style={{ margin: 0, maxWidth: 720 }} />
-          <Link href="/forkcast" className="card-btn">Explore Forkcast <span>&rarr;</span></Link>
-        </section>
 
         {/* Where it happens */}
         <section className="section">
@@ -136,11 +109,6 @@ export default async function ProtocolCoordinationPage() {
                 <li><strong style={{ color: "var(--color-text-bright)" }}>Credible neutrality</strong> is one of Ethereum&apos;s defining features. Where a member is exposed to a conflict in any initiative, ACD included, a mechanism is set up so the neutrality of the outcome is not in question.</li>
                 <li>Public by default: the calls are streamed and recorded, the notes are committed to ethereum/pm, and Forkcast tracks the outcomes.</li>
               </ul>
-              <p>
-                On the <Link href="/team" className="link-blue">team</Link>, Yorick works on protocol
-                coordination and Butta on stakeholder coordination. The{" "}
-                <Link href="/about#faq" className="link-blue">FAQ</Link> covers funding, neutrality, and scope.
-              </p>
             </div>
           </div>
         </section>

@@ -1,12 +1,9 @@
-import type { CSSProperties } from "react";
-
 export type ConsoleLine = { tag: string; text: string };
 
 interface StatusConsoleProps {
   lines: readonly ConsoleLine[];
   title?: string;
   command?: string;
-  style?: CSSProperties;
 }
 
 // The console reads as a live log of the coordination work. The tag names the stream a line
@@ -15,10 +12,9 @@ export default function StatusConsole({
   lines,
   title = "ethcoordinate — status",
   command = "coordinate status --live",
-  style,
 }: StatusConsoleProps) {
   return (
-    <div className="terminal" style={style}>
+    <div className="terminal">
       <div className="terminal-bar">
         <span className="terminal-title">{title}</span>
       </div>
