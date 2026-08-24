@@ -1,0 +1,246 @@
+/* =============================================================
+   UPGRADE TIMELINE - Ethcoordinate design system
+   Scoped under .upgrades-root. Dark terminal theme, JetBrains Mono.
+   ============================================================= */
+
+.upgrades-root {
+  color: var(--color-text-body);
+}
+
+/* ---------- legend drawer ---------- */
+.legend-drawer {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-bg-surface);
+  margin-bottom: 2rem;
+}
+.legend-drawer summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.25rem;
+  cursor: pointer;
+  color: var(--color-text-bright);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.legend-drawer summary::-webkit-details-marker { display: none; }
+.legend-drawer summary:hover { color: var(--color-blue); }
+.legend-chevron { transition: transform 0.2s; color: var(--color-blue); }
+.legend-drawer[open] .legend-chevron { transform: rotate(180deg); }
+.legend-body {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+.legend-heading {
+  color: var(--color-blue);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 1rem 0 0.5rem;
+}
+.legend-body ol { list-style: none; margin: 0; padding: 0; }
+.legend-body li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 3px 0;
+  font-size: 0.72rem;
+  color: var(--color-text-body);
+}
+.legend-body li span {
+  flex: 0 0 18px;
+  color: var(--coord-purple);
+  font-size: 0.62rem;
+  font-weight: 700;
+}
+.legend-body li small { margin-left: auto; color: var(--color-text-dim); font-size: 0.62rem; }
+
+/* ---------- timeline canvas ---------- */
+.timeline-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+.timeline {
+  position: relative;
+  min-width: 900px;
+  aspect-ratio: 960 / 460;
+}
+.timeline svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.track {
+  stroke: var(--color-border);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 0.1 9;
+  fill: none;
+}
+.curve { stroke: var(--color-border-hover); }
+.loop { stroke: var(--color-border); }
+
+.track-label, .range-label {
+  position: absolute;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transform: translateX(-50%);
+}
+.track-label { color: var(--coord-purple); }
+.range-label { color: var(--color-text-dim); }
+
+/* ---------- pre-merge dots ---------- */
+.pm-dot {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  z-index: 5;
+}
+.pm-dot-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-bg-surface);
+  border: 2px solid var(--color-border-hover);
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+.pm-dot:hover .pm-dot-circle,
+.pm-dot:focus-visible .pm-dot-circle {
+  border-color: var(--color-blue);
+  background: var(--color-blue-dim);
+  transform: scale(1.35);
+}
+
+/* ---------- tooltips ---------- */
+.pm-tip {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 140px;
+  max-width: 220px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border-hover);
+  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s;
+  z-index: 40;
+  pointer-events: none;
+  text-align: left;
+}
+.pm-tip b { display: block; color: var(--color-text-bright); font-size: 0.75rem; }
+.pm-tip small { display: block; color: var(--color-blue); font-size: 0.65rem; margin-top: 2px; }
+.pm-tip em { display: block; color: var(--color-text-body); font-size: 0.68rem; font-style: normal; line-height: 1.5; margin-top: 6px; }
+.pm-dot:hover .pm-tip,
+.pm-dot:focus-visible .pm-tip,
+.merge-node:hover .pm-tip,
+.merge-node:focus-visible .pm-tip,
+.post-node:hover .pm-tip,
+.post-node:focus-visible .pm-tip {
+  opacity: 1;
+  visibility: visible;
+}
+.tip-left .pm-tip { left: -12px; transform: none; }
+.tip-right .pm-tip { left: auto; right: -12px; transform: none; }
+
+/* ---------- merge node ---------- */
+.merge-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 10;
+  text-decoration: none;
+}
+.merge-node .mascot { width: 64px; height: auto; filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.25)); }
+.merge-label {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 212, 255, 0.12);
+  border: 1px solid var(--color-blue-dim);
+  color: var(--color-blue);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+.merge-tip { top: auto; bottom: calc(100% + 10px); }
+
+/* ---------- post-merge nodes ---------- */
+.post-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  text-decoration: none;
+}
+.post-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 128px;
+  padding: 0.75rem 0.5rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg-surface);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.post-node:hover .post-card,
+.post-node:focus-visible .post-card {
+  border-color: var(--color-border-hover);
+  transform: translateY(-3px);
+}
+.post-card .mascot { width: 44px; height: 44px; object-fit: contain; }
+.mascot-placeholder {
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  color: var(--color-text-dim);
+}
+.post-card b { color: var(--color-text-bright); font-size: 0.78rem; }
+.post-card small { color: var(--color-text-muted); font-size: 0.62rem; }
+
+/* status accents */
+.status-shipped .post-card { border-left: 3px solid var(--coord-green); }
+.status-upcoming .post-card { border-left: 3px solid var(--coord-yellow); }
+.status-tbd .post-card { border-left: 3px solid var(--color-text-dim); }
+
+.post-tip { top: auto; bottom: calc(100% + 12px); }
+
+/* ---------- footnote ---------- */
+.timeline-note {
+  margin-top: 1.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .legend-body { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upgrades-root *, .upgrades-root *::before, .upgrades-root *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
