@@ -94,8 +94,8 @@ export const organization = {
   tagline: "Coordination is infrastructure.",
   email: "team@ethcoordinate.org",
   about: [
-    "EthCoordinate is the natural evolution of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum's consensus mechanism.",
-    "As the ecosystem shifted in 2026, new organizational gaps opened up, and that same team launched EthCoordinate to close them, broadening their scope with new mission-aligned members along the way.",
+    "EthCoordinate grew out of EthStaker, the nonprofit that spent the past several years supporting home stakers and other independent participants in Ethereum's consensus mechanism.",
+    "When the ecosystem shifted in 2026, some organizational work was left uncovered. The same team launched EthCoordinate to take it on, widening its scope and adding new members who share the mission.",
   ],
   social: {
     x: "https://x.com/ethcoordinate",

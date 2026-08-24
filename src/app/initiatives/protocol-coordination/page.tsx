@@ -12,34 +12,28 @@ import {
 export const metadata: Metadata = {
   title: "Protocol coordination",
   description:
-    "How EthCoordinate facilitates coordination around Ethereum core protocol development: AllCoreDevs calls, breakout rooms, EIP championing, and Forkcast.",
+    "How EthCoordinate helps coordinate Ethereum core protocol development: AllCoreDevs calls, breakout rooms, EIP championing, and Forkcast.",
 };
 
 const whereItHappens = [
   {
     title: "AllCoreDevs calls",
-    description: "Bi-weekly execution, consensus, and testing calls. Agendas, notes, and recordings live in the ethereum/pm repository.",
+    description: "Bi-weekly execution, consensus, and testing calls. Agendas, notes, and recordings are in the ethereum/pm repository.",
     href: "/pm-repo",
     icon: <CalendarIcon color="var(--coord-cyan)" />,
   },
   {
     title: "Breakout rooms",
-    description: "Focused technical discussions on specific protocol topics. Anyone can propose one for an EIP, a research thread, or cross-team work.",
+    description: "Technical discussions on specific protocol topics. Anyone can propose one for an EIP, a research question, or work that spans several teams.",
     href: "/pm-repo/breakouts",
     icon: <UsersIcon color="var(--coord-pink)" />,
-  },
-  {
-    title: "Championing an EIP",
-    description: "What it takes to carry a proposal through the process, and how to build a credible case for inclusion.",
-    href: "/guides/champion",
-    icon: <FileTextIcon color="var(--coord-green)" />,
   },
 ];
 
 const getInvolved = [
   {
     title: "Watch the calls",
-    description: "AllCoreDevs calls stream live and stay up as recordings.",
+    description: "AllCoreDevs calls are streamed live, and recordings stay available afterward.",
     href: "https://www.youtube.com/@EthereumProtocol",
     external: true,
     icon: <YouTubeIcon color="var(--coord-pink)" />,
@@ -58,6 +52,13 @@ const getInvolved = [
     external: true,
     icon: <DiscordIcon color="var(--coord-purple)" />,
   },
+  {
+    title: "Championing an EIP",
+    description: "How to guide a proposal through the process and make a convincing case for including it in an upgrade.",
+    href: "/guides/champion",
+    external: false,
+    icon: <FileTextIcon color="var(--coord-green)" />,
+  },
 ];
 
 export default function ProtocolCoordinationPage() {
@@ -68,9 +69,9 @@ export default function ProtocolCoordinationPage() {
         <div className="page-header">
           <h1 className="page-title">Protocol coordination</h1>
           <p className="page-desc">
-            We facilitate coordination around core protocol development and its
-            adjacent efforts: the calls, the breakout rooms, the proposals moving
-            through them, and the record that comes out the other side.
+            We help coordinate core protocol development and related work. ACD
+            Calls, breakout rooms, the proposals discussed on them, and the
+            notes and recordings.
           </p>
           <div className="flex gap-3 flex-wrap" style={{ marginTop: "1.5rem" }}>
             <Link href="/pm-repo" className="card-btn" style={{ marginTop: 0 }}>

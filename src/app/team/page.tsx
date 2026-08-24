@@ -83,7 +83,6 @@ export default function TeamPage() {
       <Navigation />
       <main id="main-content" className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <p className="page-eyebrow">People behind the work</p>
           <h1 className="page-title">Meet the Team</h1>
           <p className="page-desc">
             Our team is made up of Ethereum professionals across research,
@@ -120,12 +119,10 @@ export default function TeamPage() {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.7 }}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               @ethcoordinate
             </a>
-            <span style={{ color: "var(--color-text-dim)" }}>·</span>
             <a href="mailto:team@ethcoordinate.org" className="link-blue" style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontSize: "0.95rem" }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
               team@ethcoordinate.org
             </a>
-            <span style={{ color: "var(--color-text-dim)" }}>·</span>
             <a href="https://discord.com/invite/ethstaker" target="_blank" rel="noopener noreferrer" className="link-blue" style={{ fontSize: "0.95rem" }}>
               Community Discord ↗
             </a>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     "Central hub for Ethereum protocol coordination. AllCoreDevs call notes, breakout rooms, EIP championing, and governance in the open.",
 };
 import type { ArtifactCall } from "@/lib/github";
-import { CalendarIcon, ArchiveIcon, GitHubIcon } from "@/components/Icons";
+import { CalendarIcon, ArchiveIcon, GitHubIcon, MessageCircleIcon, FileTextIcon, MapIcon } from "@/components/Icons";
 
 export const revalidate = 3600;
 
@@ -46,6 +46,9 @@ export default async function PMRepoPage() {
           <h2 className="section-title">What&apos;s in the PM Repo?</h2>
           <div className="card-grid">
             <Card title="AllCoreDevs Meetings" description="Notes and recordings from bi-weekly execution, consensus, and testing calls." href="https://github.com/ethereum/pm/tree/master/AllCoreDevs-Meetings" external icon={<CalendarIcon color="var(--coord-cyan)" />} />
+            <Card title="Breakout Rooms" description="Focused technical discussions on specific topics. View active series or schedule one." href="/pm-repo/breakouts" icon={<MessageCircleIcon color="var(--coord-green)" />} />
+            <Card title="Championing an EIP" description="A guide to shepherding an EIP through the process to protocol inclusion." href="https://github.com/ethereum/pm/blob/master/processes/2026_championing_an_EIP.md" external icon={<FileTextIcon color="var(--coord-yellow)" />} />
+            <Card title="Protocol Upgrade Process" description="An overview of how the Ethereum network upgrade process works." href="https://github.com/ethereum/pm/blob/master/processes/protocol-upgrade.md" external icon={<MapIcon color="var(--coord-purple)" />} />
             <Card title="Active Breakout Series" description="Breakout calls that have had a call within the last three months." href="https://github.com/ethereum/pm/blob/master/Breakout-Room-Meetings/active-breakout-series.md" external icon={<GitHubIcon color="var(--coord-pink)" />} />
             <Card title="Upgrade Archive" description="Historical archive of fork development, incident postmortems, and records." href="https://github.com/ethereum/pm/tree/master/Network-Upgrade-Archive" external icon={<ArchiveIcon color="var(--coord-cyan-alt)" />} />
           </div>

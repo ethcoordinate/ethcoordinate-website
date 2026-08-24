@@ -36,7 +36,7 @@ const navLinks: readonly NavItem[] = [
     activePrefixes: ["/pm-repo", "/guides"],
     children: [
       { href: "/pm-repo", label: "PM repository", note: "Calls, agendas, and coordination" },
-      { href: "/pm-repo/breakouts", label: "Breakout rooms", note: "Focused protocol discussions" },
+      { href: "/pm-repo/breakouts", label: "Breakout calls", note: "Focused protocol discussions" },
       { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
       { href: "/guides/breakout", label: "Run a breakout call", note: "Propose, schedule, and host one" },
     ],
@@ -211,7 +211,12 @@ export default function Navigation() {
             <button
               type="button"
               className="mobile-menu-toggle"
-              onClick={() => setMobileMenuOpen((open) => !open)}
+              onClick={() => {
+                if (!mobileMenuOpen) {
+                  setMobileExpanded(navLinks.find((item) => isActive(item))?.href ?? null);
+                }
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation"
               aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -231,33 +236,48 @@ export default function Navigation() {
       {mobileMenuOpen && (
         <div id="mobile-navigation" className="mobile-nav-panel">
           <div className="mobile-nav-inner">
-            <p className="mobile-nav-kicker">Navigate the work</p>
             {navLinks.map((item) => {
               const active = isActive(item);
               const expanded = mobileExpanded === item.href;
+              if (!item.children) {
+                return (
+                  <div key={item.href} className="mobile-nav-group">
+                    <Link href={item.href} className={`mobile-nav-parent${active ? " active" : ""}`} onClick={closeNavigation}>
+                      {item.label}
+                    </Link>
+                  </div>
+                );
+              }
               return (
                 <div key={item.href} className="mobile-nav-group">
-                  <div className="mobile-nav-parent">
-                    <Link href={item.href} className={active ? "active" : ""} onClick={closeNavigation}>{item.label}</Link>
-                    {item.children && (
-                      <button
-                        type="button"
-                        aria-label={`${expanded ? "Collapse" : "Expand"} ${item.label} links`}
-                        aria-expanded={expanded}
-                        onClick={() => setMobileExpanded(expanded ? null : item.href)}
-                      >
-                        <span aria-hidden="true">{expanded ? "−" : "+"}</span>
-                      </button>
-                    )}
-                  </div>
-                  {item.children && expanded && (
+                  <button
+                    type="button"
+                    className={`mobile-nav-parent${active ? " active" : ""}`}
+                    aria-expanded={expanded}
+                    aria-label={`${expanded ? "Collapse" : "Expand"} ${item.label} links`}
+                    onClick={() => setMobileExpanded(expanded ? null : item.href)}
+                  >
+                    {item.label}
+                    <svg width="12" height="12" viewBox="0 0 10 10" fill="none" stroke="currentColor" aria-hidden="true" className={expanded ? "rotated" : ""}>
+                      <path d="M2.5 4L5 6.5L7.5 4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </button>
+                  {expanded && (
                     <div className="mobile-nav-children">
-                      {item.children.map((child) => (
-                        <Link key={child.href} href={child.href} onClick={closeNavigation}>
-                          <strong>{child.label}</strong>
-                          <span>{child.note}</span>
-                        </Link>
-                      ))}
+                      {item.children.map((child) => {
+                        const childActive = activeChild(item) === child.href;
+                        return (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className={childActive ? "active" : undefined}
+                            aria-current={childActive ? "page" : undefined}
+                            onClick={closeNavigation}
+                          >
+                            {child.label}
+                          </Link>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

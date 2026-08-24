@@ -34,10 +34,16 @@ export default function BreakoutGuidePage() {
         </div>
         <div className="page-divider" />
 
-        {/* When to Start */}
+        {/* What are Breakout Calls */}
         <section className="section">
-          <h2 className="section-title">When to Start a Breakout</h2>
+          <h2 className="section-title">What are Breakout Calls?</h2>
           <p style={prose}>
+            Breakout calls are feature- or topic-specific calls for items in
+            active implementation stages, aiming for inclusion in an upcoming
+            fork, that benefit from synchronous discussion beyond what fits
+            into AllCoreDevs.
+          </p>
+          <p style={{ ...prose, marginTop: "1rem" }}>
             Start a breakout when:
           </p>
           <ul style={{ listStyle: "none", padding: 0, margin: "0.75rem 0 0", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
@@ -52,14 +58,14 @@ export default function BreakoutGuidePage() {
               </li>
             ))}
           </ul>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--color-text-bright)", marginTop: "2rem", marginBottom: "0.75rem" }}>
-            Responsibilities
-          </h3>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+          <p style={{ ...prose, marginTop: "1rem" }}>
+            Examples of breakout series:
+          </p>
+          <ul style={{ listStyle: "none", padding: 0, margin: "0.75rem 0 0", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
             {[
-              "Get the right people to attend and keep discussions productive",
-              "Curate the agenda - surface open spec questions, parameter changes, competing proposals, and implementation blockers. Publish the agenda in the GitHub issue before the call so participants can come prepared",
-              "Facilitate, don't dictate - you source agenda items and keep things moving, but participants should feel comfortable pushing back and raising alternatives",
+              "ePBS (EIP-7732)",
+              "PeerDAS",
+              "FOCIL",
             ].map((item) => (
               <li key={item} style={{ display: "flex", alignItems: "baseline", gap: "0.6rem", fontSize: "0.95rem", color: "var(--color-text-body)" }}>
                 <span style={{ color: "var(--coord-purple)", fontSize: "0.7rem", flexShrink: 0 }}>▸</span>
@@ -67,9 +73,6 @@ export default function BreakoutGuidePage() {
               </li>
             ))}
           </ul>
-          <p style={{ ...prose, marginTop: "1rem" }}>
-            Examples of breakout series include ePBS (EIP-7732), PeerDAS, and FOCIL.
-          </p>
         </section>
 
         {/* How to Set Up */}

@@ -8,21 +8,21 @@ import { communityLinks, faqItems, organization } from "@/data/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn why EthCoordinate exists, how the organization works, who supports it, and how to join its Ethereum communities.",
+    "Why EthCoordinate exists, how it works, who supports it, and how to join its communities.",
 };
 
 const principles = [
   {
     title: "Coordination, not control",
-    body: "We make shared work easier to understand and advance without trying to own Ethereum's roadmap.",
+    body: "We help shared work move forward without trying to own Ethereum's roadmap.",
   },
   {
     title: "Credible neutrality",
-    body: "We disclose and manage conflicts so participation and outcomes remain trustworthy.",
+    body: "We disclose and manage conflicts of interest so people can trust the process and its outcomes.",
   },
   {
     title: "Public by default",
-    body: "Open calls, documentation, repositories, and community channels make the work legible.",
+    body: "Our calls, documentation, repositories, and community channels are open to everyone.",
   },
 ];
 
@@ -34,8 +34,8 @@ export default function AboutPage() {
         <header className="page-header about-header">
           <h1 className="page-title">About EthCoordinate</h1>
           <p className="page-desc">
-            Providing support for governance operations, facilitating stakeholder
-            engagement, and maintaining home staking tooling & software.
+            We support governance operations, help stakeholders engage with the
+            protocol, and maintain home-staking tools and software.
           </p>
         </header>
         <div className="page-divider" />
@@ -43,7 +43,7 @@ export default function AboutPage() {
         <section className="about-story section--major" aria-labelledby="story-title">
           <div>
             <p className="page-eyebrow">Our story</p>
-            <h2 id="story-title">A broader home for coordination work</h2>
+            <h2 id="story-title">From EthStaker to EthCoordinate</h2>
           </div>
           <div className="about-story-copy">
             {organization.about.map((paragraph) => (
