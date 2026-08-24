@@ -10,6 +10,7 @@ export const initiatives: readonly Initiative[] = [
   { id: "forkcast", title: "Forkcast", color: "var(--coord-purple)" },
   { id: "protocol-economics", title: "Protocol economics", color: "var(--coord-yellow)" },
   { id: "open-source-tooling", title: "Open-source tooling", color: "var(--coord-orange)" },
+  { id: "navigator", title: "Protocol navigator", color: "var(--coord-pink)" },
 ];
 
 export const communityLinks = [

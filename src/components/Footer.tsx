@@ -8,6 +8,7 @@ const footerGroups = [
     links: [
       { label: "Initiatives", href: "/#initiatives" },
       { label: "Governance", href: "/pm-repo" },
+      { label: "Protocol Navigator", href: "/navigator" },
     ],
   },
   {

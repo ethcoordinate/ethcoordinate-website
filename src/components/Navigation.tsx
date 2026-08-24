@@ -33,8 +33,9 @@ const navLinks: readonly NavItem[] = [
   {
     href: "/pm-repo",
     label: "Governance",
-    activePrefixes: ["/pm-repo", "/guides"],
+    activePrefixes: ["/pm-repo", "/guides", "/navigator"],
     children: [
+      { href: "/navigator", label: "Protocol Navigator", note: "Learn the EIP and ACD process" },
       { href: "/pm-repo", label: "PM repository", note: "Calls, agendas, and coordination" },
       { href: "/pm-repo/breakouts", label: "Breakout calls", note: "Focused protocol discussions" },
       { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
