@@ -60,8 +60,8 @@ export default async function Home() {
                 <span className="card-tag">Upgrade Tracker</span>
               </div>
               <p style={{ fontSize: "0.95rem", color: "var(--color-text-body)", lineHeight: 1.6, marginBottom: "1rem", flex: 1 }}>
-                Track Ethereum network upgrades in real time. Monitor EIP inclusion, testnet activations,
-                and mainnet readiness across every fork, from proposal to deployment.
+                Follow Ethereum upgrades as they happen, from proposal to deployment. Identify which EIPs
+                are in each fork, when testnets go live, and when mainnet hardforks are ready to go live.
               </p>
               <div className="flex items-center gap-4" style={{ marginBottom: "1rem" }}>
                 <div className="upgrade-timeline" style={{ flexDirection: "row", gap: "0.5rem", margin: 0, flexWrap: "wrap" }}>
@@ -85,9 +85,6 @@ export default async function Home() {
                 <h3 style={{ fontSize: "1.25rem", fontWeight: 600, color: "var(--color-text-bright)" }}>Quick Links</h3>
                 <span className="card-tag">Resources</span>
               </div>
-              <p style={{ fontSize: "0.95rem", color: "var(--color-text-body)", lineHeight: 1.6, marginBottom: "0.75rem" }}>
-                Essential channels and tools for protocol developers.
-              </p>
               <div className="quick-links-grid">
                 <a href="https://www.youtube.com/c/ethstaker" target="_blank" rel="noopener noreferrer">
                   <svg width="14" height="14" viewBox="0 0 24 24" style={{ flexShrink: 0, opacity: 0.7, fill: "var(--coord-pink)" }}><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -114,7 +111,7 @@ export default async function Home() {
                 <span className="card-tag">Home Staking</span>
               </div>
               <p style={{ fontSize: "0.95rem", color: "var(--color-text-body)", lineHeight: 1.6, marginBottom: "1rem", flex: 1 }}>
-                A safe, informed space for independent stakers to stay engaged with the network: operational guides, staking software, community support, and weekly office hours for anyone running a validator at home.
+                EthStaker is a community providing guidance, education, support, and resources for existing and potential stakers. EthStaker’s principal goal is to maximize decentralization of the Ethereum network.
               </p>
               <div className="quick-links-grid quick-links-grid--row" style={{ marginBottom: "1rem" }}>
                 <a href="https://docs.ethstaker.org" target="_blank" rel="noopener noreferrer">Knowledge Base <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>{"↗"}</span></a>
@@ -131,7 +128,7 @@ export default async function Home() {
                 <span className="card-tag">OSS</span>
               </div>
               <p style={{ fontSize: "0.95rem", color: "var(--color-text-body)", lineHeight: 1.6, marginBottom: "0.75rem" }}>
-                Open-source tools and documentation used by participants of the consensus set.
+                Open-source tools for staking
               </p>
               <div className="quick-links-grid">
                 <a href="https://ethdocker.com" target="_blank" rel="noopener noreferrer">
