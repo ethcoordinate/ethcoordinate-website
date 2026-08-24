@@ -3,7 +3,6 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
 import Card from "@/components/Card";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Forkcast",
@@ -131,65 +130,6 @@ export default function ForkcastPage() {
               external
               icon={<ShieldIcon color="var(--coord-cyan-alt)" />}
             />
-          </div>
-        </section>
-
-        {/* How It Connects to ACD - redesigned with better typography */}
-        <section className="section">
-          <h2 className="section-title">How Forkcast Connects to ACD</h2>
-          <p style={{ fontSize: "1.05rem", color: "var(--color-text-body)", lineHeight: 1.7, fontWeight: 500, marginBottom: "1.5rem", maxWidth: "640px" }}>
-            Forkcast is the visual layer on top of the AllCoreDevs process.
-            The <Link href="/pm-repo" className="link-blue">PM repo</Link> is
-            where the work happens; Forkcast is where you see the state of that work.
-          </p>
-          <div className="card" style={{ padding: 0, overflow: "hidden" }}>
-            <div className="acd-quadrants">
-              {[
-                {
-                  label: "Before calls",
-                  color: "var(--coord-cyan)",
-                  text: "Client teams publish their EIP perspectives. Forkcast aggregates them so you can see the consensus landscape before discussion begins.",
-                },
-                {
-                  label: "During calls",
-                  color: "var(--coord-purple)",
-                  text: "ACD calls produce decisions about which EIPs move from Proposed to Considered for Inclusion (CFI) to Scheduled for Inclusion (SFI).",
-                },
-                {
-                  label: "After calls",
-                  color: "var(--coord-green)",
-                  text: "Forkcast records these decisions with timestamps and call references, and publishes AI-generated summaries and transcripts.",
-                },
-                {
-                  label: "Between calls",
-                  color: "var(--coord-yellow)",
-                  text: "EIP detail pages and stakeholder views let you follow progress asynchronously without attending every meeting.",
-                },
-              ].map((item, i) => (
-                <div key={item.label} className="acd-quadrant" style={{
-                  padding: "1.25rem 1.5rem",
-                }}>
-                  <div style={{
-                    fontSize: "1.15rem",
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: 600,
-                    color: item.color,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    marginBottom: "0.6rem",
-                  }}>
-                    <span style={{ opacity: 0.5 }}>{i + 1}.</span> {item.label}
-                  </div>
-                  <p style={{
-                    fontSize: "0.95rem",
-                    color: "var(--color-text-body)",
-                    lineHeight: 1.6,
-                  }}>
-                    {item.text}
-                  </p>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
