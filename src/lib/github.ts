@@ -353,7 +353,7 @@ export const getRecentArtifactCalls = unstable_cache(
 
       // Each dir is named like "2026-02-12_230" (date_number)
       const sorted = dirs
-        .filter((d) => d.type === "dir")
+        .filter((d) => d.type === "dir" && /^\d{4}-\d{2}-\d{2}_\d+$/.test(d.name))
         .sort((a, b) => b.name.localeCompare(a.name))
         .slice(0, limit);
 
