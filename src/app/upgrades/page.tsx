@@ -15,18 +15,12 @@ export default function UpgradesPage() {
       {/* the loop is the largest above-fold image; start it before first paint */}
       <link rel="preload" as="image" href="/upgrades/loop.webp" />
       <Navigation />
-      <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
+      <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container upgrades-page">
         <div className="page-header">
           <p className="page-eyebrow">Ethereum&apos;s upgrades</p>
           <h1 className="page-title">Fork history</h1>
-          <p className="page-desc">
-            Hover over any fork for its name and date, click for more info.
-          </p>
         </div>
-        <div className="page-divider" />
-        <section className="section">
-          <UpgradeTimeline />
-        </section>
+        <UpgradeTimeline />
       </main>
       <Footer />
     </>

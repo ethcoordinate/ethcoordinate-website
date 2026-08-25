@@ -6,9 +6,9 @@ const footerGroups = [
   {
     label: "Explore",
     links: [
-      { label: "Initiatives", href: "/#initiatives" },
-      { label: "Protocol coordination", href: "/initiatives/protocol-coordination" },
       { label: "ACD navigator", href: "/navigator" },
+      { label: "Forkcast", href: "/forkcast" },
+      { label: "Staking support", href: "/initiatives/staker-support" },
     ],
   },
   {

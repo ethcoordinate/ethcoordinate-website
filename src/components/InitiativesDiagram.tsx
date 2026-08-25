@@ -38,7 +38,7 @@ export default function InitiativesDiagram() {
 
   return (
     <div className="coord-diagram" style={{ maxWidth: 700, margin: "0 auto" }}>
-      <svg viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="initiatives-diagram-title initiatives-diagram-desc">
+      <svg viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="initiatives-diagram-title initiatives-diagram-desc">
         <title id="initiatives-diagram-title">EthCoordinate initiatives</title>
         <desc id="initiatives-diagram-desc">An octopus diagram showing the {initiatives.length} initiatives EthCoordinate works on: {initiatives.map((i) => i.title).join(", ")}.</desc>
 
@@ -59,26 +59,37 @@ export default function InitiativesDiagram() {
         <circle cx={CX + 11} cy={CY - 20} r="1.4" style={{ fill: "var(--color-bg-deep, #0a0a14)" }} aria-hidden="true" />
         <text x={CX} y={CY + 12} textAnchor="middle" style={{ fill: "var(--coord-cyan)" }} fontSize="13" fontWeight="700" letterSpacing="0.04em" aria-hidden="true">EthCoordinate</text>
 
-        {/* Endpoint dots + labels */}
-        {arms.map(({ initiative, end, anchor, label, lines }) => (
-          <g key={initiative.id} aria-hidden="true">
-            <circle cx={end.x} cy={end.y} r="5" style={{ fill: initiative.color }} opacity="0.8" />
-            {lines.length === 1 ? (
-              <text className="coord-arm-label" x={label.x} y={label.y + 4} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[0]}</text>
-            ) : (
-              <>
-                <text className="coord-arm-label" x={label.x} y={label.y - 5} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[0]}</text>
-                <text className="coord-arm-label" x={label.x} y={label.y + 9} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[1]}</text>
-              </>
-            )}
-          </g>
-        ))}
+        {/* Endpoint dots + labels (linked when the initiative has a page) */}
+        {arms.map(({ initiative, end, anchor, label, lines }) => {
+          const labelEls = (
+            <>
+              <circle cx={end.x} cy={end.y} r="5" style={{ fill: initiative.color }} opacity="0.8" />
+              {lines.length === 1 ? (
+                <text className="coord-arm-label" x={label.x} y={label.y + 4} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[0]}</text>
+              ) : (
+                <>
+                  <text className="coord-arm-label" x={label.x} y={label.y - 5} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[0]}</text>
+                  <text className="coord-arm-label" x={label.x} y={label.y + 9} textAnchor={anchor} style={{ fill: initiative.color }} fontSize="13" fontWeight="600">{lines[1]}</text>
+                </>
+              )}
+            </>
+          );
+          return initiative.href ? (
+            <a key={initiative.id} href={initiative.href} className="coord-arm-link">
+              <g>{labelEls}</g>
+            </a>
+          ) : (
+            <g key={initiative.id} aria-hidden="true">{labelEls}</g>
+          );
+        })}
       </svg>
 
       {/* Readable legend for small screens, which replaces the in-diagram labels */}
-      <ul className="coord-mobile-list" aria-hidden="true">
+      <ul className="coord-mobile-list">
         {initiatives.map((initiative) => (
-          <li key={initiative.id} style={{ "--initiative-color": initiative.color } as React.CSSProperties}>{initiative.title}</li>
+          <li key={initiative.id} style={{ "--initiative-color": initiative.color } as React.CSSProperties}>
+            {initiative.href ? <a href={initiative.href}>{initiative.title}</a> : initiative.title}
+          </li>
         ))}
       </ul>
     </div>

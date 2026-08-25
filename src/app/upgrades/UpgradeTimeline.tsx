@@ -66,6 +66,10 @@ const EL_YEARS = [
 ];
 const POST_YEARS = [
   { year: "2023", x: 1100 }, { year: "2024", x: 1860 }, { year: "2025", x: 2700 },
+  // Jan 1 2026: least-squares fit of the four shipped post-merge fork dates to
+  // their badge-center x positions (2.2376 px/day, residuals <= ~18 days),
+  // evaluated at 2026-01-01. Lands just right of Fusaka (3 Dec 2025).
+  { year: "2026", x: 3334 },
 ];
 
 const tipAlign = (x: number) => (x < 500 ? "tip-left" : x > CW - 500 ? "tip-right" : "");
@@ -251,6 +255,47 @@ export default function UpgradeTimeline() {
             );
           })}
         </div>
+
+      {/* mobile fallback: vertical list (the timeline is desktop-scale) */}
+      <div className="timeline-mobile">
+        <p className="legend-heading">Pre-merge — execution layer</p>
+        {preMergeEL.map((f, i) => (
+          <button key={f.name} className={`tm-row ${selected === 7 + i ? "selected" : ""}`} onClick={() => toggle(7 + i)}>
+            <span className="tm-num tm-num-el">{i + 1}</span>
+            <b>{f.name}</b>
+            <small>{f.date}</small>
+          </button>
+        ))}
+        <p className="legend-heading">Pre-merge — consensus layer</p>
+        {preMergeCL.map((f, i) => (
+          <button key={f.name} className={`tm-row ${selected === 21 + i ? "selected" : ""}`} onClick={() => toggle(21 + i)}>
+            <span className="tm-num tm-num-cl">{i + 1}</span>
+            <b>{f.name}</b>
+            <small>{f.date}</small>
+          </button>
+        ))}
+        <button className={`tm-row ${selected === 0 ? "selected" : ""}`} onClick={() => toggle(0)}>
+          <span className="tm-num tm-num-merge">m</span>
+          <b>{mergeFork.name}</b>
+          <small>{mergeFork.date}</small>
+        </button>
+        <p className="legend-heading">Post-merge</p>
+        {postMerge.map((f, i) => (
+          <button key={f.n} className={`tm-row ${selected === i + 1 ? "selected" : ""}`} onClick={() => toggle(i + 1)}>
+            <span className="tm-num tm-num-post">{f.n}</span>
+            <b>{f.nickname}</b>
+            <small>{f.date}</small>
+          </button>
+        ))}
+      </div>
+
+      <p className="timeline-hint">Hover over any fork for its name and date — click for more info.</p>
+      <p className="timeline-export">
+        Print-quality image:{" "}
+        <a href="/upgrades/fork-history-dark.png" download>dark</a>
+        {" · "}
+        <a href="/upgrades/fork-history-light.png" download>light</a>
+      </p>
 
       {/* detail panel: always open; defaults to instructions until a fork is clicked */}
       <div className="fork-detail open">

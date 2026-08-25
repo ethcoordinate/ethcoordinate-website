@@ -42,3 +42,6 @@ next-env.d.ts
 
 # source artwork scratch
 temp/
+
+# export generator font cache
+scripts/.fonts/

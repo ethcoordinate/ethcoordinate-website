@@ -8,6 +8,23 @@
   color: var(--color-text-body);
 }
 
+/* ---------- compact page chrome (fits a 13" laptop without scrolling) ---------- */
+.upgrades-page .page-header { padding-top: 4.5rem; padding-bottom: 1rem; }
+
+.timeline-hint {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  margin: 0.9rem 0 0;
+}
+.timeline-export {
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  margin: 0.35rem 0 0;
+}
+.timeline-export a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+.timeline-export a:hover { color: var(--color-blue); }
+
 /* ---------- legend: right-side drawer ---------- */
 .legend-toggle {
   position: fixed;
@@ -241,7 +258,7 @@
 }
 .fork-detail.open {
   grid-template-rows: 1fr;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 .fork-detail-inner {
   overflow: hidden;
@@ -256,8 +273,8 @@
 }
 .fork-detail:not(.open) .fork-detail-inner { border-color: transparent; }
 .fork-detail-mascot {
-  width: 110px;
-  height: 110px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -270,7 +287,7 @@
   color: var(--color-text-dim);
 }
 .fork-detail-body {
-  padding: 1.25rem 0;
+  padding: 1rem 0;
   min-width: 0;
 }
 .fork-detail-head {
@@ -325,9 +342,49 @@
 
 /* ---------- footnote ---------- */
 
+/* ---------- mobile: vertical list replaces the timeline ---------- */
+.timeline-mobile { display: none; }
+
+.tm-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 4px;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-text-body);
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+.tm-row:last-child { border-bottom: 0; }
+.tm-row b { color: var(--color-text-bright); font-weight: 600; }
+.tm-row small { margin-left: auto; color: var(--color-text-muted); font-size: 0.68rem; white-space: nowrap; flex-shrink: 0; }
+.tm-num {
+  flex: 0 0 20px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 5px;
+  padding: 2px 0;
+}
+.tm-num-el { background: var(--coord-purple); color: var(--color-bg-void); }
+.tm-num-cl { background: var(--color-blue); color: var(--color-bg-void); }
+.tm-num-merge { background: var(--color-blue); color: var(--color-bg-void); }
+.tm-num-post { background: var(--color-bg-elevated); border: 1px solid var(--color-border-hover); color: var(--color-text-bright); }
+.tm-row.selected b { color: var(--color-blue); }
+.timeline-mobile .legend-heading { margin-top: 1.4rem; }
+
 /* ---------- responsive ---------- */
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .legend-panel { width: 92vw; }
+  .legend-toggle { display: none; } /* the mobile list already is the legend */
+  .timeline { display: none; }
+  .timeline-hint { display: none; } /* no hover on touch; the list below is self-explanatory */
+  .timeline-mobile { display: block; }
 }
 
 @media (prefers-reduced-motion: reduce) {
