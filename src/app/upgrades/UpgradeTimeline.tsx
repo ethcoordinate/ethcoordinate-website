@@ -127,11 +127,17 @@ export default function UpgradeTimeline() {
 
   // detail items: 0 = merge, 1..6 = post-merge forks, 7..20 = pre-merge EL, 21..22 = pre-merge CL
   const detailItems = [
-    { mascot: mergeFork.mascot as string | null, name: mergeFork.name, fullName: mergeFork.fullName, date: mergeFork.date, blurb: mergeFork.blurb, href: mergeFork.href, emoji: undefined as string | undefined },
-    ...postMerge.map((p) => ({ mascot: p.mascot, name: p.nickname, fullName: p.fullName, date: p.date, blurb: p.blurb, href: p.href, emoji: p.mascotEmoji })),
-    ...preMergeEL.map((p) => ({ mascot: null, name: p.name, fullName: "Execution layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined })),
-    ...preMergeCL.map((p) => ({ mascot: null, name: p.name, fullName: "Consensus layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined })),
+    { mascot: mergeFork.mascot as string | null, name: mergeFork.name, fullName: mergeFork.fullName, date: mergeFork.date, blurb: mergeFork.blurb, href: mergeFork.href, emoji: undefined as string | undefined, eipCount: mergeFork.eipCount as number | null, scheduled: false },
+    ...postMerge.map((p) => ({ mascot: p.mascot, name: p.nickname, fullName: p.fullName, date: p.date, blurb: p.blurb, href: p.href, emoji: p.mascotEmoji, eipCount: p.eipCount, scheduled: p.status === "upcoming" })),
+    ...preMergeEL.map((p) => ({ mascot: null, name: p.name, fullName: "Execution layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined, eipCount: p.eipCount as number | null, scheduled: false })),
+    ...preMergeCL.map((p) => ({ mascot: null, name: p.name, fullName: "Consensus layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined, eipCount: p.eipCount as number | null, scheduled: false })),
   ];
+
+  const eipCountText = (count: number | null, scheduled: boolean) => {
+    if (count === null) return "scope TBD";
+    if (count === 0) return "no EIPs";
+    return `${count} EIP${count === 1 ? "" : "s"}${scheduled ? " scheduled" : ""}`;
+  };
   const toggle = (i: number) => setSelected((cur) => (cur === i ? null : i));
   const active = selected !== null ? detailItems[selected] : null;
 
@@ -262,7 +268,7 @@ export default function UpgradeTimeline() {
             <div className="fork-detail-body">
               <div className="fork-detail-head">
                 <b>{active.name}</b>
-                <span>{active.fullName} · {active.date}</span>
+                <span>{active.fullName} · {active.date} · {eipCountText(active.eipCount, active.scheduled)}</span>
               </div>
               <p className="fork-detail-caption">major feature shipped</p>
               <p>{active.blurb}</p>
