@@ -144,7 +144,7 @@ function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
     <main className="home-page">
       <section className="home-centerfold">
         <div className="section-heading">
-          <p className="eyebrow">Ethereum protocol navigator</p>
+          <p className="eyebrow">AllCoreDevs navigator</p>
           <h1>What are you trying to do?</h1>
           <p>Start with your goal. You do not need to know whether it belongs to the EIP process, AllCoreDevs, or fork planning.</p>
         </div>

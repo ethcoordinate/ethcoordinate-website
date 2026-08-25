@@ -8,7 +8,7 @@ import { getRecentArtifactCalls } from "@/lib/github";
 import type { ArtifactCall } from "@/lib/github";
 import {
   CalendarIcon, UsersIcon, FileTextIcon,
-  YouTubeIcon, GitHubIcon, DiscordIcon, ArchiveIcon,
+  YouTubeIcon, GitHubIcon, DiscordIcon,
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ const whereItHappens = [
   {
     title: "AllCoreDevs calls",
     description: "Bi-weekly execution, consensus, and testing calls. Agendas, notes, and recordings are in the ethereum/pm repository.",
-    href: "https://github.com/ethereum/pm/tree/master/AllCoreDevs-Meetings",
+    href: "https://forkcast.org/calls?filter=acd",
     external: true,
     icon: <CalendarIcon color="var(--coord-cyan)" />,
   },
@@ -30,13 +30,6 @@ const whereItHappens = [
     description: "Technical discussions on specific protocol topics. Anyone can propose one for an EIP, a research question, or work that spans several teams.",
     href: "/breakouts",
     icon: <UsersIcon color="var(--coord-pink)" />,
-  },
-  {
-    title: "Upgrade archive",
-    description: "Historical record of past fork development, incident postmortems, and network upgrade documentation.",
-    href: "https://github.com/ethereum/pm/tree/master/Network-Upgrade-Archive",
-    external: true,
-    icon: <ArchiveIcon color="var(--coord-cyan-alt)" />,
   },
 ];
 

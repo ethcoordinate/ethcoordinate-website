@@ -12,14 +12,15 @@ export const metadata: Metadata = {
 export default function UpgradesPage() {
   return (
     <>
+      {/* the loop is the largest above-fold image; start it before first paint */}
+      <link rel="preload" as="image" href="/upgrades/loop.webp" />
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <p className="page-eyebrow">Every fork, one timeline</p>
+          <p className="page-eyebrow">Ethereum&apos;s upgrades</p>
           <h1 className="page-title">Fork history</h1>
           <p className="page-desc">
-            From Frontier to the Merge to today&apos;s forks. Hover any point for
-            its name and date; click through to the primary record.
+            Hover over any fork for its name and date, click for more info.
           </p>
         </div>
         <div className="page-divider" />

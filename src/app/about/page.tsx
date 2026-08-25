@@ -40,10 +40,10 @@ export default function AboutPage() {
         </header>
         <div className="page-divider" />
 
-        <section className="about-story section--major" aria-labelledby="story-title">
+        <section id="from-ethstaker" className="about-story section--major" aria-labelledby="from-ethstaker-title">
           <div>
             <p className="page-eyebrow">Our story</p>
-            <h2 id="story-title">From EthStaker to EthCoordinate</h2>
+            <h2 id="from-ethstaker-title">From EthStaker to EthCoordinate</h2>
           </div>
           <div className="about-story-copy">
             {organization.about.map((paragraph) => (

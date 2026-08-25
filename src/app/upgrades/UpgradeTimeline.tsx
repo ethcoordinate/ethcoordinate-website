@@ -151,7 +151,7 @@ export default function UpgradeTimeline() {
       <div className="timeline" role="img" aria-label="Interactive timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
           {/* the loop (source artwork sprite) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/upgrades/loop.png" alt="" className="loop-sprite"
+          <img src="/upgrades/loop.webp" alt="" className="loop-sprite"
             style={{ left: px(LOOP.x), top: py(LOOP.y), width: px(LOOP.w) }} />
 
           {/* dotted tracks */}
@@ -192,7 +192,7 @@ export default function UpgradeTimeline() {
                 aria-label={`${f.name}, ${f.date}`}
                 aria-expanded={selected === 7 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/el-${i + 1}.png`} alt="" />
+                <img src={`/upgrades/el-${i + 1}.webp`} alt="" />
                 <Tip title={f.name} date={f.date} />
               </button>
             );
@@ -208,7 +208,7 @@ export default function UpgradeTimeline() {
                 aria-label={`${f.name}, ${f.date}`}
                 aria-expanded={selected === 21 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/cl-${i + 1}.png`} alt="" />
+                <img src={`/upgrades/cl-${i + 1}.webp`} alt="" />
                 <Tip title={f.name} date={f.date} />
               </button>
             );
@@ -221,7 +221,7 @@ export default function UpgradeTimeline() {
             aria-label={`${mergeFork.name}, ${mergeFork.date}`}
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/upgrades/merge-pill.png" alt="" />
+            <img src="/upgrades/merge-pill.webp" alt="" />
             <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
           <button className={`badge-sprite merge-sprite tip-left ${selected === 0 ? "selected" : ""}`}
@@ -230,7 +230,7 @@ export default function UpgradeTimeline() {
             aria-label={`${mergeFork.name}, ${mergeFork.date}`}
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/upgrades/merge-pill-left.png" alt="" />
+            <img src="/upgrades/merge-pill-left.webp" alt="" />
             <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
 
@@ -244,7 +244,7 @@ export default function UpgradeTimeline() {
                 aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
                 aria-expanded={selected === i + 1}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/post-${i + 1}.png`} alt="" />
+                <img src={`/upgrades/post-${i + 1}.webp`} alt="" />
                 <span className="fork-nickname">{f.nickname}</span>
                 <Tip title={f.nickname} sub={f.fullName} date={f.date} />
               </button>

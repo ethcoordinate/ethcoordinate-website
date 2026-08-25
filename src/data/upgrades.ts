@@ -12,7 +12,7 @@ export type PostMergeFork = {
   fullName: string;
   date: string;
   blurb: string;
-  mascot: string | null; // /upgrades/*.png, null -> placeholder
+  mascot: string | null; // /upgrades/*.webp, null -> placeholder
   mascotEmoji?: string; // fallback when no PNG asset exists
   href: string;
   status: "shipped" | "upcoming" | "tbd";
@@ -54,7 +54,7 @@ export const mergeFork = {
   fullName: "Bellatrix/Paris",
   date: "15 Sep 2022",
   blurb: "Changed from Proof of Work to Proof of Stake.",
-  mascot: "/upgrades/merge-panda.png",
+  mascot: "/upgrades/merge-panda.webp",
   href: `${HISTORY}#paris`,
   eipCount: 2, // EIP-3675, EIP-4399
 };
@@ -66,7 +66,7 @@ export const postMerge: PostMergeFork[] = [
     fullName: "Capella/Shanghai",
     date: "12 Apr 2023",
     blurb: "Enabled withdrawals from validators.",
-    mascot: "/upgrades/shapella-owl.png",
+    mascot: "/upgrades/shapella-owl.webp",
     href: `${HISTORY}#shapella`,
     eipCount: 5,
     status: "shipped",
@@ -77,7 +77,7 @@ export const postMerge: PostMergeFork[] = [
     fullName: "Deneb/Cancun",
     date: "13 Mar 2024",
     blurb: "Added a new data type called “blobs” that made L2s cheaper to use.",
-    mascot: "/upgrades/dencun-blobfish.png",
+    mascot: "/upgrades/dencun-blobfish.webp",
     href: `${HISTORY}#dencun`,
     eipCount: 9,
     status: "shipped",
@@ -88,7 +88,7 @@ export const postMerge: PostMergeFork[] = [
     fullName: "Electra/Prague",
     date: "7 May 2025",
     blurb: "Enabled better wallet UX, validator consolidations & withdrawal address exits.",
-    mascot: "/upgrades/pectra-giraffe.png",
+    mascot: "/upgrades/pectra-giraffe.webp",
     href: `${FORKCAST}pectra`,
     eipCount: 11,
     status: "shipped",
@@ -99,7 +99,7 @@ export const postMerge: PostMergeFork[] = [
     fullName: "Fulu/Osaka",
     date: "3 Dec 2025",
     blurb: "Data availability sampling (scaling unlock).",
-    mascot: "/upgrades/fusaka-zebra.png",
+    mascot: "/upgrades/fusaka-zebra.webp",
     href: `${FORKCAST}fusaka`,
     eipCount: 13,
     status: "shipped",
