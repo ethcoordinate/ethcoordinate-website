@@ -62,11 +62,9 @@ export default function StakerSupportPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <h1 className="page-title">Staker support</h1>
+          <h1 className="page-title">Staking support</h1>
           <p className="page-desc">
-            EthStaker is a community providing guidance, education, support, and
-            resources for existing and potential stakers. EthStaker’s principal
-            goal is to maximize decentralization of the Ethereum network.
+            EthStaker is a community providing guidance, education, support, and resources for existing and potential stakers. EthStaker’s principal goal is to maximize decentralization of the Ethereum network.
           </p>
           <div className="flex gap-3 flex-wrap" style={{ marginTop: "1.5rem" }}>
             <a href="https://ethstaker.org" target="_blank" rel="noopener noreferrer" className="card-btn" style={{ marginTop: 0 }}>

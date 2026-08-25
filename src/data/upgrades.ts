@@ -108,8 +108,8 @@ export const postMerge: PostMergeFork[] = [
   },
   {
     n: 6,
-    nickname: "Hegota",
-    fullName: "H star",
+    nickname: "Hegotá",
+    fullName: "Heze / Bogotá",
     date: "TBD",
     blurb: "FOCIL.",
     mascot: null,

@@ -170,7 +170,7 @@ export default function UpgradeTimeline() {
           <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(674) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
-            <span key={year} className="year-label" style={{ left: px(x), top: py(862) }}>{year}</span>
+            <span key={year} className="year-label" style={{ left: px(x), top: py(880) }}>{year}</span>
           ))}
           {POST_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(1645) }}>{year}</span>
@@ -217,7 +217,7 @@ export default function UpgradeTimeline() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill.png" alt="" />
             <span className="merge-date-label" aria-hidden="true">15 SEP</span>
-            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
+            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} />
           </button>
           <button className={`badge-sprite merge-sprite tip-left ${selected === 0 ? "selected" : ""}`}
             style={{ left: px(MERGE_L.x), top: py(MERGE_L.y), width: px(MERGE_L.w) }}
@@ -227,7 +227,7 @@ export default function UpgradeTimeline() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill-left.png" alt="" />
             <span className="merge-date-label" aria-hidden="true">15 SEP</span>
-            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
+            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} />
           </button>
 
           {/* post-merge badges (toggle the detail panel) */}
@@ -243,7 +243,7 @@ export default function UpgradeTimeline() {
                 <img src={`/upgrades/post-${i + 1}.png`} alt="" />
                 <span className="fork-nickname">{f.nickname}</span>
                 <span className="fork-date">{f.date}</span>
-                <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} detail={f.blurb} />
+                <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} />
               </button>
             );
           })}
