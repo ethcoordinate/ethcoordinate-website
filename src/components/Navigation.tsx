@@ -21,27 +21,26 @@ type NavItem = {
 
 const navLinks: readonly NavItem[] = [
   {
-    href: "/#initiatives",
-    label: "Initiatives",
-    activePrefixes: ["/initiatives", "/forkcast", "/products/forkcast"],
+    href: "/initiatives/protocol-coordination",
+    label: "Protocol coordination",
+    activePrefixes: ["/initiatives/protocol-coordination", "/navigator", "/upgrades", "/breakouts", "/guides"],
     children: [
-      { href: "/initiatives/staker-support", label: "Staker support", note: "Guidance, tools, and community" },
-      { href: "/forkcast", label: "Forkcast", note: "Upgrades, EIPs, calls, and decisions" },
-      { href: "/initiatives/protocol-coordination", label: "Protocol coordination", note: "Calls, breakouts, and EIP support" },
+      { href: "/initiatives/protocol-coordination", label: "EthCoordinate's role", note: "Calls, breakouts, and EIP support" },
+      { href: "/navigator", label: "ACD navigator", note: "Learn the EIP and ACD process" },
+      { href: "/upgrades", label: "Fork history", note: "Every fork from Frontier to today" },
+      { href: "/breakouts", label: "Breakout calls", note: "Focused protocol discussions" },
+      { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
     ],
   },
   {
-    href: "/pm-repo",
-    label: "Governance",
-    activePrefixes: ["/pm-repo", "/guides", "/navigator", "/upgrades"],
-    children: [
-      { href: "/navigator", label: "Protocol Navigator", note: "Learn the EIP and ACD process" },
-      { href: "/upgrades", label: "Fork history", note: "Every fork from Frontier to today" },
-      { href: "/pm-repo", label: "PM repository", note: "Calls, agendas, and coordination" },
-      { href: "/pm-repo/breakouts", label: "Breakout calls", note: "Focused protocol discussions" },
-      { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
-      { href: "/guides/breakout", label: "Run a breakout call", note: "Propose, schedule, and host one" },
-    ],
+    href: "/forkcast",
+    label: "Forkcast",
+    activePrefixes: ["/forkcast", "/products/forkcast"],
+  },
+  {
+    href: "/initiatives/staker-support",
+    label: "Solo staking",
+    activePrefixes: ["/initiatives/staker-support"],
   },
   {
     href: "/about",

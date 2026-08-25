@@ -89,9 +89,9 @@ export default function NavigatorApp() {
   return (
     <div className="navigator-root">
       <div className="nav-topbar">
-        <button className="nav-wordmark" onClick={goHome} aria-label="Protocol Navigator home">
+        <button className="nav-wordmark" onClick={goHome} aria-label="ACD Navigator home">
           <span className="nav-wordmark-glyph" aria-hidden="true">⎇</span>
-          <span>Protocol Navigator</span>
+          <span>ACD Navigator</span>
         </button>
         <nav aria-label="Navigator sections">
           <button className={screen === 'home' ? 'active' : ''} onClick={goHome}>Home</button>
@@ -133,7 +133,7 @@ export default function NavigatorApp() {
       {screen === 'participate' && <ParticipationGuide onOpenClient={() => openPeople('client')} />}
       {screen === 'process' && <ReferencePage eyebrow="Reference" title="How a proposal reaches mainnet" intro="Explore the route from a problem to mainnet activation. This map describes common coordination practice, not a guaranteed pipeline."><ProcessExplorer /></ReferencePage>}
       {screen === 'people' && <ReferencePage eyebrow="People" title="Who’s involved" intro="Meet the roles and teams involved in proposing, reviewing, implementing, and testing protocol changes."><RoleExplorer initialRole={peopleRole} /></ReferencePage>}
-      {screen === 'resources' && <ReferencePage eyebrow="Live resources" title="Continue with primary and live sources" intro="Use Protocol Navigator for orientation, then verify changing facts in Forkcast and the canonical process documents."><ForkcastHandoffs /><SourceLinks /></ReferencePage>}
+      {screen === 'resources' && <ReferencePage eyebrow="Live resources" title="Continue with primary and live sources" intro="Use ACD Navigator for orientation, then verify changing facts in Forkcast and the canonical process documents."><ForkcastHandoffs /><SourceLinks /></ReferencePage>}
     </div>
   )
 }
@@ -338,7 +338,7 @@ function ForkcastHandoffs() {
     <div className="section-heading">
       <p className="eyebrow">Continue in Forkcast</p>
       <h2>Learn here. Track the live process there.</h2>
-      <p>Protocol Navigator explains what the process means. Forkcast maintains changing EIP, call, decision, upgrade, and testing information.</p>
+      <p>ACD Navigator explains what the process means. Forkcast maintains changing EIP, call, decision, upgrade, and testing information.</p>
     </div>
     <div className="handoff-grid">
       {destinations.map(destination => <a href={destination.href} target="_blank" rel="noreferrer" key={destination.href}>

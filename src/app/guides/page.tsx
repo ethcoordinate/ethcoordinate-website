@@ -27,7 +27,7 @@ export default function GuidesPage() {
         <div className="page-divider" />
 
         <section className="section">
-          {/* Protocol Navigator */}
+          {/* ACD Navigator */}
           <Link
             href="/navigator"
             className="card"
@@ -64,7 +64,7 @@ export default function GuidesPage() {
                     color: "var(--color-text-bright)",
                   }}
                 >
-                  Protocol Navigator
+                  ACD Navigator
                 </h2>
               </div>
               <p
@@ -144,7 +144,7 @@ export default function GuidesPage() {
 
           {/* Running a Breakout Call */}
           <Link
-            href="/guides/breakout"
+            href="/breakouts"
             className="card"
             style={{
               marginTop: "1rem",

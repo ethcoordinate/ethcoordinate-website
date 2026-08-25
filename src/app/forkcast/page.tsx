@@ -30,7 +30,7 @@ export default function ForkcastPage() {
             </a>
           </div>
           <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginTop: "1rem" }}>
-            New to the process? Start with the <Link href="/navigator" className="link-blue">Protocol Navigator</Link> — Forkcast tracks the live record.
+            New to the process? Start with the <Link href="/navigator" className="link-blue">ACD Navigator</Link> — Forkcast tracks the live record.
           </p>
         </div>
         <div className="page-divider" />

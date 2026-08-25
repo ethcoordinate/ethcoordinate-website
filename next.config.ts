@@ -16,6 +16,21 @@ const nextConfig: NextConfig = {
         destination: "/initiatives/staker-support",
         permanent: true,
       },
+      {
+        source: "/pm-repo/breakouts",
+        destination: "/breakouts",
+        permanent: true,
+      },
+      {
+        source: "/pm-repo",
+        destination: "/initiatives/protocol-coordination",
+        permanent: true,
+      },
+      {
+        source: "/guides/breakout",
+        destination: "/breakouts",
+        permanent: true,
+      },
     ];
   },
   images: {

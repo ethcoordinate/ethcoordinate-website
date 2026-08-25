@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import NavigatorApp from "./NavigatorApp";
 
 export const metadata: Metadata = {
-  title: "Protocol Navigator",
+  title: "ACD Navigator",
   description:
     "An interactive, plain-language guide to Ethereum's EIP, AllCoreDevs, and network-upgrade processes. Start with your goal, not the process vocabulary.",
 };

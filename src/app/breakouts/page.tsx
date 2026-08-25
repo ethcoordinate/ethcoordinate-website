@@ -2,34 +2,51 @@ import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
-import Link from "next/link";
+import { getActiveBreakouts } from "@/lib/github";
 
 export const metadata: Metadata = {
-  title: "Running a Breakout Call",
+  title: "Breakout Calls",
   description:
-    "How to organize and run a breakout call for Ethereum protocol development: when to start one, how to set it up, and what to expect.",
+    "Active breakout room discussions for Ethereum protocol development, and how to organize and run your own breakout call.",
 };
 
-export default function BreakoutGuidePage() {
+export const revalidate = 3600;
+
+const prose = {
+  color: "var(--color-text-body)",
+  fontSize: "0.95rem",
+  lineHeight: 1.75,
+} as const;
+
+const proseSm = {
+  color: "var(--color-text-body)",
+  fontSize: "0.85rem",
+  lineHeight: 1.7,
+  margin: 0,
+} as const;
+
+const bright = { color: "var(--color-text-bright)" } as const;
+
+const codeStyle = {
+  fontSize: "0.8rem",
+  background: "var(--color-bg-elevated)",
+  padding: "0.15rem 0.4rem",
+  borderRadius: "3px",
+  color: "var(--color-text-secondary)",
+} as const;
+
+export default async function BreakoutsPage() {
+  const activeBreakouts = await getActiveBreakouts();
+
   return (
     <>
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
-        {/* Breadcrumb */}
         <div className="page-header">
-          <div className="guide-breadcrumb">
-            <Link href="/guides" className="link-muted">Guides</Link>
-            <span style={{ color: "var(--color-text-dim)" }}>/</span>
-            <span style={{ color: "var(--color-text-bright)" }}>Running a Breakout Call</span>
-          </div>
-
-          <h1 className="page-title" style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)" }}>
-            Running a Breakout Call
-          </h1>
+          <h1 className="page-title">Breakout Calls</h1>
           <p className="page-desc">
-            Breakout calls are feature- or topic-specific calls for items in active
-            implementation stages that benefit from synchronous discussion beyond
-            what fits into AllCoreDevs.
+            Focused technical discussions on specific Ethereum protocol topics.
+            Anyone can propose and participate in breakout calls.
           </p>
         </div>
         <div className="page-divider" />
@@ -75,7 +92,40 @@ export default function BreakoutGuidePage() {
           </ul>
         </section>
 
-        {/* How to Set Up */}
+        {/* Active Breakout Topics */}
+        <section className="section">
+          <h2 className="section-title">Active Breakout Topics</h2>
+          <p style={{ color: "var(--color-text-body)", fontSize: "0.95rem", lineHeight: 1.75, marginBottom: "1.25rem", maxWidth: 650 }}>
+            Breakout series that have had a call within the last three months.
+            Each links to its coordination issue on GitHub.
+          </p>
+          <div className="card-grid">
+            {activeBreakouts.map((room) => (
+              <a
+                key={room.issueUrl}
+                href={room.issueUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card"
+                style={{ textDecoration: "none" }}
+              >
+                <span style={{ fontSize: "0.95rem", fontWeight: 500, color: "var(--color-text-bright)" }}>
+                  {room.name}
+                </span>
+                <span style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", marginTop: "0.25rem" }}>
+                  Latest: {room.latestDate}
+                </span>
+              </a>
+            ))}
+          </div>
+          <div style={{ marginTop: "1.5rem" }}>
+            <a href="https://github.com/ethereum/pm/blob/master/Breakout-Room-Meetings/active-breakout-series.md" target="_blank" rel="noopener noreferrer" className="link-blue" style={{ fontSize: "0.9rem" }}>
+              View active breakout series on GitHub &rarr;
+            </a>
+          </div>
+        </section>
+
+        {/* How to Set Up (merged from the breakout guide) */}
         <section className="section">
           <h2 className="section-title">How to Set Up a Breakout Call</h2>
           <div className="flex flex-col gap-4">
@@ -151,44 +201,9 @@ export default function BreakoutGuidePage() {
           </div>
         </section>
 
-        {/* Nav */}
-        <div className="guide-nav">
-          <Link href="/guides" className="guide-nav-link">
-            <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>← Back</span>
-            <span>All Guides</span>
-          </Link>
-          <Link href="/pm-repo/breakouts" className="guide-nav-link" style={{ textAlign: "right", marginLeft: "auto" }}>
-            <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>Related →</span>
-            <span>Active Breakout Calls</span>
-          </Link>
-        </div>
-
         <Footer />
       </main>
       <FloatingOcto />
     </>
   );
 }
-
-const prose = {
-  color: "var(--color-text-body)",
-  fontSize: "0.95rem",
-  lineHeight: 1.75,
-} as const;
-
-const proseSm = {
-  color: "var(--color-text-body)",
-  fontSize: "0.85rem",
-  lineHeight: 1.7,
-  margin: 0,
-} as const;
-
-const bright = { color: "var(--color-text-bright)" } as const;
-
-const codeStyle = {
-  fontSize: "0.8rem",
-  background: "var(--color-bg-elevated)",
-  padding: "0.15rem 0.4rem",
-  borderRadius: "3px",
-  color: "var(--color-text-secondary)",
-} as const;
