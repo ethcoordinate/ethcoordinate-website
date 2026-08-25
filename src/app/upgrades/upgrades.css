@@ -150,6 +150,7 @@
   position: absolute;
   transform: translateX(-50%);
   font-size: 0.72rem;
+  line-height: 1;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
 }

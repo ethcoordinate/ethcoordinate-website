@@ -170,7 +170,7 @@ export default function UpgradeTimeline() {
           <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(674) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
-            <span key={year} className="year-label" style={{ left: px(x), top: py(880) }}>{year}</span>
+            <span key={year} className="year-label" style={{ left: px(x), top: py(870) }}>{year}</span>
           ))}
           {POST_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(1645) }}>{year}</span>
