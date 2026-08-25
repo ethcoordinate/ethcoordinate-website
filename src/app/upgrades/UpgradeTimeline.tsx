@@ -3,56 +3,63 @@
 import { preMergeEL, preMergeCL, mergeFork, postMerge, historyBase, type PreMergeFork } from "@/data/upgrades";
 import "./upgrades.css";
 
-/* Faithful interactive rebuild of the upgrades illustration:
-   dotted tracks, numbered badges, rotated dates, the merge loop,
-   mascots on the timeline. Schematic spacing; full names on hover.
-   Fixed internal coordinate space (1100x600), SVG tracks + HTML nodes. */
+/* Faithful interactive rebuild of the upgrades illustration.
+   All geometry measured from the source image (PNG pixel space).
+   Badges/pills/loop are sprite crops of the original artwork;
+   tracks are dotted lines through the source dot positions. */
 
-const W = 1100;
-const H = 600;
+const CW = 4700;      // canvas width (px in source)
+const CY0 = 680;      // canvas top in source px
+const CH = 2020;      // canvas height (content y 680-2700)
 
-const EL_Y = 200;
-const EL_X0 = 60;
-const EL_X1 = 820;
-const CL_Y = 95;
-const CL_X0 = 570;
-const CL_X1 = 800;
-const MERGE = { x: 895, y: 150 };
-const POST_Y = 360;
-const POST_XS = [100, 280, 460, 640, 820, 1000];
+const px = (x: number) => `${(x / CW) * 100}%`;
+const py = (y: number) => `${((y - CY0) / CH) * 100}%`;
 
-const YEAR_LABELS = [
-  { year: "2016", i: 2 },
-  { year: "2017", i: 6 },
-  { year: "2018", i: 6.55 },
-  { year: "2019", i: 7 },
-  { year: "2020", i: 9 },
-  { year: "2021", i: 10 },
-  { year: "2022", i: 13 },
+// --- sprite geometry (source px) ---
+const EL_BADGES = [
+  { x: 357, y: 947, w: 80, h: 77 }, { x: 438, y: 947, w: 80, h: 77 },
+  { x: 704, y: 945, w: 80, h: 78 }, { x: 879, y: 945, w: 81, h: 78 },
+  { x: 1013, y: 929, w: 87, h: 83 }, { x: 1058, y: 992, w: 81, h: 72 },
+  { x: 1532, y: 947, w: 81, h: 77 }, { x: 2236, y: 945, w: 81, h: 78 },
+  { x: 2684, y: 929, w: 88, h: 83 }, { x: 2732, y: 992, w: 78, h: 72 },
+  { x: 3381, y: 945, w: 81, h: 78 }, { x: 3556, y: 946, w: 81, h: 78 },
+  { x: 3733, y: 942, w: 81, h: 77 }, { x: 3993, y: 942, w: 81, h: 77 },
+];
+const CL_BADGES = [
+  { x: 3210, y: 777, w: 80, h: 78 }, { x: 3641, y: 777, w: 81, h: 78 },
+];
+const MERGE_R = { x: 4171, y: 832, w: 235, h: 123 };
+const MERGE_L = { x: 401, y: 1753, w: 235, h: 124 };
+const POST_BADGES = [
+  { x: 1040, y: 1750, w: 105, h: 105 }, { x: 1810, y: 1750, w: 105, h: 105 },
+  { x: 2795, y: 1750, w: 105, h: 105 }, { x: 3175, y: 1750, w: 120, h: 105 },
+  { x: 3775, y: 1750, w: 120, h: 105 }, { x: 4318, y: 1750, w: 124, h: 105 },
+];
+const LOOP = { x: 100, y: 800, w: 4600, h: 1100 };
+
+// exact dot positions from the source (EL track)
+const EL_DOTS = [526,569,612,656,698,791,832,874,967,1006,1100,1140,1183,1228,1272,1316,1361,1404,1448,1492,1529,1624,1668,1710,1756,1800,1845,1888,1932,1976,2021,2064,2108,2152,2196,2232,2328,2372,2416,2460,2505,2548,2592,2636,2678,2771,2812,2856,2900,2944,2988,3032,3076,3120,3164,3208,3252,3292,3340,3378,3472,3516,3554,3648,3692,3731,3823,3868,3912,3956,4081,4117,4214,4241,4294,4325,4357];
+const EL_DOT_Y = 975;
+// dots rising into the merge pill (from source)
+const EL_RISE_DOTS = [[4081, 950], [4131, 900], [4171, 860], [4211, 830]];
+
+const EL_YEARS = [
+  { year: "2016", x: 720 }, { year: "2017", x: 1240 }, { year: "2018", x: 1765 },
+  { year: "2019", x: 2275 }, { year: "2020", x: 2750 }, { year: "2021", x: 3415 }, { year: "2022", x: 3925 },
+];
+const POST_YEARS = [
+  { year: "2023", x: 1100 }, { year: "2024", x: 1860 }, { year: "2025", x: 2700 },
 ];
 
-const px = (x: number) => `${(x / W) * 100}%`;
-const py = (y: number) => `${(y / H) * 100}%`;
-const elX = (i: number) => EL_X0 + i * ((EL_X1 - EL_X0) / (preMergeEL.length - 1));
-const tipAlign = (x: number) => (x < 140 ? "tip-left" : x > W - 140 ? "tip-right" : "");
+const tipAlign = (x: number) => (x < 500 ? "tip-left" : x > CW - 500 ? "tip-right" : "");
 
-function PreMergeBadge({ fork, x, y, n, layer }: { fork: PreMergeFork; x: number; y: number; n: number; layer: "el" | "cl" }) {
+function Tip({ title, sub, detail }: { title: string; sub: string; detail?: string }) {
   return (
-    <a
-      className={`pm-badge pm-badge-${layer} ${tipAlign(x)}`}
-      style={{ left: px(x), top: py(y) }}
-      href={`${historyBase}#${fork.anchor}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${fork.name}, ${fork.date}`}
-    >
-      <span className="pm-badge-num">{n}</span>
-      <span className="pm-date" aria-hidden="true">{fork.date}</span>
-      <span className={`pm-tip ${layer === "cl" ? "tip-below" : ""}`} role="tooltip">
-        <b>{fork.name}</b>
-        <small>{fork.date}</small>
-      </span>
-    </a>
+    <span className="pm-tip" role="tooltip">
+      <b>{title}</b>
+      <small>{sub}</small>
+      {detail && <em>{detail}</em>}
+    </span>
   );
 }
 
@@ -101,97 +108,130 @@ export default function UpgradeTimeline() {
 
       <div className="timeline-scroll">
         <div className="timeline" role="img" aria-label="Interactive timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
-          <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" aria-hidden="true">
-            <defs>
-              <marker id="loop-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 9 5 L 0 9" fill="none" stroke="var(--color-border-hover)" strokeWidth="1.6" />
-              </marker>
-            </defs>
-            {/* execution layer track */}
-            <line x1={EL_X0} y1={EL_Y} x2={EL_X1} y2={EL_Y} className="track" />
-            {/* consensus layer track */}
-            <line x1={CL_X0} y1={CL_Y} x2={CL_X1} y2={CL_Y} className="track" />
-            {/* convergence into the merge */}
-            <path d={`M ${EL_X1} ${EL_Y} C 855 ${EL_Y}, 858 182, 866 166`} className="track curve" />
-            <path d={`M ${CL_X1} ${CL_Y} C 845 ${CL_Y}, 858 118, 866 134`} className="track curve" />
-            {/* the loop back to the post-merge row */}
-            <path d={`M ${MERGE.x} 176 C 975 235, 985 305, 915 325 C 800 352, 220 352, 76 358`} className="track curve loop" markerEnd="url(#loop-arrow)" />
+          {/* the loop (source artwork sprite) */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/upgrades/loop.png" alt="" className="loop-sprite"
+            style={{ left: px(LOOP.x), top: py(LOOP.y), width: px(LOOP.w) }} />
+
+          {/* dotted tracks */}
+          <svg viewBox={`0 0 ${CW} ${CH}`} preserveAspectRatio="none" aria-hidden="true">
+            {/* CL track */}
+            <line x1={CL_BADGES[0].x - 60} y1={816 - CY0} x2={4080} y2={816 - CY0} className="track" />
+            <path d={`M 4080 ${816 - CY0} Q 4145 ${828 - CY0} 4190 ${885 - CY0}`} className="track" />
+            {/* EL dots at exact source positions */}
+            {EL_DOTS.map((x) => (
+              <rect key={x} x={x - 6} y={EL_DOT_Y - 9 - CY0} width="12" height="18" rx="6" className="track-dot" />
+            ))}
+            {EL_RISE_DOTS.map(([x, y]) => (
+              <rect key={`${x}-${y}`} x={x - 6} y={y - 9 - CY0} width="12" height="18" rx="6" className="track-dot" />
+            ))}
             {/* post-merge track */}
-            <line x1={POST_XS[0]} y1={POST_Y} x2={1060} y2={POST_Y} className="track" />
+            <line x1={660} y1={1802 - CY0} x2={4500} y2={1802 - CY0} className="track" />
           </svg>
 
-          {/* track + year labels */}
-          <span className="layer-label layer-label-cl" style={{ left: px(CL_X1 + 12), top: py(CL_Y - 30) }}>consensus layer</span>
-          <span className="layer-label layer-label-el" style={{ left: px(430), top: py(EL_Y + 30) }}>execution layer</span>
-          {YEAR_LABELS.map(({ year, i }) => (
-            <span key={year} className="year-label" style={{ left: px(elX(i)), top: py(EL_Y - 32) }}>{year}</span>
+          {/* labels */}
+          <span className="layer-label layer-label-cl" style={{ left: px(3980), top: py(745) }}>consensus layer</span>
+          <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
+          {EL_YEARS.map(({ year, x }) => (
+            <span key={year} className="year-label" style={{ left: px(x), top: py(905) }}>{year}</span>
+          ))}
+          {POST_YEARS.map(({ year, x }) => (
+            <span key={year} className="year-label" style={{ left: px(x), top: py(1690) }}>{year}</span>
           ))}
 
-          {/* pre-merge badges */}
-          {preMergeEL.map((f, i) => (
-            <PreMergeBadge key={f.name} fork={f} n={i + 1} x={elX(i)} y={EL_Y} layer="el" />
-          ))}
-          {preMergeCL.map((f, i) => (
-            <PreMergeBadge key={f.name} fork={f} n={i + 1} x={620 + i * 140} y={CL_Y} layer="cl" />
-          ))}
+          {/* pre-merge EL badges (source sprites) */}
+          {preMergeEL.map((f, i) => {
+            const b = EL_BADGES[i];
+            return (
+              <a key={f.name} className={`badge-sprite ${tipAlign(b.x)}`}
+                style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
+                href={`${historyBase}#${f.anchor}`} target="_blank" rel="noopener noreferrer"
+                aria-label={`${f.name}, ${f.date}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/upgrades/el-${i + 1}.png`} alt="" />
+                <span className="pm-date pm-date-rotated" aria-hidden="true">{f.date}</span>
+                <Tip title={f.name} sub={f.date} />
+              </a>
+            );
+          })}
 
-          {/* merge node */}
-          <a
-            className="merge-node"
-            style={{ left: px(MERGE.x), top: py(MERGE.y) }}
-            href={mergeFork.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${mergeFork.name}, ${mergeFork.date}`}
-          >
+          {/* pre-merge CL badges */}
+          {preMergeCL.map((f, i) => {
+            const b = CL_BADGES[i];
+            return (
+              <a key={f.name} className={`badge-sprite ${tipAlign(b.x)}`}
+                style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
+                href={`${historyBase}#${f.anchor}`} target="_blank" rel="noopener noreferrer"
+                aria-label={`${f.name}, ${f.date}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/upgrades/cl-${i + 1}.png`} alt="" />
+                <span className="pm-date pm-date-rotated" aria-hidden="true">{f.date}</span>
+                <Tip title={f.name} sub={f.date} />
+              </a>
+            );
+          })}
+
+          {/* merge pills */}
+          <a className="badge-sprite merge-sprite tip-right" style={{ left: px(MERGE_R.x), top: py(MERGE_R.y), width: px(MERGE_R.w) }}
+            href={mergeFork.href} target="_blank" rel="noopener noreferrer"
+            aria-label={`${mergeFork.name}, ${mergeFork.date}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={mergeFork.mascot} alt="" className="merge-mascot" />
-            <span className="merge-pill">merge</span>
-            <span className="merge-date">15 SEP</span>
-            <span className="pm-tip merge-tip" role="tooltip">
-              <b>{mergeFork.name}</b>
-              <small>{mergeFork.fullName} · {mergeFork.date}</small>
-              <em>{mergeFork.blurb}</em>
-            </span>
+            <img src="/upgrades/merge-pill.png" alt="" />
+            <span className="merge-date-label" aria-hidden="true">15 SEP</span>
+            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
+          </a>
+          <a className="badge-sprite merge-sprite tip-left" style={{ left: px(MERGE_L.x), top: py(MERGE_L.y), width: px(MERGE_L.w) }}
+            href={mergeFork.href} target="_blank" rel="noopener noreferrer"
+            aria-label={`${mergeFork.name}, ${mergeFork.date}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/upgrades/merge-pill-left.png" alt="" />
+            <span className="merge-date-label" aria-hidden="true">15 SEP</span>
+            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
           </a>
 
-          {/* post-merge nodes */}
-          {postMerge.map((f, i) => (
-            <a
-              key={f.n}
-              className={`fork-node ${tipAlign(POST_XS[i])}`}
-              style={{ left: px(POST_XS[i]), top: py(POST_Y) }}
-              href={f.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
-            >
-              <span className="fork-badge">{f.n}</span>
-              <span className="fork-nickname">{f.nickname}</span>
-              <span className="fork-date">{f.date}</span>
-              {f.mascot ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={f.mascot} alt="" className="fork-mascot" />
-              ) : (
-                <span className="fork-mascot fork-mascot-placeholder" aria-hidden="true">{f.mascotEmoji ?? "?"}</span>
-              )}
-              <span className="fork-blurb">{f.blurb}</span>
-              <span className="pm-tip fork-tip" role="tooltip">
-                <b>{f.nickname}</b>
-                <small>{f.fullName} · {f.date}</small>
-                <em>{f.blurb}</em>
-              </span>
-            </a>
-          ))}
+          {/* post-merge badges */}
+          {postMerge.map((f, i) => {
+            const b = POST_BADGES[i];
+            return (
+              <a key={f.n} className={`badge-sprite fork-sprite ${tipAlign(b.x + b.w / 2)}`}
+                style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
+                href={f.href} target="_blank" rel="noopener noreferrer"
+                aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/upgrades/post-${i + 1}.png`} alt="" />
+                <span className="fork-nickname">{f.nickname}</span>
+                <span className="fork-date">{f.date}</span>
+                <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} detail={f.blurb} />
+              </a>
+            );
+          })}
 
-          <span className="feature-label" style={{ left: px(18), top: py(470) }}>major feature shipped →</span>
+          {/* feature panel (major feature shipped) */}
+          <div className="feature-panel" style={{ left: px(100), top: py(2000), width: px(4500), height: py(2650) }}>
+            {[
+              { mascot: mergeFork.mascot as string | null, blurb: mergeFork.blurb, href: mergeFork.href, name: mergeFork.name, emoji: undefined as string | undefined },
+              ...postMerge.map((p) => ({ mascot: p.mascot, blurb: p.blurb, href: p.href, name: p.nickname, emoji: p.mascotEmoji })),
+            ].map((c, i) => (
+              <a key={i} className="feature-col" style={{ left: px(100 + i * 642), top: py(2080), width: px(642), height: `${(480 / CH) * 100}%` }}
+                href={c.href} target="_blank" rel="noopener noreferrer"
+                aria-label={c.name}>
+                <span className="feature-blurb">{c.blurb}</span>
+                {c.mascot ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={c.mascot} alt="" className="feature-mascot" />
+                ) : (
+                  <span className="feature-mascot feature-placeholder" aria-hidden="true">{c.emoji ?? "?"}</span>
+                )}
+              </a>
+            ))}
+            <span className="feature-strip-label" style={{ left: px(200), top: py(2560) }}>major feature shipped</span>
+          </div>
         </div>
       </div>
 
       <p className="timeline-note">
-        Schematic view — even spacing, not to time scale. Post-merge nicknames
-        are primary; full layer names (e.g. “Gloas/Amsterdam”) appear on hover.
-        Click anything to open its primary record.
+        Artwork geometry preserved from the original illustration. Hover any badge
+        for its full name; click through to the primary record.
       </p>
     </div>
   );

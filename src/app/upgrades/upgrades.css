@@ -1,6 +1,6 @@
 /* =============================================================
-   UPGRADE TIMELINE - faithful to the source illustration,
-   re-tokened to the Ethcoordinate dark theme (JetBrains Mono).
+   UPGRADE TIMELINE - source artwork geometry, Ethcoordinate theme
+   Badges/pills/loop are sprite crops of the original illustration.
    Scoped under .upgrades-root.
    ============================================================= */
 
@@ -68,8 +68,8 @@
 }
 .timeline {
   position: relative;
-  min-width: 980px;
-  aspect-ratio: 1100 / 600;
+  min-width: 1000px;
+  aspect-ratio: 4700 / 2020;
 }
 .timeline svg {
   position: absolute;
@@ -77,20 +77,27 @@
   width: 100%;
   height: 100%;
 }
+.loop-sprite {
+  position: absolute;
+  height: auto;
+  opacity: 0.85;
+  pointer-events: none;
+}
 .track {
-  stroke: var(--color-border-hover);
-  stroke-width: 3;
+  stroke: rgba(138, 154, 175, 0.5);
+  stroke-width: 14;
   stroke-linecap: round;
-  stroke-dasharray: 0.1 10;
+  stroke-dasharray: 0.1 32;
   fill: none;
 }
-.curve { stroke: var(--color-border); }
-.loop { stroke: var(--color-border-hover); }
+.track-dot {
+  fill: rgba(138, 154, 175, 0.55);
+}
 
 /* ---------- labels ---------- */
 .layer-label {
   position: absolute;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   letter-spacing: 0.06em;
   transform: rotate(-2deg);
 }
@@ -99,52 +106,38 @@
 .year-label {
   position: absolute;
   transform: translateX(-50%);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
 }
-.feature-label {
-  position: absolute;
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-dim);
-  transform: rotate(-2deg);
-}
 
-/* ---------- pre-merge badges ---------- */
-.pm-badge {
+/* ---------- badge sprites ---------- */
+.badge-sprite {
   position: absolute;
-  transform: translate(-50%, -50%);
-  z-index: 5;
+  display: block;
+  z-index: 10;
   text-decoration: none;
 }
-.pm-badge-num {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  transition: transform 0.15s, box-shadow 0.15s;
+.badge-sprite img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
-.pm-badge-el .pm-badge-num {
-  background: var(--coord-purple);
-  color: var(--color-bg-void);
+.badge-sprite:hover img,
+.badge-sprite:focus-visible img {
+  transform: scale(1.12) rotate(-3deg);
+  filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.4));
 }
-.pm-badge-cl .pm-badge-num {
-  background: var(--color-blue);
-  color: var(--color-bg-void);
+.fork-sprite:hover img,
+.fork-sprite:focus-visible img {
+  transform: scale(1.12) rotate(2deg);
 }
-.pm-badge:hover .pm-badge-num,
-.pm-badge:focus-visible .pm-badge-num {
-  transform: scale(1.25) rotate(-4deg);
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
-}
-.pm-date {
+
+/* rotated date under pre-merge badges (like the source) */
+.pm-date-rotated {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   left: 50%;
   transform-origin: top center;
   transform: translateX(-50%) rotate(-68deg);
@@ -153,17 +146,53 @@
   color: var(--color-text-muted);
   white-space: nowrap;
   text-transform: uppercase;
+  pointer-events: none;
 }
-.pm-badge-cl .pm-date { transform: translateX(-50%) rotate(-68deg); }
+.merge-date-label {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* nickname + date under post-merge badges */
+.fork-nickname {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-text-bright);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.fork-date {
+  position: absolute;
+  top: calc(100% + 10px + 1.1rem);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-text-muted);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
 
 /* ---------- tooltips ---------- */
 .pm-tip {
   position: absolute;
-  bottom: calc(100% + 14px);
+  bottom: calc(100% + 16px);
   left: 50%;
   transform: translateX(-50%);
-  min-width: 150px;
-  max-width: 230px;
+  min-width: 160px;
+  max-width: 240px;
   padding: 10px 12px;
   border: 1px solid var(--color-border-hover);
   border-radius: 8px;
@@ -176,117 +205,49 @@
   pointer-events: none;
   text-align: left;
 }
-.pm-tip.tip-below { bottom: auto; top: calc(100% + 14px); }
 .pm-tip b { display: block; color: var(--color-text-bright); font-size: 0.78rem; }
 .pm-tip small { display: block; color: var(--color-blue); font-size: 0.65rem; margin-top: 2px; }
 .pm-tip em { display: block; color: var(--color-text-body); font-size: 0.68rem; font-style: normal; line-height: 1.5; margin-top: 6px; }
-.pm-badge:hover .pm-tip,
-.pm-badge:focus-visible .pm-tip,
-.merge-node:hover .pm-tip,
-.merge-node:focus-visible .pm-tip,
-.fork-node:hover .pm-tip,
-.fork-node:focus-visible .pm-tip {
+.badge-sprite:hover .pm-tip,
+.badge-sprite:focus-visible .pm-tip {
   opacity: 1;
   visibility: visible;
 }
 .tip-left .pm-tip { left: -14px; transform: none; }
 .tip-right .pm-tip { left: auto; right: -14px; transform: none; }
 
-/* ---------- merge node ---------- */
-.merge-node {
+/* ---------- feature panel (major feature shipped) ---------- */
+.feature-panel {
   position: absolute;
-  transform: translate(-50%, -50%);
-  z-index: 10;
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: var(--color-bg-surface);
+}
+.feature-col {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   text-decoration: none;
-  display: grid;
-  place-items: center;
 }
-.merge-mascot {
-  position: absolute;
-  bottom: calc(100% + 26px);
-  left: 50%;
-  transform: translateX(-50%) rotate(-3deg);
-  width: 74px;
-  height: auto;
-  filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.3));
-}
-.merge-pill {
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: var(--color-blue);
-  color: var(--color-bg-void);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.merge-node:hover .merge-pill,
-.merge-node:focus-visible .merge-pill {
-  transform: scale(1.08);
-  box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
-}
-.merge-date {
-  position: absolute;
-  top: calc(100% + 8px);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-}
-.merge-tip { bottom: auto; top: calc(100% + 30px); }
-
-/* ---------- post-merge fork nodes ---------- */
-.fork-node {
-  position: absolute;
-  transform: translate(-50%, 0);
-  z-index: 10;
-  text-decoration: none;
-  display: grid;
-  justify-items: center;
-  width: 150px;
-}
-.fork-badge {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
-  transform: translateY(-50%) rotate(-1deg);
-  background: var(--color-bg-elevated);
-  border: 1px solid var(--color-border-hover);
-  color: var(--color-text-bright);
-  font-size: 0.85rem;
-  font-weight: 700;
-  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-}
-.fork-node:hover .fork-badge,
-.fork-node:focus-visible .fork-badge {
-  transform: translateY(-50%) scale(1.15) rotate(2deg);
-  border-color: var(--color-blue);
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.3);
-}
-.fork-nickname {
-  margin-top: 10px;
-  color: var(--color-text-bright);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-.fork-date {
-  margin-top: 2px;
-  color: var(--color-text-muted);
+.feature-blurb {
+  color: var(--color-text-body);
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 90%;
 }
-.fork-mascot {
-  width: 68px;
-  height: 68px;
+.feature-col:hover .feature-blurb { color: var(--color-text-bright); }
+.feature-mascot {
+  width: 72px;
+  height: 72px;
   object-fit: contain;
-  margin-top: 14px;
   transition: transform 0.2s;
 }
-.fork-node:hover .fork-mascot { transform: scale(1.1) rotate(-2deg); }
-.fork-mascot-placeholder {
+.feature-col:hover .feature-mascot { transform: scale(1.12) rotate(-2deg); }
+.feature-placeholder {
   display: grid;
   place-items: center;
   border: 1px dashed var(--color-border);
@@ -294,15 +255,14 @@
   font-size: 1.6rem;
   color: var(--color-text-dim);
 }
-.fork-blurb {
-  margin-top: 10px;
-  color: var(--color-text-muted);
+.feature-strip-label {
+  position: absolute;
   font-size: 0.62rem;
-  line-height: 1.5;
-  text-align: center;
-  max-width: 150px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transform: rotate(-2deg);
 }
-.fork-tip { bottom: auto; top: -10px; }
 
 /* ---------- footnote ---------- */
 .timeline-note {
