@@ -286,10 +286,6 @@ export default function UpgradeTimeline() {
         )}
       </div>
 
-      <p className="timeline-note">
-        Artwork geometry preserved from the original illustration. Hover any badge
-        for its full name; click through to the primary record from the detail card.
-      </p>
     </div>
   );
 }
