@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
@@ -64,7 +65,7 @@ export default function StakerSupportPage() {
         <div className="page-header">
           <h1 className="page-title">Staking support</h1>
           <p className="page-desc">
-            EthStaker is a community providing guidance, education, support, and resources for existing and potential stakers. EthStaker’s principal goal is to maximize decentralization of the Ethereum network.
+            EthStaker is an <Link href="/about#story-title" className="link-blue">EthCoordinate project</Link>; it’s made up of a community providing guidance, education, support, and resources for existing and potential stakers. EthStaker’s principal goal is to maximize decentralization of the Ethereum network.
           </p>
           <div className="flex gap-3 flex-wrap" style={{ marginTop: "1.5rem" }}>
             <a href="https://ethstaker.org" target="_blank" rel="noopener noreferrer" className="card-btn" style={{ marginTop: 0 }}>

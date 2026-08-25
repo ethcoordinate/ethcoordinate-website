@@ -70,12 +70,12 @@ const POST_YEARS = [
 
 const tipAlign = (x: number) => (x < 500 ? "tip-left" : x > CW - 500 ? "tip-right" : "");
 
-function Tip({ title, sub, detail }: { title: string; sub: string; detail?: string }) {
+function Tip({ title, sub, date }: { title: string; sub?: string; date?: string }) {
   return (
     <span className="pm-tip" role="tooltip">
       <b>{title}</b>
-      <small>{sub}</small>
-      {detail && <em>{detail}</em>}
+      {sub && <small>{sub}</small>}
+      {date && <small className="tip-date">{date}</small>}
     </span>
   );
 }
@@ -193,7 +193,7 @@ export default function UpgradeTimeline() {
                 aria-expanded={selected === 7 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/el-${i + 1}.png`} alt="" />
-                <Tip title={f.name} sub={f.date} />
+                <Tip title={f.name} date={f.date} />
               </button>
             );
           })}
@@ -209,7 +209,7 @@ export default function UpgradeTimeline() {
                 aria-expanded={selected === 21 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/cl-${i + 1}.png`} alt="" />
-                <Tip title={f.name} sub={f.date} />
+                <Tip title={f.name} date={f.date} />
               </button>
             );
           })}
@@ -222,8 +222,7 @@ export default function UpgradeTimeline() {
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill.png" alt="" />
-            <span className="merge-date-label" aria-hidden="true">15 SEP</span>
-            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} />
+            <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
           <button className={`badge-sprite merge-sprite tip-left ${selected === 0 ? "selected" : ""}`}
             style={{ left: px(MERGE_L.x), top: py(MERGE_L.y), width: px(MERGE_L.w) }}
@@ -232,8 +231,7 @@ export default function UpgradeTimeline() {
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill-left.png" alt="" />
-            <span className="merge-date-label" aria-hidden="true">15 SEP</span>
-            <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} />
+            <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
 
           {/* post-merge badges (toggle the detail panel) */}
@@ -248,8 +246,7 @@ export default function UpgradeTimeline() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/post-${i + 1}.png`} alt="" />
                 <span className="fork-nickname">{f.nickname}</span>
-                <span className="fork-date">{f.date}</span>
-                <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} />
+                <Tip title={f.nickname} sub={f.fullName} date={f.date} />
               </button>
             );
           })}

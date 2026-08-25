@@ -187,32 +187,7 @@
   transform: scale(1.12) rotate(2deg);
 }
 
-/* per-badge dates: hidden until hover (years carry the timeline) */
-.merge-date-label,
-.fork-date {
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.badge-sprite:hover .merge-date-label,
-.badge-sprite:focus-visible .merge-date-label,
-.badge-sprite:hover .fork-date,
-.badge-sprite:focus-visible .fork-date {
-  opacity: 1;
-}
-
-.merge-date-label {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  pointer-events: none;
-}
-
-/* nickname + date under post-merge badges */
+/* nickname under post-merge badges */
 .fork-nickname {
   position: absolute;
   top: calc(100% + 20px);
@@ -221,18 +196,6 @@
   color: var(--color-text-bright);
   font-size: 0.8rem;
   font-weight: 700;
-  white-space: nowrap;
-  pointer-events: none;
-}
-.fork-date {
-  position: absolute;
-  top: calc(100% + 20px + 1.1rem);
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--color-text-muted);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   white-space: nowrap;
   pointer-events: none;
 }
@@ -259,6 +222,7 @@
 }
 .pm-tip b { display: block; color: var(--color-text-bright); font-size: 0.78rem; }
 .pm-tip small { display: block; color: var(--color-blue); font-size: 0.65rem; margin-top: 2px; }
+.pm-tip .tip-date { color: var(--color-text-muted); }
 .pm-tip em { display: block; color: var(--color-text-body); font-size: 0.68rem; font-style: normal; line-height: 1.5; margin-top: 6px; }
 .badge-sprite:hover .pm-tip,
 .badge-sprite:focus-visible .pm-tip {
