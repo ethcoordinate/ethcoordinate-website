@@ -32,17 +32,33 @@ const CL_BADGES = [
 const MERGE_R = { x: 4171, y: 832, w: 235, h: 123 };
 const MERGE_L = { x: 401, y: 1753, w: 235, h: 124 };
 const POST_BADGES = [
-  { x: 1006, y: 1752, w: 186, h: 129 }, { x: 1776, y: 1752, w: 186, h: 129 },
-  { x: 2756, y: 1752, w: 186, h: 129 }, { x: 3166, y: 1752, w: 136, h: 129 },
+  { x: 1048, y: 1752, w: 102, h: 106 }, { x: 1815, y: 1752, w: 108, h: 106 },
+  { x: 2795, y: 1752, w: 108, h: 106 }, { x: 3166, y: 1752, w: 136, h: 129 },
   { x: 3766, y: 1752, w: 136, h: 129 }, { x: 4312, y: 1752, w: 136, h: 129 },
 ];
 const LOOP = { x: 100, y: 800, w: 4600, h: 1100 };
 
-// exact dot positions from the source (EL track)
-const EL_DOTS = [526,569,612,656,698,791,832,874,967,1006,1100,1140,1183,1228,1272,1316,1361,1404,1448,1492,1529,1624,1668,1710,1756,1800,1845,1888,1932,1976,2021,2064,2108,2152,2196,2232,2328,2372,2416,2460,2505,2548,2592,2636,2678,2771,2812,2856,2900,2944,2988,3032,3076,3120,3164,3208,3252,3292,3340,3378,3472,3516,3554,3648,3692,3731,3823,3868,3912,3956,4081,4117,4214,4241,4294,4325,4357];
-const EL_DOT_Y = 975;
-// dots rising into the merge pill (from source)
-const EL_RISE_DOTS = [[4081, 950], [4131, 900], [4171, 860], [4211, 830]];
+// Dot tracks: identical spacing on every track — they all represent time.
+// Positions stay where the source put the tracks; dots skip badge boxes.
+const DOT_GAP = 43;
+const SKIP_EL = EL_BADGES.map((b) => [b.x - 12, b.x + b.w + 12]);
+const SKIP_CL = CL_BADGES.map((b) => [b.x - 12, b.x + b.w + 12]);
+const SKIP_POST = [
+  [MERGE_L.x - 12, MERGE_L.x + MERGE_L.w + 12],
+  ...POST_BADGES.map((b) => [b.x - 12, b.x + b.w + 12]),
+];
+
+function dotRow(x0: number, x1: number, skip: number[][]) {
+  const dots = [];
+  for (let x = Math.ceil(x0 / DOT_GAP) * DOT_GAP; x <= x1; x += DOT_GAP) {
+    if (!skip.some(([a, b]) => x >= a && x <= b)) dots.push(x);
+  }
+  return dots;
+}
+
+const EL_TRACK_DOTS = dotRow(530, 4040, SKIP_EL);
+const CL_TRACK_DOTS = dotRow(3300, 4040, SKIP_CL);
+const POST_TRACK_DOTS = dotRow(660, 4500, SKIP_POST);
 
 const EL_YEARS = [
   { year: "2016", x: 720 }, { year: "2017", x: 1240 }, { year: "2018", x: 1765 },
@@ -134,22 +150,24 @@ export default function UpgradeTimeline() {
 
           {/* dotted tracks */}
           <svg viewBox={`0 0 ${CW} ${CH}`} preserveAspectRatio="none" aria-hidden="true">
-            {/* CL track */}
-            <line x1={CL_BADGES[0].x - 60} y1={816 - CY0} x2={4080} y2={816 - CY0} className="track" />
-            <path d={`M 4080 ${816 - CY0} Q 4145 ${828 - CY0} 4190 ${885 - CY0}`} className="track" />
-            {/* EL dots at exact source positions */}
-            {EL_DOTS.map((x) => (
-              <rect key={x} x={x - 6} y={EL_DOT_Y - 9 - CY0} width="12" height="18" rx="6" className="track-dot" />
+            {/* CL track: dots, then curve down into the merge */}
+            {CL_TRACK_DOTS.map((x) => (
+              <rect key={`cl-${x}`} x={x - 7} y={816 - 9 - CY0} width="14" height="18" rx="7" className="track-dot" />
             ))}
-            {EL_RISE_DOTS.map(([x, y]) => (
-              <rect key={`${x}-${y}`} x={x - 6} y={y - 9 - CY0} width="12" height="18" rx="6" className="track-dot" />
+            <path d={`M 4040 ${816 - CY0} C 4100 ${816 - CY0}, 4130 ${845 - CY0}, 4165 ${902 - CY0}`} className="track-dotted" />
+            {/* EL track: dots, then curve up into the merge — both join at the pill's left edge */}
+            {EL_TRACK_DOTS.map((x) => (
+              <rect key={`el-${x}`} x={x - 7} y={975 - 9 - CY0} width="14" height="18" rx="7" className="track-dot" />
             ))}
+            <path d={`M 4040 ${975 - CY0} C 4100 ${975 - CY0}, 4130 ${950 - CY0}, 4165 ${908 - CY0}`} className="track-dotted" />
             {/* post-merge track */}
-            <line x1={660} y1={1802 - CY0} x2={4500} y2={1802 - CY0} className="track" />
+            {POST_TRACK_DOTS.map((x) => (
+              <rect key={`post-${x}`} x={x - 7} y={1816 - 9 - CY0} width="14" height="18" rx="7" className="track-dot" />
+            ))}
           </svg>
 
           {/* labels */}
-          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(700) }}>consensus layer</span>
+          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(682) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(862) }}>{year}</span>
@@ -246,9 +264,10 @@ export default function UpgradeTimeline() {
                 <b>{active.name}</b>
                 <span>{active.fullName} · {active.date}</span>
               </div>
+              <p className="fork-detail-caption">major feature shipped — not a full overview</p>
               <p>{active.blurb}</p>
               <a href={active.href} target="_blank" rel="noopener noreferrer" className="link-blue">
-                Open the primary record ↗
+                {active.href.includes("forkcast.org") ? "Open on Forkcast ↗" : "Open on ethereum.org ↗"}
               </a>
             </div>
             <button className="fork-detail-close" onClick={() => setSelected(null)} aria-label="Back to instructions">×</button>
