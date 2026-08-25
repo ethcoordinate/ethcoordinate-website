@@ -268,7 +268,8 @@ export default function UpgradeTimeline() {
             <div className="fork-detail-body">
               <div className="fork-detail-head">
                 <b>{active.name}</b>
-                <span>{active.fullName} · {active.date} · {eipCountText(active.eipCount, active.scheduled)}</span>
+                <span className="fork-detail-layer">{active.fullName}</span>
+                <span className="fork-detail-meta">{active.date} · {eipCountText(active.eipCount, active.scheduled)}</span>
               </div>
               <p className="fork-detail-caption">major feature shipped</p>
               <p>{active.blurb}</p>
