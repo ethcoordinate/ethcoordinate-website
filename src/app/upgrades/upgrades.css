@@ -134,7 +134,8 @@
   position: absolute;
   font-size: 0.78rem;
   letter-spacing: 0.06em;
-  transform: rotate(-2deg);
+  transform: translateX(-50%) rotate(-2deg);
+  white-space: nowrap;
 }
 .layer-label-cl { color: var(--color-blue); }
 .layer-label-el { color: var(--coord-purple); }
@@ -202,7 +203,7 @@
 /* nickname + date under post-merge badges */
 .fork-nickname {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 20px);
   left: 50%;
   transform: translateX(-50%);
   color: var(--color-text-bright);
@@ -211,9 +212,16 @@
   white-space: nowrap;
   pointer-events: none;
 }
+.fork-expand-hint {
+  color: var(--color-blue);
+  font-weight: 400;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.fork-sprite[aria-expanded="true"] .fork-expand-hint { transform: rotate(180deg); }
 .fork-date {
   position: absolute;
-  top: calc(100% + 10px + 1.1rem);
+  top: calc(100% + 20px + 1.1rem);
   left: 50%;
   transform: translateX(-50%);
   color: var(--color-text-muted);
@@ -338,6 +346,17 @@
 }
 
 /* ---------- footnote ---------- */
+.timeline-hint {
+  margin-top: 1.25rem;
+  color: var(--color-text-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+.timeline-hint::before {
+  content: "⌄";
+  color: var(--color-blue);
+  margin-right: 0.5rem;
+}
 .timeline-note {
   margin-top: 1.5rem;
   color: var(--color-text-muted);

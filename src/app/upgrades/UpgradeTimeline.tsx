@@ -147,7 +147,7 @@ export default function UpgradeTimeline() {
           </svg>
 
           {/* labels */}
-          <span className="layer-label layer-label-cl" style={{ left: px(3980), top: py(745) }}>consensus layer</span>
+          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(745) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(862) }}>{year}</span>
@@ -219,7 +219,7 @@ export default function UpgradeTimeline() {
                 aria-expanded={selected === i + 1}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/post-${i + 1}.png`} alt="" />
-                <span className="fork-nickname">{f.nickname}</span>
+                <span className="fork-nickname">{f.nickname} <span className="fork-expand-hint" aria-hidden="true">⌄</span></span>
                 <span className="fork-date">{f.date}</span>
                 <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} detail={f.blurb} />
               </button>
@@ -252,9 +252,10 @@ export default function UpgradeTimeline() {
         )}
       </div>
 
+      <p className="timeline-hint">Click a post-merge fork to see what it shipped.</p>
       <p className="timeline-note">
         Artwork geometry preserved from the original illustration. Hover any badge
-        for its full name; click a post-merge badge for the feature it shipped.
+        for its full name; click through to the primary record from the detail card.
       </p>
     </div>
   );
