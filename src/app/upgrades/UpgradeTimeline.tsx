@@ -11,7 +11,7 @@ import "./upgrades.css";
 
 const CW = 4700;      // canvas width (px in source)
 const CY0 = 680;      // canvas top in source px
-const CH = 2020;      // canvas height (content y 680-2700)
+const CH = 1320;      // canvas height (content y 680-2000)
 
 const px = (x: number) => `${(x / CW) * 100}%`;
 const py = (y: number) => `${((y - CY0) / CH) * 100}%`;
@@ -107,6 +107,16 @@ function LegendDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 
 export default function UpgradeTimeline() {
   const [legendOpen, setLegendOpen] = useState(false);
+  const [selected, setSelected] = useState<number | null>(null);
+
+  // detail items: 0 = the merge, 1..6 = post-merge forks
+  const detailItems = [
+    { mascot: mergeFork.mascot as string | null, name: mergeFork.name, fullName: mergeFork.fullName, date: mergeFork.date, blurb: mergeFork.blurb, href: mergeFork.href, emoji: undefined as string | undefined },
+    ...postMerge.map((p) => ({ mascot: p.mascot, name: p.nickname, fullName: p.fullName, date: p.date, blurb: p.blurb, href: p.href, emoji: p.mascotEmoji })),
+  ];
+  const toggle = (i: number) => setSelected((cur) => (cur === i ? null : i));
+  const active = selected !== null ? detailItems[selected] : null;
+
   return (
     <div className="upgrades-root">
       <button className="legend-toggle" onClick={() => setLegendOpen(true)}>
@@ -176,66 +186,75 @@ export default function UpgradeTimeline() {
             );
           })}
 
-          {/* merge pills */}
-          <a className="badge-sprite merge-sprite tip-right" style={{ left: px(MERGE_R.x), top: py(MERGE_R.y), width: px(MERGE_R.w) }}
-            href={mergeFork.href} target="_blank" rel="noopener noreferrer"
-            aria-label={`${mergeFork.name}, ${mergeFork.date}`}>
+          {/* merge pills (toggle the detail panel) */}
+          <button className={`badge-sprite merge-sprite tip-right ${selected === 0 ? "selected" : ""}`}
+            style={{ left: px(MERGE_R.x), top: py(MERGE_R.y), width: px(MERGE_R.w) }}
+            onClick={() => toggle(0)}
+            aria-label={`${mergeFork.name}, ${mergeFork.date}`}
+            aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill.png" alt="" />
             <span className="merge-date-label" aria-hidden="true">15 SEP</span>
             <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
-          </a>
-          <a className="badge-sprite merge-sprite tip-left" style={{ left: px(MERGE_L.x), top: py(MERGE_L.y), width: px(MERGE_L.w) }}
-            href={mergeFork.href} target="_blank" rel="noopener noreferrer"
-            aria-label={`${mergeFork.name}, ${mergeFork.date}`}>
+          </button>
+          <button className={`badge-sprite merge-sprite tip-left ${selected === 0 ? "selected" : ""}`}
+            style={{ left: px(MERGE_L.x), top: py(MERGE_L.y), width: px(MERGE_L.w) }}
+            onClick={() => toggle(0)}
+            aria-label={`${mergeFork.name}, ${mergeFork.date}`}
+            aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/upgrades/merge-pill-left.png" alt="" />
             <span className="merge-date-label" aria-hidden="true">15 SEP</span>
             <Tip title={mergeFork.name} sub={`${mergeFork.fullName} · ${mergeFork.date}`} detail={mergeFork.blurb} />
-          </a>
+          </button>
 
-          {/* post-merge badges */}
+          {/* post-merge badges (toggle the detail panel) */}
           {postMerge.map((f, i) => {
             const b = POST_BADGES[i];
             return (
-              <a key={f.n} className={`badge-sprite fork-sprite ${tipAlign(b.x + b.w / 2)}`}
+              <button key={f.n} className={`badge-sprite fork-sprite ${tipAlign(b.x + b.w / 2)} ${selected === i + 1 ? "selected" : ""}`}
                 style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
-                href={f.href} target="_blank" rel="noopener noreferrer"
-                aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}>
+                onClick={() => toggle(i + 1)}
+                aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
+                aria-expanded={selected === i + 1}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/post-${i + 1}.png`} alt="" />
                 <span className="fork-nickname">{f.nickname}</span>
                 <span className="fork-date">{f.date}</span>
                 <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} detail={f.blurb} />
-              </a>
+              </button>
             );
           })}
+        </div>
 
-          {/* feature panel (major feature shipped) */}
-          <div className="feature-panel" style={{ left: px(100), top: py(2000), width: px(4500), height: py(2650) }}>
-            {[
-              { mascot: mergeFork.mascot as string | null, blurb: mergeFork.blurb, href: mergeFork.href, name: mergeFork.name, emoji: undefined as string | undefined },
-              ...postMerge.map((p) => ({ mascot: p.mascot, blurb: p.blurb, href: p.href, name: p.nickname, emoji: p.mascotEmoji })),
-            ].map((c, i) => (
-              <a key={i} className="feature-col" style={{ left: px(100 + i * 642), top: py(2080), width: px(642), height: `${(480 / CH) * 100}%` }}
-                href={c.href} target="_blank" rel="noopener noreferrer"
-                aria-label={c.name}>
-                <span className="feature-blurb">{c.blurb}</span>
-                {c.mascot ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={c.mascot} alt="" className="feature-mascot" />
-                ) : (
-                  <span className="feature-mascot feature-placeholder" aria-hidden="true">{c.emoji ?? "?"}</span>
-                )}
+      {/* detail dropdown: opens when a post-merge item is clicked */}
+      <div className={`fork-detail ${active ? "open" : ""}`} aria-hidden={!active}>
+        {active && (
+          <div className="fork-detail-inner">
+            {active.mascot ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={active.mascot} alt="" className="fork-detail-mascot" />
+            ) : (
+              <span className="fork-detail-mascot fork-detail-placeholder" aria-hidden="true">{active.emoji ?? "?"}</span>
+            )}
+            <div className="fork-detail-body">
+              <div className="fork-detail-head">
+                <b>{active.name}</b>
+                <span>{active.fullName} · {active.date}</span>
+              </div>
+              <p>{active.blurb}</p>
+              <a href={active.href} target="_blank" rel="noopener noreferrer" className="link-blue">
+                Open the primary record ↗
               </a>
-            ))}
-            <span className="feature-strip-label" style={{ left: px(200), top: py(2560) }}>major feature shipped</span>
+            </div>
+            <button className="fork-detail-close" onClick={() => setSelected(null)} aria-label="Close">×</button>
           </div>
+        )}
       </div>
 
       <p className="timeline-note">
         Artwork geometry preserved from the original illustration. Hover any badge
-        for its full name; click through to the primary record.
+        for its full name; click a post-merge badge for the feature it shipped.
       </p>
     </div>
   );
