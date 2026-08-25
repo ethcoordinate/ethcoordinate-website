@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support - Tentacle v8</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0C0A1A;
+      --deep: #12102A;
+      --surface: #1A1740;
+      --elevated: #221F52;
+      --tentacle-1: #7B61FF;
+      --tentacle-2: #00D4FF;
+      --tentacle-3: #FF6B9D;
+      --tentacle-4: #14F195;
+      --text-bright: #F0EEFF;
+      --text-primary: #CCC6FF;
+      --text-secondary: #8E86B8;
+      --text-muted: #544D7A;
+      --text-dim: #2E2955;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 15px; }
+
+    body {
+      background: var(--ink);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    ::selection { background: var(--tentacle-1); color: white; }
+
+    /* === ANIMATED TENTACLE BACKGROUND === */
+    .tentacle-bg {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 1;
+      overflow: hidden;
+    }
+
+    .tentacle-bg svg {
+      position: absolute;
+      width: 100%; height: 100%;
+    }
+
+    .tentacle-path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: 0.08;
+    }
+
+    .tentacle-path.t1 { stroke: var(--tentacle-1); }
+    .tentacle-path.t2 { stroke: var(--tentacle-2); }
+    .tentacle-path.t3 { stroke: var(--tentacle-3); }
+    .tentacle-path.t4 { stroke: var(--tentacle-4); }
+
+    @keyframes tentacle-drift {
+      0%, 100% { d: path(var(--path-a)); }
+      50% { d: path(var(--path-b)); }
+    }
+
+    /* Sucker dots scattered */
+    .sucker {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: sucker-pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes sucker-pulse {
+      0%, 100% { opacity: 0; transform: scale(0.6); }
+      50% { opacity: 0.15; transform: scale(1); }
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100; padding: 0 2rem;
+      background: rgba(12, 10, 26, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--text-dim);
+    }
+
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; justify-content: space-between;
+      align-items: center; height: 60px;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      font-family: var(--font-display);
+    }
+
+    .logo-icon {
+      width: 32px; height: 32px;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Tentacle logo icon */
+    .logo-icon svg {
+      width: 32px; height: 32px;
+    }
+
+    .logo-text {
+      font-weight: 600; font-size: 1rem;
+      color: var(--text-bright);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a:hover { color: var(--tentacle-1); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px;
+      background: var(--tentacle-1);
+      border-radius: 1px;
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* === MAIN === */
+    main {
+      position: relative; z-index: 10;
+      padding: 100px 2rem 4rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    /* === HERO === */
+    .hero {
+      margin-bottom: 5rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem; align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 5rem);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+    }
+
+    .hero-description {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    /* Tentacle accent line under hero text */
+    .tentacle-accent {
+      width: 120px; height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--tentacle-1), var(--tentacle-2), var(--tentacle-3));
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: visible;
+    }
+
+    .tentacle-accent::after {
+      content: '';
+      position: absolute; right: -8px; top: -3px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--tentacle-3);
+      box-shadow: 0 0 12px var(--tentacle-3);
+    }
+
+    /* Octopus hero image */
+    .octopus-container {
+      position: relative;
+      display: flex; flex-direction: column;
+      align-items: center;
+    }
+
+    .octopus-logo {
+      width: 300px; height: auto;
+      filter: brightness(0) invert(1);
+      transition: all 0.5s ease;
+      animation: octo-bob 5s ease-in-out infinite;
+    }
+
+    .octopus-logo:hover {
+      filter: brightness(0) invert(1) drop-shadow(0 0 40px rgba(123, 97, 255, 0.5));
+      transform: scale(1.08) rotate(3deg);
+    }
+
+    @keyframes octo-bob {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-8px) rotate(1deg); }
+      75% { transform: translateY(4px) rotate(-1deg); }
+    }
+
+    /* Tentacle decorations around octopus */
+    .octo-tentacle-deco {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .octo-tentacle-deco svg {
+      overflow: visible;
+    }
+
+    .octo-tentacle-deco.left {
+      left: -60px; top: 40%;
+    }
+    .octo-tentacle-deco.right {
+      right: -50px; top: 20%;
+    }
+    .octo-tentacle-deco.bottom {
+      bottom: -30px; left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* === TENTACLE DIVIDER === */
+    .divider {
+      display: flex; align-items: center;
+      margin: 3.5rem 0 2rem;
+      position: relative;
+    }
+
+    .divider-tentacle {
+      flex: 1; height: 24px;
+      position: relative; overflow: visible;
+    }
+
+    .divider-tentacle svg {
+      width: 100%; height: 24px;
+      overflow: visible;
+    }
+
+    .divider-tentacle path {
+      fill: none; stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .divider-text {
+      font-family: var(--font-display);
+      font-size: 0.7rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 0 1.5rem;
+      white-space: nowrap;
+    }
+
+    /* Sucker dots on dividers */
+    .divider-sucker {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      position: absolute;
+      opacity: 0.5;
+    }
+
+    /* === CARDS === */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 700px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Tentacle curl on card corner */
+    .card::before {
+      content: '';
+      position: absolute; top: -20px; right: -20px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .card:nth-child(1)::before { border-color: var(--tentacle-1); opacity: 0.15; }
+    .card:nth-child(2)::before { border-color: var(--tentacle-2); opacity: 0.15; }
+    .card:nth-child(3)::before { border-color: var(--tentacle-3); opacity: 0.15; }
+    .card:nth-child(4)::before { border-color: var(--tentacle-4); opacity: 0.15; }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--text-muted);
+    }
+
+    .card:nth-child(1):hover { box-shadow: 0 12px 40px rgba(123, 97, 255, 0.12); }
+    .card:nth-child(2):hover { box-shadow: 0 12px 40px rgba(0, 212, 255, 0.12); }
+    .card:nth-child(3):hover { box-shadow: 0 12px 40px rgba(255, 107, 157, 0.12); }
+    .card:nth-child(4):hover { box-shadow: 0 12px 40px rgba(20, 241, 149, 0.12); }
+
+    .card:hover::before { opacity: 0.35; transform: scale(1.2); }
+
+    /* Tentacle number badge */
+    .card-tentacle-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .card:nth-child(1) .card-tentacle-num { background: var(--tentacle-1); }
+    .card:nth-child(2) .card-tentacle-num { background: var(--tentacle-2); }
+    .card:nth-child(3) .card-tentacle-num { background: var(--tentacle-3); }
+    .card:nth-child(4) .card-tentacle-num { background: var(--tentacle-4); }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .card-link {
+      font-size: 0.7rem; font-weight: 500;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      transition: color 0.2s;
+    }
+
+    .card:nth-child(1) .card-link { color: var(--tentacle-1); }
+    .card:nth-child(2) .card-link { color: var(--tentacle-2); }
+    .card:nth-child(3) .card-link { color: var(--tentacle-3); }
+    .card:nth-child(4) .card-link { color: var(--tentacle-4); }
+
+    .card-link:hover { opacity: 0.8; }
+    .card-link::after { content: ' ~>'; }
+
+    /* === ABOUT === */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 800px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    .about-content h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .about-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    /* Stats with tentacle accents */
+    .stats-panel {
+      background: var(--surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .stats-header {
+      padding: 1rem 1.25rem;
+      background: var(--elevated);
+      border-bottom: 1px solid var(--text-dim);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .stats-header h3 {
+      font-family: var(--font-display);
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .stats-live {
+      font-size: 0.6rem;
+      color: var(--tentacle-4);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    .live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--tentacle-4);
+      box-shadow: 0 0 8px var(--tentacle-4);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .stats-body { padding: 1rem 1.25rem; }
+
+    .stat-row {
+      display: flex; justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .stat-label { color: var(--text-muted); }
+
+    .stat-value { font-weight: 600; }
+
+    .stat-row:nth-child(1) .stat-value { color: var(--tentacle-1); }
+    .stat-row:nth-child(2) .stat-value { color: var(--tentacle-2); }
+    .stat-row:nth-child(3) .stat-value { color: var(--tentacle-3); }
+    .stat-row:nth-child(4) .stat-value { color: var(--tentacle-4); }
+    .stat-row:nth-child(5) .stat-value { color: var(--tentacle-1); }
+
+    /* Tentacle activity viz */
+    .activity-bar { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--text-dim); }
+
+    .activity-label {
+      font-size: 0.65rem; color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex; justify-content: space-between;
+    }
+
+    .activity-track {
+      height: 6px; background: var(--deep);
+      border-radius: 3px; overflow: hidden;
+      display: flex; gap: 2px;
+    }
+
+    .activity-segment {
+      height: 100%; border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .activity-segment:hover { filter: brightness(1.4); }
+
+    /* === FOOTER === */
+    footer {
+      margin-top: 5rem; padding: 2rem 0;
+      border-top: 1px solid var(--text-dim);
+      position: relative;
+    }
+
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+
+    .footer-text {
+      font-size: 0.7rem; color: var(--text-muted);
+    }
+    .footer-text a {
+      color: var(--tentacle-1); text-decoration: none;
+    }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--tentacle-2); }
+
+    /* Floating octopus */
+    .floating-octopus {
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 44px; height: 44px;
+      opacity: 0.3; z-index: 50;
+      transition: all 0.4s ease;
+      cursor: pointer;
+      filter: brightness(0) invert(1);
+      animation: octo-bob 5s ease-in-out infinite;
+    }
+
+    .floating-octopus:hover {
+      opacity: 0.9;
+      filter: brightness(0) invert(1) drop-shadow(0 0 12px rgba(123, 97, 255, 0.6));
+      transform: scale(1.2) rotate(8deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tentacle background -->
+  <div class="tentacle-bg">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none">
+      <!-- Tentacle paths that curve organically -->
+      <path class="tentacle-path t1" d="M-50,200 C200,180 300,350 500,300 S800,100 1000,250 S1300,400 1500,200" stroke-dasharray="8 12">
+        <animate attributeName="d" dur="12s" repeatCount="indefinite"
+          values="M-50,200 C200,180 300,350 500,300 S800,100 1000,250 S1300,400 1500,200;
+                  M-50,250 C200,300 350,150 500,250 S750,350 1000,200 S1250,100 1500,300;
+                  M-50,200 C200,180 300,350 500,300 S800,100 1000,250 S1300,400 1500,200" />
+      </path>
+      <path class="tentacle-path t2" d="M-50,500 C150,450 400,600 600,480 S900,350 1100,500 S1350,650 1500,500" stroke-dasharray="6 14">
+        <animate attributeName="d" dur="15s" repeatCount="indefinite"
+          values="M-50,500 C150,450 400,600 600,480 S900,350 1100,500 S1350,650 1500,500;
+                  M-50,550 C200,600 350,400 600,520 S850,600 1100,450 S1300,350 1500,550;
+                  M-50,500 C150,450 400,600 600,480 S900,350 1100,500 S1350,650 1500,500" />
+      </path>
+      <path class="tentacle-path t3" d="M-50,700 C200,750 350,600 550,700 S800,800 1050,650 S1300,550 1500,750" stroke-dasharray="4 16">
+        <animate attributeName="d" dur="18s" repeatCount="indefinite"
+          values="M-50,700 C200,750 350,600 550,700 S800,800 1050,650 S1300,550 1500,750;
+                  M-50,650 C150,600 400,750 550,650 S850,550 1050,700 S1250,800 1500,650;
+                  M-50,700 C200,750 350,600 550,700 S800,800 1050,650 S1300,550 1500,750" />
+      </path>
+      <path class="tentacle-path t4" d="M-50,100 C100,50 300,150 450,80 S700,200 900,100 S1200,50 1500,150" stroke-dasharray="10 10" style="opacity: 0.05;">
+        <animate attributeName="d" dur="20s" repeatCount="indefinite"
+          values="M-50,100 C100,50 300,150 450,80 S700,200 900,100 S1200,50 1500,150;
+                  M-50,130 C150,150 250,50 450,120 S650,50 900,150 S1150,200 1500,100;
+                  M-50,100 C100,50 300,150 450,80 S700,200 900,100 S1200,50 1500,150" />
+      </path>
+    </svg>
+    <!-- Sucker dots -->
+    <div id="suckers"></div>
+  </div>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <!-- Octopus tentacle swirl icon -->
+          <svg viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="13" r="6" stroke="var(--tentacle-1)" stroke-width="1.5" fill="none" />
+            <circle cx="14" cy="12" r="1.2" fill="var(--tentacle-2)" />
+            <circle cx="18" cy="12" r="1.2" fill="var(--tentacle-2)" />
+            <path d="M10,18 Q8,24 6,28" stroke="var(--tentacle-1)" stroke-width="1.5" stroke-linecap="round" fill="none" />
+            <path d="M12,19 Q11,25 13,29" stroke="var(--tentacle-2)" stroke-width="1.5" stroke-linecap="round" fill="none" />
+            <path d="M16,19 Q16,26 16,30" stroke="var(--tentacle-3)" stroke-width="1.5" stroke-linecap="round" fill="none" />
+            <path d="M20,19 Q21,25 19,29" stroke="var(--tentacle-4)" stroke-width="1.5" stroke-linecap="round" fill="none" />
+            <path d="M22,18 Q24,24 26,28" stroke="var(--tentacle-1)" stroke-width="1.5" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+        <span class="logo-text">Protocol Support</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Repository</a></li>
+        <li><a href="#">Breakouts</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Contributing</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="tentacle-accent"></div>
+          <h1>Protocol<br>Support</h1>
+          <p class="hero-description">
+            Coordinating Ethereum protocol development. We manage AllCoreDevs, facilitate breakout discussions, and build the infrastructure for building infrastructure.
+          </p>
+        </div>
+
+        <div class="octopus-container">
+          <!-- Decorative tentacle curls around the octopus -->
+          <div class="octo-tentacle-deco left">
+            <svg width="50" height="120" viewBox="0 0 50 120">
+              <path d="M45,0 Q10,30 40,60 Q5,80 30,120" fill="none" stroke="var(--tentacle-1)" stroke-width="1.5" stroke-linecap="round" opacity="0.2">
+                <animate attributeName="d" dur="6s" repeatCount="indefinite"
+                  values="M45,0 Q10,30 40,60 Q5,80 30,120;
+                          M40,0 Q15,35 35,55 Q10,85 35,120;
+                          M45,0 Q10,30 40,60 Q5,80 30,120" />
+              </path>
+              <circle cx="30" cy="120" r="3" fill="var(--tentacle-1)" opacity="0.15" />
+            </svg>
+          </div>
+          <div class="octo-tentacle-deco right">
+            <svg width="45" height="100" viewBox="0 0 45 100">
+              <path d="M5,0 Q40,25 10,50 Q45,75 15,100" fill="none" stroke="var(--tentacle-3)" stroke-width="1.5" stroke-linecap="round" opacity="0.2">
+                <animate attributeName="d" dur="7s" repeatCount="indefinite"
+                  values="M5,0 Q40,25 10,50 Q45,75 15,100;
+                          M10,0 Q35,30 15,55 Q40,70 20,100;
+                          M5,0 Q40,25 10,50 Q45,75 15,100" />
+              </path>
+              <circle cx="15" cy="100" r="2.5" fill="var(--tentacle-3)" opacity="0.15" />
+            </svg>
+          </div>
+
+          <img
+            src="../public/ps_logo_octo_solo.png"
+            alt="Protocol Support Octopus"
+            class="octopus-logo"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Tentacle divider -->
+    <div class="divider">
+      <div class="divider-tentacle">
+        <svg viewBox="0 0 500 24" preserveAspectRatio="none">
+          <path d="M0,12 Q50,2 100,12 T200,12 T300,12 T400,12 T500,12" stroke="var(--tentacle-1)" stroke-width="1.5" fill="none" opacity="0.25">
+            <animate attributeName="d" dur="4s" repeatCount="indefinite"
+              values="M0,12 Q50,2 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,22 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,2 100,12 T200,12 T300,12 T400,12 T500,12" />
+          </path>
+        </svg>
+      </div>
+      <span class="divider-text">Core Systems</span>
+      <div class="divider-tentacle">
+        <svg viewBox="0 0 500 24" preserveAspectRatio="none">
+          <path d="M0,12 Q50,22 100,12 T200,12 T300,12 T400,12 T500,12" stroke="var(--tentacle-2)" stroke-width="1.5" fill="none" opacity="0.25">
+            <animate attributeName="d" dur="5s" repeatCount="indefinite"
+              values="M0,12 Q50,22 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,2 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,22 100,12 T200,12 T300,12 T400,12 T500,12" />
+          </path>
+        </svg>
+      </div>
+    </div>
+
+    <section>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-tentacle-num">1</div>
+          <h3>PM Repository</h3>
+          <p>Central hub for protocol coordination — where calls are scheduled, EIPs championed, and upgrades tracked.</p>
+          <a href="https://github.com/ethereum/pm" class="card-link" target="_blank">Explore</a>
+        </div>
+        <div class="card">
+          <div class="card-tentacle-num">2</div>
+          <h3>Breakout Rooms</h3>
+          <p>Focused sessions on EOF, Verkle, ePBS, and more. View active series or schedule your own.</p>
+          <a href="#" class="card-link">Schedule</a>
+        </div>
+        <div class="card">
+          <div class="card-tentacle-num">3</div>
+          <h3>Championing an EIP</h3>
+          <p>Guide to shepherding an EIP from proposal to protocol inclusion. Start here to submit an EIP.</p>
+          <a href="https://github.com/ethereum/pm/blob/master/processes/2026_championing_an_EIP.md" class="card-link" target="_blank">Read Guide</a>
+        </div>
+        <div class="card">
+          <div class="card-tentacle-num">4</div>
+          <h3>Protocol Upgrades</h3>
+          <p>Overview of the upgrade process, historical archive of fork development, and incident postmortems.</p>
+          <a href="https://github.com/ethereum/pm/tree/master/Network-Upgrade-Archive" class="card-link" target="_blank">Browse</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider">
+      <div class="divider-tentacle">
+        <svg viewBox="0 0 500 24" preserveAspectRatio="none">
+          <path d="M0,12 Q50,5 100,12 T200,12 T300,12 T400,12 T500,12" stroke="var(--tentacle-3)" stroke-width="1.5" fill="none" opacity="0.25">
+            <animate attributeName="d" dur="6s" repeatCount="indefinite"
+              values="M0,12 Q50,5 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,19 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,5 100,12 T200,12 T300,12 T400,12 T500,12" />
+          </path>
+        </svg>
+      </div>
+      <span class="divider-text">About</span>
+      <div class="divider-tentacle">
+        <svg viewBox="0 0 500 24" preserveAspectRatio="none">
+          <path d="M0,12 Q50,19 100,12 T200,12 T300,12 T400,12 T500,12" stroke="var(--tentacle-4)" stroke-width="1.5" fill="none" opacity="0.25">
+            <animate attributeName="d" dur="5s" repeatCount="indefinite"
+              values="M0,12 Q50,19 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,5 100,12 T200,12 T300,12 T400,12 T500,12;
+                      M0,12 Q50,19 100,12 T200,12 T300,12 T400,12 T500,12" />
+          </path>
+        </svg>
+      </div>
+    </div>
+
+    <section>
+      <div class="about-grid">
+        <div class="about-content">
+          <h2>About Protocol Support</h2>
+          <p>
+            Protocol Support is an Ethereum Foundation team dedicated to facilitating the protocol development process. We serve as the connective tissue between client teams, researchers, and the broader community.
+          </p>
+          <p>
+            Our octopus mascot represents the many arms reaching into different areas of Ethereum development — from coordinating AllCoreDevs meetings to helping newcomers navigate the complex landscape of protocol governance.
+          </p>
+        </div>
+
+        <div class="stats-panel">
+          <div class="stats-header">
+            <h3>Network Statistics</h3>
+            <div class="stats-live">
+              <div class="live-dot"></div>
+              Live
+            </div>
+          </div>
+          <div class="stats-body">
+            <div class="stat-row">
+              <span class="stat-label">ACD Meetings</span>
+              <span class="stat-value">200+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Breakout Calls</span>
+              <span class="stat-value">50+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">EIPs Coordinated</span>
+              <span class="stat-value">100+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">System Uptime</span>
+              <span class="stat-value">99.99%</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tentacles Active</span>
+              <span class="stat-value">8</span>
+            </div>
+
+            <div class="activity-bar">
+              <div class="activity-label">
+                <span>Weekly Activity</span>
+                <span>+23%</span>
+              </div>
+              <div class="activity-track">
+                <div class="activity-segment" style="flex: 3; background: var(--tentacle-1);"></div>
+                <div class="activity-segment" style="flex: 2; background: var(--tentacle-2);"></div>
+                <div class="activity-segment" style="flex: 4; background: var(--tentacle-3);"></div>
+                <div class="activity-segment" style="flex: 1; background: var(--tentacle-4);"></div>
+                <div class="activity-segment" style="flex: 3; background: var(--tentacle-1);"></div>
+                <div class="activity-segment" style="flex: 2; background: var(--tentacle-2);"></div>
+                <div class="activity-segment" style="flex: 5; background: var(--tentacle-3);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-text">
+          <a href="https://ethereum.org">Ethereum Foundation</a> — Protocol Support · <a href="mailto:protocolsupport@ethereum.org">protocolsupport@ethereum.org</a>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/ethereum/pm" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://discord.gg/a4gm9nT3Ty" target="_blank" rel="noopener">Discord</a>
+          <a href="https://www.youtube.com/@EthereumProtocol" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <img
+    src="../public/ps_logo_octo_icon_grey.png"
+    alt="PS"
+    class="floating-octopus"
+    title="Protocol Support"
+  />
+
+  <script>
+    // Generate sucker dots scattered around the page
+    const suckerContainer = document.getElementById('suckers');
+    const colors = ['var(--tentacle-1)', 'var(--tentacle-2)', 'var(--tentacle-3)', 'var(--tentacle-4)'];
+
+    for (let i = 0; i < 40; i++) {
+      const sucker = document.createElement('div');
+      sucker.className = 'sucker';
+      const size = 4 + Math.random() * 8;
+      sucker.style.width = size + 'px';
+      sucker.style.height = size + 'px';
+      sucker.style.left = Math.random() * 100 + '%';
+      sucker.style.top = Math.random() * 100 + '%';
+      sucker.style.background = colors[Math.floor(Math.random() * colors.length)];
+      sucker.style.animationDelay = (Math.random() * 6) + 's';
+      sucker.style.animationDuration = (3 + Math.random() * 4) + 's';
+      suckerContainer.appendChild(sucker);
+    }
+
+    // Floating octopus click interaction
+    const octopus = document.querySelector('.floating-octopus');
+    octopus.addEventListener('click', function() {
+      octopus.style.transform = 'scale(1.4) rotate(20deg)';
+      octopus.style.filter = 'brightness(0) invert(1) drop-shadow(0 0 20px rgba(123, 97, 255, 0.9))';
+      setTimeout(function() {
+        octopus.style.transform = '';
+        octopus.style.filter = '';
+      }, 500);
+    });
+  </script>
+</body>
+</html>

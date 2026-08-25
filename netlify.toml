@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# This site was created for a different framework, so Netlify does not install
+# the Next.js runtime by itself. Without it the .next directory is published as
+# static files and every route returns 404.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

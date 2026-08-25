@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support - Terminal Refined</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Core palette - Blue dominant with purple accent */
+      --blue: #00D4FF;
+      --blue-light: #5CE1FF;
+      --blue-muted: #0088AA;
+      --blue-dim: #004466;
+
+      --purple: #A855F7;
+      --purple-light: #C084FC;
+      --purple-muted: #7C3AED;
+
+      --pink: #F472B6;
+
+      /* Backgrounds */
+      --bg-void: #030308;
+      --bg-deep: #0A0A12;
+      --bg-surface: #12121A;
+      --bg-elevated: #1A1A24;
+
+      /* Text */
+      --text-bright: #F0F6FF;
+      --text-primary: #00D4FF;
+      --text-secondary: #7DD3FC;
+      --text-muted: #3B82A0;
+      --text-dim: #1E3A5F;
+
+      /* Typography */
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 15px;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Refined scanlines - subtle, not overwhelming */
+    .scanlines {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Subtle vignette */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.3) 100%
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Ambient glow - top */
+    .ambient-glow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 400px;
+      background: radial-gradient(
+        ellipse 80% 60% at 50% -10%,
+        rgba(0, 212, 255, 0.08) 0%,
+        transparent 60%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Matrix rain effect - subtle blue/purple */
+    .matrix-rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.4;
+    }
+
+    .rain-column {
+      position: absolute;
+      top: -100%;
+      font-size: 10px;
+      color: var(--blue);
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      animation: rain-fall linear infinite;
+      opacity: 0.3;
+    }
+
+    @keyframes rain-fall {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(200vh); }
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      background: rgba(3, 3, 8, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--text-dim);
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+    }
+
+    .logo {
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      border: 1.5px solid var(--blue);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--blue);
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--blue);
+      transition: width 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--blue);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Main */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 100px 2rem 4rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* System status bar */
+    .status-bar {
+      display: flex;
+      gap: 2rem;
+      padding: 1rem 0;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--text-dim);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 8px var(--blue);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    .status-dot.purple {
+      background: var(--purple);
+      box-shadow: 0 0 8px var(--purple);
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Hero */
+    .hero {
+      margin-bottom: 6rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      color: var(--text-bright);
+    }
+
+    h1 strong {
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+
+    .hero-description {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    /* Terminal prompt */
+    .terminal {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--text-dim);
+    }
+
+    .terminal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot.red { background: #FF5F57; }
+    .terminal-dot.yellow { background: #FFBD2E; }
+    .terminal-dot.green { background: #28CA41; }
+
+    .terminal-title {
+      margin-left: auto;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-body {
+      padding: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .terminal-line {
+      display: flex;
+      margin-bottom: 0.25rem;
+    }
+
+    .terminal-prompt {
+      color: var(--purple);
+      margin-right: 0.5rem;
+    }
+
+    .terminal-command {
+      color: var(--text-bright);
+    }
+
+    .terminal-output {
+      color: var(--text-muted);
+      padding-left: 1rem;
+    }
+
+    .terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--blue);
+      animation: cursor-blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    @keyframes cursor-blink {
+      50% { opacity: 0; }
+    }
+
+    /* Octopus Logo */
+    .octopus-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .octopus-logo {
+      width: 280px;
+      height: auto;
+      filter: brightness(0) invert(1);
+      transition: all 0.4s ease;
+      animation: float-logo 6s ease-in-out infinite;
+    }
+
+    .octopus-logo:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes float-logo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .octopus-label {
+      text-align: center;
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      margin-top: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+
+    /* Section divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 4rem 0;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--text-dim), transparent);
+    }
+
+    .divider-line:last-child {
+      background: linear-gradient(90deg, transparent, var(--text-dim));
+    }
+
+    .divider-text {
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    /* Section header */
+    .section-header {
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-bright);
+    }
+
+    /* Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: var(--blue-muted);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .card-id {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-bright);
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .card-command {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: var(--bg-deep);
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-command span {
+      color: var(--blue);
+    }
+
+    /* About section */
+    .about {
+      margin-top: 4rem;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 800px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-content h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-bright);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    /* Stats panel */
+    .stats-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .stats-header {
+      padding: 1rem 1.25rem;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--text-dim);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stats-header h3 {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .stats-live {
+      font-size: 0.6rem;
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .stats-body {
+      padding: 1.25rem;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .stat-value.purple {
+      color: var(--purple);
+    }
+
+    /* Activity bar */
+    .activity-bar {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--text-dim);
+    }
+
+    .activity-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .activity-track {
+      height: 4px;
+      background: var(--bg-deep);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+      gap: 2px;
+    }
+
+    .activity-segment {
+      height: 100%;
+      border-radius: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .activity-segment:hover {
+      filter: brightness(1.3);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 6rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--text-dim);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .footer-inner {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    .footer-text {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .footer-text a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--blue);
+    }
+
+    /* Floating octopus icon - bottom right */
+    .floating-octopus {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 48px;
+      height: 48px;
+      opacity: 0.4;
+      z-index: 50;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      filter: brightness(1.5) drop-shadow(0 0 5px rgba(0, 212, 255, 0.3));
+    }
+
+    .floating-octopus:hover {
+      opacity: 0.9;
+      filter: brightness(2) drop-shadow(0 0 15px rgba(0, 212, 255, 0.6));
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--purple);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div class="ambient-glow"></div>
+
+  <!-- Matrix rain -->
+  <div class="matrix-rain" id="matrix"></div>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-icon">PS</div>
+        <span>PROTOCOL SUPPORT</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Repository</a></li>
+        <li><a href="#">Breakouts</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Contributing</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-dot"></div>
+        <span>Mainnet Connected</span>
+      </div>
+      <div class="status-item">
+        <div class="status-dot purple"></div>
+        <span>Block 19,234,567</span>
+      </div>
+      <div class="status-item">
+        <span>Latency: 12ms</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-label"></div>
+          <h1>
+            <strong>Protocol</strong><br>
+            Support
+          </h1>
+          <p class="hero-description">
+            Coordinating Ethereum protocol development. We manage AllCoreDevs, facilitate breakout discussions, and build the infrastructure for building infrastructure.
+          </p>
+
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+              <span class="terminal-title">protocol-support — zsh</span>
+            </div>
+            <div class="terminal-body">
+              <div class="terminal-line">
+                <span class="terminal-prompt">→</span>
+                <span class="terminal-command">cd ethereum/pm</span>
+              </div>
+              <div class="terminal-line">
+                <span class="terminal-prompt">→</span>
+                <span class="terminal-command">./coordinate --acd-meeting 181</span>
+              </div>
+              <div class="terminal-output">✓ Meeting scheduled for Thursday 14:00 UTC</div>
+              <div class="terminal-output">✓ Agenda published to GitHub</div>
+              <div class="terminal-output">✓ 47 participants notified</div>
+              <div class="terminal-line">
+                <span class="terminal-prompt">→</span>
+                <span class="terminal-cursor"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="octopus-container">
+          <img
+            src="../public/ps_logo_octo_solo.png"
+            alt="Protocol Support Octopus"
+            class="octopus-logo"
+          />
+          <div class="octopus-label">Protocol Support</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">Core Systems</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <h3>PM Repository</h3>
+            <span class="card-id">SYS:001</span>
+          </div>
+          <p>Central hub for Ethereum protocol coordination — where calls are scheduled, EIPs championed, and upgrades tracked.</p>
+          <div class="card-command">
+            <span>$</span> open github.com/ethereum/pm
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Breakout Rooms</h3>
+            <span class="card-id">SYS:002</span>
+          </div>
+          <p>Focused technical sessions on topics like EOF, Verkle, and ePBS. View active series or schedule your own.</p>
+          <div class="card-command">
+            <span>$</span> ./schedule --topic "verkle-trees"
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Championing an EIP</h3>
+            <span class="card-id">SYS:003</span>
+          </div>
+          <p>Guide to shepherding an EIP from proposal to protocol inclusion. Start here if you want to submit an EIP.</p>
+          <div class="card-command">
+            <span>$</span> open pm/processes/championing_an_EIP
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Protocol Upgrades</h3>
+            <span class="card-id">SYS:004</span>
+          </div>
+          <p>Overview of the upgrade process, historical archive of fork development, and incident postmortems.</p>
+          <div class="card-command">
+            <span>$</span> ls pm/Network-Upgrade-Archive/
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">System Status</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <section class="about">
+      <div class="about-grid">
+        <div class="about-content">
+          <h2>About Protocol Support</h2>
+          <p>
+            Protocol Support is an Ethereum Foundation team dedicated to facilitating the protocol development process. We serve as the connective tissue between client teams, researchers, and the broader community.
+          </p>
+          <p>
+            Our octopus mascot represents the many arms reaching into different areas of Ethereum development—from coordinating AllCoreDevs meetings to helping newcomers navigate the complex landscape of protocol governance.
+          </p>
+        </div>
+
+        <div class="stats-panel">
+          <div class="stats-header">
+            <h3>Network Statistics</h3>
+            <div class="stats-live">
+              <div class="status-dot"></div>
+              Live
+            </div>
+          </div>
+          <div class="stats-body">
+            <div class="stat-row">
+              <span class="stat-label">ACD Meetings</span>
+              <span class="stat-value">200+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Breakout Calls</span>
+              <span class="stat-value purple">50+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">EIPs Coordinated</span>
+              <span class="stat-value">100+</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">System Uptime</span>
+              <span class="stat-value purple">99.99%</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Tentacles Active</span>
+              <span class="stat-value">8</span>
+            </div>
+
+            <div class="activity-bar">
+              <div class="activity-label">
+                <span>Weekly Activity</span>
+                <span>↑ 23%</span>
+              </div>
+              <div class="activity-track">
+                <div class="activity-segment" style="flex: 3; background: var(--blue);"></div>
+                <div class="activity-segment" style="flex: 2; background: var(--purple);"></div>
+                <div class="activity-segment" style="flex: 4; background: var(--blue);"></div>
+                <div class="activity-segment" style="flex: 1; background: var(--purple);"></div>
+                <div class="activity-segment" style="flex: 3; background: var(--blue);"></div>
+                <div class="activity-segment" style="flex: 2; background: var(--purple);"></div>
+                <div class="activity-segment" style="flex: 5; background: var(--blue);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-text">
+          <a href="https://ethereum.org">Ethereum Foundation</a> — Protocol Support · <a href="mailto:protocolsupport@ethereum.org">protocolsupport@ethereum.org</a>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/ethereum/pm" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://discord.gg/a4gm9nT3Ty" target="_blank" rel="noopener">Discord</a>
+          <a href="https://www.youtube.com/@EthereumProtocol" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Floating octopus icon -->
+  <img
+    src="../public/ps_logo_octo_icon_grey.png"
+    alt="PS"
+    class="floating-octopus"
+    title="Protocol Support"
+  />
+
+  <script>
+    // Create subtle matrix rain
+    const matrix = document.getElementById('matrix');
+    const chars = '01アイウエオカキクケコサシスセソタチツテト';
+    const columns = Math.floor(window.innerWidth / 30);
+
+    for (let i = 0; i < columns; i++) {
+      const column = document.createElement('div');
+      column.className = 'rain-column';
+      column.style.left = (i * 30 + Math.random() * 15) + 'px';
+      column.style.animationDuration = (8 + Math.random() * 12) + 's';
+      column.style.animationDelay = (Math.random() * 10) + 's';
+      column.style.color = Math.random() > 0.7 ? 'var(--purple)' : 'var(--blue)';
+      column.style.opacity = 0.1 + Math.random() * 0.2;
+
+      let text = '';
+      for (let j = 0; j < 30; j++) {
+        text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+      }
+      column.textContent = text;
+      matrix.appendChild(column);
+    }
+
+    // Terminal typing effect
+    const cursor = document.querySelector('.terminal-cursor');
+    let visible = true;
+
+    // Add interactivity to floating octopus icon
+    const octopus = document.querySelector('.floating-octopus');
+    octopus.addEventListener('click', () => {
+      octopus.style.transform = 'scale(1.3) rotate(15deg)';
+      octopus.style.filter = 'brightness(3) drop-shadow(0 0 25px rgba(0, 212, 255, 0.8))';
+      setTimeout(() => {
+        octopus.style.transform = '';
+        octopus.style.filter = '';
+      }, 400);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support - v8 Bento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #00D4FF;
+      --blue-light: #5CE1FF;
+      --blue-muted: #0088AA;
+      --blue-dim: #004466;
+      --purple: #A855F7;
+      --purple-light: #C084FC;
+      --purple-muted: #7C3AED;
+      --pink: #F472B6;
+      --bg-void: #030308;
+      --bg-deep: #0A0A12;
+      --bg-surface: #12121A;
+      --bg-elevated: #1A1A24;
+      --text-bright: #F0F6FF;
+      --text-primary: #00D4FF;
+      --text-secondary: #7DD3FC;
+      --text-muted: #3B82A0;
+      --text-dim: #1E3A5F;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 15px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Overlays */
+    .scanlines {
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+      pointer-events: none; z-index: 9999;
+    }
+    .vignette {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
+      pointer-events: none; z-index: 9998;
+    }
+
+    /* === NAV === */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 2rem;
+      background: rgba(3,3,8,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(30,58,95,0.3);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center; height: 56px;
+    }
+    .logo {
+      font-weight: 600; font-size: 0.8rem; letter-spacing: 0.08em;
+      display: flex; align-items: center; gap: 0.6rem;
+      color: var(--text-bright);
+    }
+    .logo-mark {
+      width: 22px; height: 22px;
+      border: 1.5px solid var(--blue);
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6rem; color: var(--blue);
+      box-shadow: 0 0 12px rgba(0,212,255,0.2);
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.7rem; font-weight: 500; color: var(--text-muted);
+      text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+
+    /* === HERO — full bleed, octopus as bg overlay === */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      padding: 6rem 2rem;
+      overflow: hidden;
+    }
+
+    /* Octopus bg image — large, centered, ghosted */
+    .hero-bg-octopus {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(500px, 70vw, 900px);
+      height: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.04;
+      pointer-events: none;
+      animation: hero-breathe 8s ease-in-out infinite;
+    }
+    @keyframes hero-breathe {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.04; }
+      50% { transform: translate(-50%, -50%) scale(1.03); opacity: 0.06; }
+    }
+
+    /* Radial glow behind hero text */
+    .hero-glow {
+      position: absolute;
+      top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, rgba(168,85,247,0.03) 40%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--text-bright);
+      margin-bottom: 2rem;
+      letter-spacing: -0.03em;
+    }
+    .hero h1 strong {
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+
+    .hero-desc {
+      font-size: 1rem; font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(168,85,247,0.15));
+      border: 1px solid var(--blue-muted);
+      border-radius: 6px;
+      color: var(--blue);
+      font-family: var(--font-mono);
+      font-size: 0.8rem; font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .hero-cta:hover {
+      background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(168,85,247,0.25));
+      box-shadow: 0 0 40px rgba(0,212,255,0.15);
+      transform: translateY(-2px);
+    }
+    .hero-cta::after { content: ' \2192'; }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: var(--text-dim);
+      font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em;
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    .scroll-hint-line {
+      width: 1px; height: 30px;
+      background: linear-gradient(to bottom, var(--text-dim), transparent);
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 1; transform: translateX(-50%) translateY(4px); }
+    }
+
+    /* === BENTO GRID === */
+    .bento-section {
+      padding: 0 2rem 6rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.6rem; font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.2em;
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--text-dim), transparent);
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: minmax(140px, auto);
+      gap: 1rem;
+    }
+
+    .bento-cell {
+      background: var(--bg-surface);
+      border: 1px solid rgba(30,58,95,0.4);
+      border-radius: 10px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .bento-cell:hover {
+      border-color: rgba(0,212,255,0.3);
+      box-shadow: 0 8px 40px rgba(0,212,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Gradient line on top of hovered cell */
+    .bento-cell::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .bento-cell:hover::before { opacity: 1; }
+
+    /* Cell label */
+    .cell-label {
+      font-size: 0.55rem; font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase; letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+    .cell-title {
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.5rem;
+    }
+    .cell-desc {
+      font-size: 0.8rem; color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .cell-link {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      margin-top: 1rem;
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .cell-link:hover { color: var(--blue-light); }
+    .cell-link::after { content: ' \2192'; }
+
+    /* ---- CELL: PM Repo (large hero card) ---- */
+    .cell-pm {
+      grid-column: span 8;
+      grid-row: span 2;
+      display: flex; flex-direction: column; justify-content: space-between;
+      background: linear-gradient(160deg, var(--bg-surface) 0%, rgba(0,212,255,0.03) 100%);
+    }
+    .cell-pm .cell-title { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .cell-pm .cell-desc { max-width: 420px; font-size: 0.9rem; }
+
+    /* Terminal animation inside PM cell */
+    .mini-terminal {
+      margin-top: auto;
+      background: var(--bg-deep);
+      border: 1px solid var(--text-dim);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.7rem;
+    }
+    .mini-terminal .line {
+      display: flex; gap: 0.5rem; margin-bottom: 0.15rem;
+    }
+    .mini-terminal .prompt { color: var(--purple); }
+    .mini-terminal .cmd { color: var(--text-bright); }
+    .mini-terminal .out { color: var(--text-muted); padding-left: 1.2rem; }
+    .typing-cursor {
+      display: inline-block; width: 7px; height: 12px;
+      background: var(--blue);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle; margin-left: 2px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ---- CELL: Breakouts (tall) ---- */
+    .cell-breakouts {
+      grid-column: span 4;
+      grid-row: span 2;
+    }
+
+    /* Active breakout list animation */
+    .breakout-list {
+      margin-top: 1rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .breakout-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.6rem;
+      background: var(--bg-deep);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      animation: breakout-slide-in 0.5s ease-out both;
+    }
+    .breakout-item:nth-child(1) { animation-delay: 0.1s; }
+    .breakout-item:nth-child(2) { animation-delay: 0.2s; }
+    .breakout-item:nth-child(3) { animation-delay: 0.3s; }
+    .breakout-item:nth-child(4) { animation-delay: 0.4s; }
+    .breakout-item:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes breakout-slide-in {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .breakout-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .breakout-dot.live { background: #34D399; box-shadow: 0 0 6px #34D399; animation: pulse-dot 2s ease infinite; }
+    .breakout-dot.upcoming { background: var(--blue); }
+    .breakout-dot.past { background: var(--text-dim); }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+
+    /* ---- CELL: Champion EIP ---- */
+    .cell-eip {
+      grid-column: span 5;
+    }
+
+    /* EIP flow diagram */
+    .eip-flow {
+      display: flex; align-items: center; gap: 0.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.6rem; font-weight: 500;
+    }
+    .eip-stage {
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .eip-stage.draft { background: rgba(59,130,160,0.2); color: var(--text-secondary); }
+    .eip-stage.review { background: rgba(0,212,255,0.15); color: var(--blue); }
+    .eip-stage.included { background: rgba(52,211,153,0.2); color: #34D399; }
+    .eip-arrow { color: var(--text-dim); font-size: 0.7rem; }
+
+    /* ---- CELL: Protocol Upgrades ---- */
+    .cell-upgrades {
+      grid-column: span 3;
+    }
+
+    /* Animated upgrade timeline */
+    .upgrade-timeline {
+      margin-top: 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .upgrade-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.7rem;
+    }
+    .upgrade-pip {
+      width: 8px; height: 8px; border-radius: 50%;
+      border: 1.5px solid;
+      flex-shrink: 0;
+    }
+    .upgrade-pip.done { border-color: #34D399; background: #34D399; }
+    .upgrade-pip.active { border-color: var(--blue); background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+    .upgrade-pip.planned { border-color: var(--purple); }
+    .upgrade-name { color: var(--text-secondary); }
+    .upgrade-name.active-text { color: var(--text-bright); font-weight: 600; }
+
+    /* Vertical connector */
+    .upgrade-connector {
+      width: 1px; height: 8px;
+      background: var(--text-dim);
+      margin-left: 3.5px;
+    }
+
+    /* ---- CELL: Resources (wide) ---- */
+    .cell-resources {
+      grid-column: span 4;
+    }
+    .resource-links {
+      margin-top: 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .resource-link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(30,58,95,0.3);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .resource-link:last-child { border-bottom: none; }
+    .resource-link:hover { color: var(--blue); padding-left: 0.3rem; }
+    .resource-link span { color: var(--text-dim); font-size: 0.6rem; }
+
+    /* ---- CELL: Stats (full width bar) ---- */
+    .cell-stats {
+      grid-column: span 12;
+      display: flex; align-items: stretch; gap: 0;
+      padding: 0;
+      background: linear-gradient(90deg, var(--bg-surface), var(--bg-elevated), var(--bg-surface));
+    }
+
+    .stat-block {
+      flex: 1;
+      padding: 1.5rem;
+      text-align: center;
+      border-right: 1px solid rgba(30,58,95,0.3);
+      position: relative;
+    }
+    .stat-block:last-child { border-right: none; }
+
+    .stat-number {
+      font-size: 2rem; font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-number.blue { color: var(--blue); }
+    .stat-number.purple { color: var(--purple); }
+    .stat-number.green { color: #34D399; }
+    .stat-number.pink { color: var(--pink); }
+
+    .stat-desc {
+      font-size: 0.6rem; font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+
+    /* animated underline on stats */
+    .stat-block::after {
+      content: '';
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 2px;
+      border-radius: 1px;
+      transition: width 0.4s ease;
+    }
+    .stat-block:nth-child(1)::after { background: var(--blue); }
+    .stat-block:nth-child(2)::after { background: var(--purple); }
+    .stat-block:nth-child(3)::after { background: #34D399; }
+    .stat-block:nth-child(4)::after { background: var(--pink); }
+    .stat-block:hover::after { width: 60%; }
+
+    /* ---- CELL: About ---- */
+    .cell-about {
+      grid-column: span 8;
+    }
+    .cell-about .cell-title { font-size: 1.3rem; }
+    .cell-about p {
+      font-size: 0.85rem; color: var(--text-secondary);
+      line-height: 1.7; margin-bottom: 0.75rem;
+    }
+
+    /* ---- CELL: Team (small) ---- */
+    .cell-team {
+      grid-column: span 4;
+      display: flex; flex-direction: column;
+    }
+    .team-members {
+      margin-top: auto;
+      display: flex; flex-direction: column; gap: 0.35rem;
+    }
+    .team-member {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.75rem;
+    }
+    .team-member-name { color: var(--text-secondary); }
+    .team-member-links {
+      display: flex; gap: 0.5rem;
+    }
+    .team-member-links a {
+      color: var(--text-dim); font-size: 0.6rem;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .team-member-links a:hover { color: var(--blue); }
+
+    /* === FOOTER === */
+    footer {
+      padding: 2rem;
+      max-width: 1200px; margin: 0 auto;
+      border-top: 1px solid rgba(30,58,95,0.3);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-text { font-size: 0.65rem; color: var(--text-dim); }
+    .footer-text a { color: var(--text-muted); text-decoration: none; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      font-size: 0.7rem; color: var(--text-muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--blue); }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 900px) {
+      .bento-grid { grid-template-columns: 1fr; }
+      .cell-pm, .cell-breakouts, .cell-eip, .cell-upgrades,
+      .cell-resources, .cell-stats, .cell-about, .cell-team {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+      }
+      .cell-stats { flex-direction: column; }
+      .stat-block { border-right: none; border-bottom: 1px solid rgba(30,58,95,0.3); }
+      .stat-block:last-child { border-bottom: none; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+
+    ::selection { background: var(--purple); color: white; }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-mark">PS</div>
+        <span>PROTOCOL SUPPORT</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Repository</a></li>
+        <li><a href="#">Breakouts</a></li>
+        <li><a href="#">Team</a></li>
+        <li><a href="#">Resources</a></li>
+        <li><a href="#">Contributing</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <img src="../public/ps_logo_octo_solo.png" alt="" class="hero-bg-octopus" />
+
+    <div class="hero-content">
+      <h1><strong>Protocol</strong><br>Support</h1>
+      <p class="hero-desc">
+        Coordinating Ethereum protocol development. We manage AllCoreDevs,
+        facilitate breakout discussions, and build the infrastructure for
+        building infrastructure.
+      </p>
+      <a href="https://github.com/ethereum/pm" class="hero-cta" target="_blank">
+        Explore the PM Repository
+      </a>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      scroll
+    </div>
+  </section>
+
+  <!-- ===== BENTO GRID ===== -->
+  <section class="bento-section">
+    <div class="section-label">Core Systems</div>
+
+    <div class="bento-grid">
+
+      <!-- PM Repository (large hero card) -->
+      <div class="bento-cell cell-pm">
+        <div>
+          <div class="cell-label">SYS:001 — Primary Hub</div>
+          <div class="cell-title">PM Repository</div>
+          <p class="cell-desc">
+            Central hub for Ethereum protocol coordination — where calls are
+            scheduled, EIPs championed, upgrades tracked, and governance happens in the open.
+          </p>
+          <a href="https://github.com/ethereum/pm" class="cell-link" target="_blank">Open Repository</a>
+        </div>
+        <div class="mini-terminal">
+          <div class="line"><span class="prompt">$</span><span class="cmd">cd ethereum/pm</span></div>
+          <div class="line"><span class="prompt">$</span><span class="cmd">ls processes/</span></div>
+          <div class="out">championing_an_EIP.md</div>
+          <div class="out">protocol-upgrade.md</div>
+          <div class="out">running-a-breakout.md</div>
+          <div class="line"><span class="prompt">$</span><span class="typing-cursor"></span></div>
+        </div>
+      </div>
+
+      <!-- Breakouts (tall) -->
+      <div class="bento-cell cell-breakouts">
+        <div class="cell-label">SYS:002</div>
+        <div class="cell-title">Breakout Rooms</div>
+        <p class="cell-desc">Focused sessions on specific protocol topics. View active series or schedule your own.</p>
+
+        <div class="breakout-list">
+          <div class="breakout-item"><div class="breakout-dot live"></div> ePBS Breakout #19</div>
+          <div class="breakout-item"><div class="breakout-dot live"></div> Verkle Trie Sync</div>
+          <div class="breakout-item"><div class="breakout-dot upcoming"></div> EOF Testing</div>
+          <div class="breakout-item"><div class="breakout-dot upcoming"></div> PeerDAS Impl</div>
+          <div class="breakout-item"><div class="breakout-dot past"></div> Account Abstraction</div>
+        </div>
+      </div>
+
+      <!-- Championing an EIP -->
+      <div class="bento-cell cell-eip">
+        <div class="cell-label">SYS:003</div>
+        <div class="cell-title">Championing an EIP</div>
+        <p class="cell-desc">Guide to shepherding a proposal from draft to protocol inclusion.</p>
+
+        <div class="eip-flow">
+          <span class="eip-stage draft">Draft</span>
+          <span class="eip-arrow">&rarr;</span>
+          <span class="eip-stage review">Review</span>
+          <span class="eip-arrow">&rarr;</span>
+          <span class="eip-stage review">ACD</span>
+          <span class="eip-arrow">&rarr;</span>
+          <span class="eip-stage included">Included</span>
+        </div>
+
+        <a href="https://github.com/ethereum/pm/blob/master/processes/2026_championing_an_EIP.md" class="cell-link" target="_blank">Read the Guide</a>
+      </div>
+
+      <!-- Protocol Upgrades -->
+      <div class="bento-cell cell-upgrades">
+        <div class="cell-label">SYS:004</div>
+        <div class="cell-title">Upgrades</div>
+
+        <div class="upgrade-timeline">
+          <div class="upgrade-item"><div class="upgrade-pip done"></div><span class="upgrade-name">Dencun</span></div>
+          <div class="upgrade-connector"></div>
+          <div class="upgrade-item"><div class="upgrade-pip done"></div><span class="upgrade-name">Pectra</span></div>
+          <div class="upgrade-connector"></div>
+          <div class="upgrade-item"><div class="upgrade-pip active"></div><span class="upgrade-name active-text">Fusaka</span></div>
+          <div class="upgrade-connector"></div>
+          <div class="upgrade-item"><div class="upgrade-pip planned"></div><span class="upgrade-name">Glamsterdam</span></div>
+        </div>
+      </div>
+
+      <!-- Resources -->
+      <div class="bento-cell cell-resources">
+        <div class="cell-label">Quick Links</div>
+        <div class="cell-title">Resources</div>
+
+        <div class="resource-links">
+          <a href="https://forkcast.org" target="_blank" class="resource-link">Forkcast <span>forkcast.org</span></a>
+          <a href="https://epf.wiki" target="_blank" class="resource-link">EPF Wiki <span>epf.wiki</span></a>
+          <a href="https://www.youtube.com/@EthereumProtocol" target="_blank" class="resource-link">Protocol YouTube <span>youtube</span></a>
+          <a href="https://discord.gg/a4gm9nT3Ty" target="_blank" class="resource-link">R&D Discord <span>discord</span></a>
+        </div>
+      </div>
+
+      <!-- Stats Bar (full width) -->
+      <div class="bento-cell cell-stats">
+        <div class="stat-block">
+          <div class="stat-number blue" data-count="200">0</div>
+          <div class="stat-desc">ACD Meetings</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number purple" data-count="50">0</div>
+          <div class="stat-desc">Breakout Series</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number green" data-count="6">0</div>
+          <div class="stat-desc">Team Members</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-number pink" data-count="8">0</div>
+          <div class="stat-desc">Tentacles Active</div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="bento-cell cell-about">
+        <div class="cell-label">About</div>
+        <div class="cell-title">About Protocol Support</div>
+        <p>
+          An Ethereum Foundation team dedicated to facilitating the protocol
+          development process. We serve as the connective tissue between client
+          teams, researchers, and the broader community.
+        </p>
+        <p>
+          Our octopus mascot represents the many arms reaching into different
+          areas of Ethereum development — from coordinating AllCoreDevs to
+          helping newcomers navigate protocol governance.
+        </p>
+        <a href="mailto:protocolsupport@ethereum.org" class="cell-link">Contact the Team</a>
+      </div>
+
+      <!-- Team -->
+      <div class="bento-cell cell-team">
+        <div class="cell-label">Team</div>
+        <div class="cell-title">Who We Are</div>
+
+        <div class="team-members">
+          <div class="team-member">
+            <span class="team-member-name">Nixo</span>
+            <div class="team-member-links"><a href="https://x.com/nixorokish" target="_blank">X</a> <a href="https://github.com/nixorokish" target="_blank">GH</a></div>
+          </div>
+          <div class="team-member">
+            <span class="team-member-name">Josh Davis</span>
+            <div class="team-member-links"><a href="https://x.com/joshdavislight" target="_blank">X</a> <a href="https://github.com/joshdavislight" target="_blank">GH</a></div>
+          </div>
+          <div class="team-member">
+            <span class="team-member-name">Marc Garreau</span>
+            <div class="team-member-links"><a href="https://x.com/wolovim" target="_blank">X</a> <a href="https://github.com/wolovim" target="_blank">GH</a></div>
+          </div>
+          <div class="team-member">
+            <span class="team-member-name">Mario Havel</span>
+            <div class="team-member-links"><a href="https://x.com/TMIYChao" target="_blank">X</a> <a href="https://github.com/taxmeifyoucan" target="_blank">GH</a></div>
+          </div>
+          <div class="team-member">
+            <span class="team-member-name">Butta</span>
+            <div class="team-member-links"><a href="https://x.com/Butta_eth" target="_blank">X</a> <a href="https://github.com/Buttaa" target="_blank">GH</a></div>
+          </div>
+          <div class="team-member">
+            <span class="team-member-name">Dionysuz</span>
+            <div class="team-member-links"><a href="https://x.com/dionysuzx" target="_blank">X</a> <a href="https://github.com/dionysuzx" target="_blank">GH</a></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-text">
+      <a href="https://ethereum.org">Ethereum Foundation</a> — Protocol Support · <a href="mailto:protocolsupport@ethereum.org">protocolsupport@ethereum.org</a>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/ethereum/pm" target="_blank">GitHub</a>
+      <a href="https://discord.gg/a4gm9nT3Ty" target="_blank">Discord</a>
+      <a href="https://www.youtube.com/@EthereumProtocol" target="_blank">YouTube</a>
+    </div>
+  </footer>
+
+  <script>
+    // Count-up animation for stats
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          const counters = entry.target.querySelectorAll('[data-count]');
+          counters.forEach(function(counter) {
+            const target = parseInt(counter.dataset.count);
+            const suffix = target >= 50 ? '+' : '';
+            let current = 0;
+            const step = Math.max(1, Math.floor(target / 40));
+            const interval = setInterval(function() {
+              current += step;
+              if (current >= target) {
+                current = target;
+                clearInterval(interval);
+              }
+              counter.textContent = current + suffix;
+            }, 30);
+          });
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const statsBar = document.querySelector('.cell-stats');
+    if (statsBar) observer.observe(statsBar);
+  </script>
+</body>
+</html>

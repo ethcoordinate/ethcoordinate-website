@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Protocol Support - Terminal Forkcast Concept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg-deep: #0A0A0A;
+      --color-bg-base: #0D0D0D;
+      --color-bg-surface: #141414;
+      --color-bg-elevated: #1A1A1A;
+
+      /* Forkcast colors */
+      --color-green: #14F195;
+      --color-green-light: #5FFBBA;
+      --color-green-muted: #0A7A4A;
+      --color-purple: #9945FF;
+      --color-purple-light: #B36DFF;
+      --color-purple-muted: #5C2A99;
+
+      --color-accent: #FFFF33;
+      --color-error: #FF3333;
+
+      --color-text-primary: #14F195;
+      --color-text-secondary: #10C276;
+      --color-text-muted: #0A8A52;
+      --color-text-purple: #9945FF;
+
+      --font-display: 'VT323', monospace;
+      --font-mono: 'IBM Plex Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--color-bg-deep);
+      color: var(--color-text-primary);
+      font-family: var(--font-mono);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* CRT Scanlines */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 2px,
+        rgba(0, 0, 0, 0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* CRT screen curve vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        transparent 60%,
+        rgba(0, 0, 0, 0.4) 100%
+      );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* Forkcast gradient glow effect */
+    .glow {
+      text-shadow:
+        0 0 5px var(--color-green),
+        0 0 10px var(--color-green),
+        0 0 20px var(--color-green-muted);
+    }
+
+    .glow-purple {
+      text-shadow:
+        0 0 5px var(--color-purple),
+        0 0 10px var(--color-purple),
+        0 0 20px var(--color-purple-muted);
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      background: var(--color-bg-deep);
+      border-bottom: 1px solid var(--color-green-muted);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+    }
+
+    .logo::before {
+      content: '> ';
+      color: var(--color-green-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-links li::before {
+      content: '[';
+      color: var(--color-purple-muted);
+    }
+
+    .nav-links li::after {
+      content: ']';
+      color: var(--color-purple-muted);
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      padding: 0.25rem 0.5rem;
+      transition: all 0.1s;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-green);
+      text-shadow: 0 0 10px var(--color-green);
+    }
+
+    /* Main Content */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 100px 2rem 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Boot sequence */
+    .boot-sequence {
+      margin-bottom: 3rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .boot-line {
+      opacity: 0;
+      animation: boot-appear 0.1s forwards;
+    }
+
+    .boot-line:nth-child(1) { animation-delay: 0.2s; }
+    .boot-line:nth-child(2) { animation-delay: 0.4s; }
+    .boot-line:nth-child(3) { animation-delay: 0.6s; }
+    .boot-line:nth-child(4) { animation-delay: 0.8s; }
+    .boot-line:nth-child(5) { animation-delay: 1s; }
+    .boot-line:nth-child(6) { animation-delay: 1.2s; }
+
+    @keyframes boot-appear {
+      to { opacity: 1; }
+    }
+
+    .boot-ok {
+      color: var(--color-green);
+    }
+
+    .boot-purple {
+      color: var(--color-purple);
+    }
+
+    /* Hero Section */
+    .hero {
+      margin-bottom: 4rem;
+    }
+
+    .ascii-art {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .ascii-green {
+      color: var(--color-green);
+    }
+
+    .ascii-purple {
+      color: var(--color-purple);
+    }
+
+    /* ASCII Octopus */
+    .ascii-octopus {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      line-height: 1.1;
+      color: var(--color-green);
+      opacity: 0.7;
+      white-space: pre;
+      z-index: 50;
+      animation: float-octopus 4s ease-in-out infinite;
+    }
+
+    @keyframes float-octopus {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .ascii-octopus:hover {
+      opacity: 1;
+      color: var(--color-green-light);
+      text-shadow: 0 0 10px var(--color-green);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 10vw, 6rem);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 0.6em;
+      height: 1em;
+      background: linear-gradient(180deg, var(--color-green), var(--color-purple));
+      margin-left: 0.1em;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .hero-description {
+      font-size: 1rem;
+      color: var(--color-text-secondary);
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+
+    .hero-description::before {
+      content: '// ';
+      color: var(--color-purple-muted);
+    }
+
+    .command-prompt {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+
+    .prompt-symbol {
+      color: var(--color-green);
+    }
+
+    .prompt-symbol .at {
+      color: var(--color-purple);
+    }
+
+    .command-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--color-text-primary);
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      outline: none;
+      caret-color: var(--color-green);
+    }
+
+    .command-input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    /* Section divider */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, var(--color-green-muted), var(--color-purple-muted), var(--color-green-muted));
+      margin: 3rem 0;
+    }
+
+    .divider-text {
+      text-align: center;
+      font-size: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .divider-text span {
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Cards Section */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .section-header::before {
+      content: '##';
+      color: var(--color-purple-muted);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-green-muted);
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--color-green);
+      box-shadow:
+        0 0 20px rgba(20, 241, 149, 0.1),
+        0 0 40px rgba(153, 69, 255, 0.05);
+    }
+
+    .card:nth-child(even) {
+      border-color: var(--color-purple-muted);
+    }
+
+    .card:nth-child(even):hover {
+      border-color: var(--color-purple);
+      box-shadow:
+        0 0 20px rgba(153, 69, 255, 0.1),
+        0 0 40px rgba(20, 241, 149, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--color-green-muted);
+    }
+
+    .card:nth-child(even) .card-header {
+      border-bottom-color: var(--color-purple-muted);
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+    }
+
+    .card:nth-child(even) .card-title {
+      color: var(--color-purple);
+    }
+
+    .card-id {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .card:nth-child(even) .card-id {
+      color: var(--color-purple-muted);
+    }
+
+    .card p {
+      color: var(--color-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .card-command {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background: var(--color-bg-deep);
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+    }
+
+    .card-command::before {
+      content: '$ ';
+      color: var(--color-green-muted);
+    }
+
+    .card:nth-child(even) .card-command::before {
+      color: var(--color-purple-muted);
+    }
+
+    /* About Section */
+    .about {
+      margin-top: 4rem;
+    }
+
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .about-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .about-text h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-text p {
+      color: var(--color-text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .about-text p::before {
+      content: '> ';
+      color: var(--color-green-muted);
+    }
+
+    .about-text p:nth-child(even)::before {
+      color: var(--color-purple-muted);
+    }
+
+    .stats-box {
+      border: 1px solid var(--color-green-muted);
+      padding: 1.5rem;
+      font-size: 0.875rem;
+      position: relative;
+    }
+
+    .stats-box::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+    }
+
+    .stats-header {
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-green-muted);
+    }
+
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--color-text-muted);
+    }
+
+    .stat-value {
+      color: var(--color-green);
+    }
+
+    .stat-line:nth-child(even) .stat-value {
+      color: var(--color-purple);
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--color-green-muted);
+    }
+
+    .progress-bar-label {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar-track {
+      height: 8px;
+      background: var(--color-bg-deep);
+      border: 1px solid var(--color-green-muted);
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+      width: 87%;
+      animation: progress-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes progress-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 4rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--color-green-muted);
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+
+    .footer-gradient {
+      background: linear-gradient(90deg, var(--color-green), var(--color-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-links {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-green);
+    }
+
+    .footer-links a:nth-child(even):hover {
+      color: var(--color-purple);
+    }
+
+    .footer-links a::before {
+      content: './';
+      color: var(--color-green-muted);
+    }
+
+    .footer-links a:nth-child(even)::before {
+      color: var(--color-purple-muted);
+    }
+
+    /* Flicker animation for authenticity */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      92% { opacity: 1; }
+      93% { opacity: 0.8; }
+      94% { opacity: 1; }
+      97% { opacity: 0.9; }
+      98% { opacity: 1; }
+    }
+
+    .flicker {
+      animation: flicker 5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <div class="logo glow">PROTOCOL_SUPPORT</div>
+      <ul class="nav-links">
+        <li><a href="#">pm-repo</a></li>
+        <li><a href="#">breakouts</a></li>
+        <li><a href="#">team</a></li>
+        <li><a href="#">resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ASCII Octopus in corner -->
+  <div class="ascii-octopus" title="Protocol Support Octopus">      ___
+   .-'   `-.
+  /  ^   ^  \
+ |  (o) (o)  |
+  \    <    /
+   `-.___.-'
+  /|\_/|\_/|\
+ / |   |   | \
+   /\  |  /\
+  /  \_|_/  \
+     PS v2.0</div>
+
+  <main class="flicker">
+    <div class="boot-sequence">
+      <div class="boot-line">ETHEREUM PROTOCOL SUPPORT TERMINAL <span class="boot-purple">v2.0</span></div>
+      <div class="boot-line">Initializing <span class="boot-ok">Forkcast</span> color scheme... <span class="boot-ok">[OK]</span></div>
+      <div class="boot-line">Connecting to mainnet... <span class="boot-ok">[OK]</span></div>
+      <div class="boot-line">Loading ACD meeting archives... <span class="boot-purple">[OK]</span></div>
+      <div class="boot-line">Syncing EIP database... <span class="boot-ok">[OK]</span></div>
+      <div class="boot-line">System ready. Welcome, <span class="boot-purple">anon</span>.</div>
+    </div>
+
+    <section class="hero">
+      <pre class="ascii-art"><span class="ascii-green">    ____  ____   ___  _____  ___   ___  ___  _</span>
+<span class="ascii-purple">   / __ \| __ ) / _ \|_   _|/ _ \ / __|| _ \| |</span>
+<span class="ascii-green">  |  __/|  _ \| (_) | | | | (_) |\__ \|  _/| |__</span>
+<span class="ascii-purple">   \___||____/ \___/  |_|  \___/ |___/|_|  |____|</span>
+
+  <span class="ascii-green">╔═══════════════════════════════════════════════╗</span>
+  <span class="ascii-purple">║</span>  PROTOCOL SUPPORT - ETHEREUM FOUNDATION       <span class="ascii-purple">║</span>
+  <span class="ascii-green">║</span>  <span class="ascii-purple">Coordinating the future of decentralization</span>  <span class="ascii-green">║</span>
+  <span class="ascii-purple">╚═══════════════════════════════════════════════╝</span></pre>
+
+      <h1 class="gradient-text">Protocol Support<span class="typing-cursor"></span></h1>
+
+      <p class="hero-description">
+        Coordinating Ethereum protocol development. Managing AllCoreDevs. Building the infrastructure for building infrastructure.
+      </p>
+
+      <div class="command-prompt">
+        <span class="prompt-symbol">root<span class="at">@</span>ethereum:~$</span>
+        <input type="text" class="command-input" placeholder="Type 'help' for available commands..." readonly>
+      </div>
+    </section>
+
+    <div class="divider-text"><span>═══════════════════ CORE SYSTEMS ═══════════════════</span></div>
+    <hr class="divider">
+
+    <section>
+      <div class="section-header">
+        <h2 class="gradient-text">Available Modules</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">PM_REPO</span>
+            <span class="card-id">[SYS:001]</span>
+          </div>
+          <p>Central repository for protocol meeting notes, agendas, and coordination.</p>
+          <div class="card-command">cd /ethereum/pm && ls -la</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">BREAKOUTS</span>
+            <span class="card-id">[SYS:002]</span>
+          </div>
+          <p>Focused technical discussion rooms for specific protocol topics.</p>
+          <div class="card-command">./schedule_breakout --topic "EOF"</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">EIP_TRACK</span>
+            <span class="card-id">[SYS:003]</span>
+          </div>
+          <p>Monitor and coordinate Ethereum Improvement Proposals through lifecycle.</p>
+          <div class="card-command">eip-tracker --status all --sort recent</div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">DOCS</span>
+            <span class="card-id">[SYS:004]</span>
+          </div>
+          <p>Comprehensive documentation of meetings, decisions, and protocol changes.</p>
+          <div class="card-command">grep -r "Pectra" ./meeting-notes/</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-text"><span>═══════════════════ SYSTEM INFO ═══════════════════</span></div>
+    <hr class="divider">
+
+    <section class="about">
+      <div class="about-content">
+        <div class="about-text">
+          <h2 class="gradient-text">ABOUT.md</h2>
+          <p>Protocol Support is an Ethereum Foundation team facilitating protocol development coordination.</p>
+          <p>Our octopus mascot represents the many arms reaching into different areas of Ethereum development.</p>
+          <p>We manage the ethereum/pm repository - the central hub for protocol governance.</p>
+        </div>
+        <div class="stats-box">
+          <div class="stats-header">// SYSTEM STATISTICS</div>
+          <div class="stat-line">
+            <span class="stat-label">ACD_MEETINGS_TOTAL:</span>
+            <span class="stat-value">200+</span>
+          </div>
+          <div class="stat-line">
+            <span class="stat-label">BREAKOUT_CALLS:</span>
+            <span class="stat-value">50+</span>
+          </div>
+          <div class="stat-line">
+            <span class="stat-label">EIPS_COORDINATED:</span>
+            <span class="stat-value">100+</span>
+          </div>
+          <div class="stat-line">
+            <span class="stat-label">UPTIME:</span>
+            <span class="stat-value">99.99%</span>
+          </div>
+          <div class="stat-line">
+            <span class="stat-label">TENTACLES:</span>
+            <span class="stat-value">8</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-label">NETWORK_SYNC: 87% complete</div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-text">
+        © 2024 <span class="footer-gradient">ETHEREUM FOUNDATION</span> // PROTOCOL SUPPORT DIVISION<br>
+        CONNECTION: <span class="boot-ok">SECURE</span> // LATENCY: <span class="boot-purple">12ms</span> // BLOCK: 19,234,567
+      </div>
+      <div class="footer-links">
+        <a href="#">github</a>
+        <a href="#">discord</a>
+        <a href="#">twitter</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Simple typing effect for command prompt
+    const input = document.querySelector('.command-input');
+    const commands = [
+      'help',
+      'ls meetings/',
+      'cat README.md',
+      './coordinate_acd.sh',
+      'git log --oneline -5',
+      'octopus --wave'
+    ];
+
+    let currentCommand = 0;
+
+    function typeCommand() {
+      const command = commands[currentCommand];
+      let i = 0;
+      input.value = '';
+
+      const typing = setInterval(() => {
+        if (i < command.length) {
+          input.value += command[i];
+          i++;
+        } else {
+          clearInterval(typing);
+          setTimeout(() => {
+            input.value = '';
+            currentCommand = (currentCommand + 1) % commands.length;
+            setTimeout(typeCommand, 500);
+          }, 2000);
+        }
+      }, 100);
+    }
+
+    // Start typing after boot sequence
+    setTimeout(typeCommand, 2000);
+
+    // Make octopus wave on hover
+    const octopus = document.querySelector('.ascii-octopus');
+    const originalArt = octopus.textContent;
+    const wavingArt = `      ___
+   .-'   `-.
+  /  ^   ^  \\
+ |  (o) (o)  |
+  \\    <    /
+   \`-.___.-'
+  /|\\_ \\|/_/|\\
+ / |   |   | \\
+   /\\  |  /\\
+  /  \\_|_/  \\
+    ~~ PS ~~`;
+
+    octopus.addEventListener('mouseenter', () => {
+      octopus.textContent = wavingArt;
+    });
+
+    octopus.addEventListener('mouseleave', () => {
+      octopus.textContent = originalArt;
+    });
+  </script>
+</body>
+</html>
