@@ -32,9 +32,9 @@ const CL_BADGES = [
 const MERGE_R = { x: 4171, y: 832, w: 235, h: 123 };
 const MERGE_L = { x: 401, y: 1753, w: 235, h: 124 };
 const POST_BADGES = [
-  { x: 1040, y: 1750, w: 105, h: 105 }, { x: 1810, y: 1750, w: 105, h: 105 },
-  { x: 2795, y: 1750, w: 105, h: 105 }, { x: 3175, y: 1750, w: 120, h: 105 },
-  { x: 3775, y: 1750, w: 120, h: 105 }, { x: 4318, y: 1750, w: 124, h: 105 },
+  { x: 1006, y: 1752, w: 186, h: 129 }, { x: 1776, y: 1752, w: 186, h: 129 },
+  { x: 2756, y: 1752, w: 186, h: 129 }, { x: 3166, y: 1752, w: 136, h: 129 },
+  { x: 3766, y: 1752, w: 136, h: 129 }, { x: 4312, y: 1752, w: 136, h: 129 },
 ];
 const LOOP = { x: 100, y: 800, w: 4600, h: 1100 };
 
@@ -109,10 +109,12 @@ export default function UpgradeTimeline() {
   const [legendOpen, setLegendOpen] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
 
-  // detail items: 0 = the merge, 1..6 = post-merge forks
+  // detail items: 0 = merge, 1..6 = post-merge forks, 7..20 = pre-merge EL, 21..22 = pre-merge CL
   const detailItems = [
     { mascot: mergeFork.mascot as string | null, name: mergeFork.name, fullName: mergeFork.fullName, date: mergeFork.date, blurb: mergeFork.blurb, href: mergeFork.href, emoji: undefined as string | undefined },
     ...postMerge.map((p) => ({ mascot: p.mascot, name: p.nickname, fullName: p.fullName, date: p.date, blurb: p.blurb, href: p.href, emoji: p.mascotEmoji })),
+    ...preMergeEL.map((p) => ({ mascot: null, name: p.name, fullName: "Execution layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined })),
+    ...preMergeCL.map((p) => ({ mascot: null, name: p.name, fullName: "Consensus layer upgrade", date: p.date, blurb: p.blurb, href: `${historyBase}#${p.anchor}`, emoji: undefined })),
   ];
   const toggle = (i: number) => setSelected((cur) => (cur === i ? null : i));
   const active = selected !== null ? detailItems[selected] : null;
@@ -147,7 +149,7 @@ export default function UpgradeTimeline() {
           </svg>
 
           {/* labels */}
-          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(745) }}>consensus layer</span>
+          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(700) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(862) }}>{year}</span>
@@ -160,14 +162,15 @@ export default function UpgradeTimeline() {
           {preMergeEL.map((f, i) => {
             const b = EL_BADGES[i];
             return (
-              <a key={f.name} className={`badge-sprite ${tipAlign(b.x)}`}
+              <button key={f.name} className={`badge-sprite ${tipAlign(b.x)} ${selected === 7 + i ? "selected" : ""}`}
                 style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
-                href={`${historyBase}#${f.anchor}`} target="_blank" rel="noopener noreferrer"
-                aria-label={`${f.name}, ${f.date}`}>
+                onClick={() => toggle(7 + i)}
+                aria-label={`${f.name}, ${f.date}`}
+                aria-expanded={selected === 7 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/el-${i + 1}.png`} alt="" />
                 <Tip title={f.name} sub={f.date} />
-              </a>
+              </button>
             );
           })}
 
@@ -175,14 +178,15 @@ export default function UpgradeTimeline() {
           {preMergeCL.map((f, i) => {
             const b = CL_BADGES[i];
             return (
-              <a key={f.name} className={`badge-sprite ${tipAlign(b.x)}`}
+              <button key={f.name} className={`badge-sprite ${tipAlign(b.x)} ${selected === 21 + i ? "selected" : ""}`}
                 style={{ left: px(b.x), top: py(b.y), width: px(b.w) }}
-                href={`${historyBase}#${f.anchor}`} target="_blank" rel="noopener noreferrer"
-                aria-label={`${f.name}, ${f.date}`}>
+                onClick={() => toggle(21 + i)}
+                aria-label={`${f.name}, ${f.date}`}
+                aria-expanded={selected === 21 + i}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/cl-${i + 1}.png`} alt="" />
                 <Tip title={f.name} sub={f.date} />
-              </a>
+              </button>
             );
           })}
 
@@ -219,7 +223,7 @@ export default function UpgradeTimeline() {
                 aria-expanded={selected === i + 1}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/post-${i + 1}.png`} alt="" />
-                <span className="fork-nickname">{f.nickname} <span className="fork-expand-hint" aria-hidden="true">⌄</span></span>
+                <span className="fork-nickname">{f.nickname}</span>
                 <span className="fork-date">{f.date}</span>
                 <Tip title={f.nickname} sub={`${f.fullName} · ${f.date}`} detail={f.blurb} />
               </button>
@@ -227,15 +231,15 @@ export default function UpgradeTimeline() {
           })}
         </div>
 
-      {/* detail dropdown: opens when a post-merge item is clicked */}
-      <div className={`fork-detail ${active ? "open" : ""}`} aria-hidden={!active}>
-        {active && (
+      {/* detail panel: always open; defaults to instructions until a fork is clicked */}
+      <div className="fork-detail open">
+        {active ? (
           <div className="fork-detail-inner">
             {active.mascot ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img src={active.mascot} alt="" className="fork-detail-mascot" />
             ) : (
-              <span className="fork-detail-mascot fork-detail-placeholder" aria-hidden="true">{active.emoji ?? "?"}</span>
+              <span className="fork-detail-mascot fork-detail-placeholder" aria-hidden="true">{active.emoji ?? "⎇"}</span>
             )}
             <div className="fork-detail-body">
               <div className="fork-detail-head">
@@ -247,12 +251,18 @@ export default function UpgradeTimeline() {
                 Open the primary record ↗
               </a>
             </div>
-            <button className="fork-detail-close" onClick={() => setSelected(null)} aria-label="Close">×</button>
+            <button className="fork-detail-close" onClick={() => setSelected(null)} aria-label="Back to instructions">×</button>
+          </div>
+        ) : (
+          <div className="fork-detail-inner fork-detail-default">
+            <span className="fork-detail-mascot fork-detail-placeholder" aria-hidden="true">⎇</span>
+            <div className="fork-detail-body">
+              <p>Click on any fork to see the major feature that it shipped, and a link to more info.</p>
+            </div>
           </div>
         )}
       </div>
 
-      <p className="timeline-hint">Click a post-merge fork to see what it shipped.</p>
       <p className="timeline-note">
         Artwork geometry preserved from the original illustration. Hover any badge
         for its full name; click through to the primary record from the detail card.

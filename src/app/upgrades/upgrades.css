@@ -212,13 +212,6 @@
   white-space: nowrap;
   pointer-events: none;
 }
-.fork-expand-hint {
-  color: var(--color-blue);
-  font-weight: 400;
-  transition: transform 0.2s;
-  display: inline-block;
-}
-.fork-sprite[aria-expanded="true"] .fork-expand-hint { transform: rotate(180deg); }
 .fork-date {
   position: absolute;
   top: calc(100% + 20px + 1.1rem);
@@ -346,17 +339,6 @@
 }
 
 /* ---------- footnote ---------- */
-.timeline-hint {
-  margin-top: 1.25rem;
-  color: var(--color-text-body);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-}
-.timeline-hint::before {
-  content: "⌄";
-  color: var(--color-blue);
-  margin-right: 0.5rem;
-}
 .timeline-note {
   margin-top: 1.5rem;
   color: var(--color-text-muted);
