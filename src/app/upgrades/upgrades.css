@@ -134,6 +134,22 @@
   transform: scale(1.12) rotate(2deg);
 }
 
+/* per-badge dates: hidden until hover (years carry the timeline) */
+.pm-date-rotated,
+.merge-date-label,
+.fork-date {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.badge-sprite:hover .pm-date-rotated,
+.badge-sprite:focus-visible .pm-date-rotated,
+.badge-sprite:hover .merge-date-label,
+.badge-sprite:focus-visible .merge-date-label,
+.badge-sprite:hover .fork-date,
+.badge-sprite:focus-visible .fork-date {
+  opacity: 1;
+}
+
 /* rotated date under pre-merge badges (like the source) */
 .pm-date-rotated {
   position: absolute;
