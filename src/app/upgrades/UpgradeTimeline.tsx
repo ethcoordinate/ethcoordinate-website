@@ -18,23 +18,23 @@ const py = (y: number) => `${((y - CY0) / CH) * 100}%`;
 
 // --- sprite geometry (source px) ---
 const EL_BADGES = [
-  { x: 357, y: 947, w: 80, h: 77 }, { x: 438, y: 947, w: 80, h: 77 },
-  { x: 704, y: 945, w: 80, h: 78 }, { x: 879, y: 945, w: 81, h: 78 },
-  { x: 1013, y: 929, w: 87, h: 83 }, { x: 1058, y: 992, w: 81, h: 72 },
-  { x: 1532, y: 947, w: 81, h: 77 }, { x: 2236, y: 945, w: 81, h: 78 },
-  { x: 2684, y: 929, w: 88, h: 83 }, { x: 2732, y: 992, w: 78, h: 72 },
-  { x: 3381, y: 945, w: 81, h: 78 }, { x: 3556, y: 946, w: 81, h: 78 },
-  { x: 3733, y: 942, w: 81, h: 77 }, { x: 3993, y: 942, w: 81, h: 77 },
+  { x: 352, y: 942, w: 90, h: 88 }, { x: 433, y: 942, w: 90, h: 88 },
+  { x: 699, y: 940, w: 90, h: 89 }, { x: 874, y: 940, w: 91, h: 89 },
+  { x: 1008, y: 924, w: 91, h: 89 }, { x: 1035, y: 975, w: 109, h: 95 },
+  { x: 1527, y: 942, w: 91, h: 88 }, { x: 2231, y: 940, w: 91, h: 89 },
+  { x: 2679, y: 924, w: 91, h: 89 }, { x: 2705, y: 975, w: 110, h: 95 },
+  { x: 3376, y: 940, w: 91, h: 89 }, { x: 3552, y: 941, w: 90, h: 89 },
+  { x: 3729, y: 937, w: 90, h: 88 }, { x: 3988, y: 937, w: 91, h: 88 },
 ];
 const CL_BADGES = [
-  { x: 3210, y: 777, w: 80, h: 78 }, { x: 3641, y: 777, w: 81, h: 78 },
+  { x: 3205, y: 772, w: 90, h: 88 }, { x: 3636, y: 772, w: 91, h: 88 },
 ];
 const MERGE_R = { x: 4171, y: 832, w: 235, h: 123 };
 const MERGE_L = { x: 401, y: 1753, w: 235, h: 124 };
 const POST_BADGES = [
-  { x: 1048, y: 1752, w: 102, h: 106 }, { x: 1815, y: 1752, w: 108, h: 106 },
-  { x: 2795, y: 1752, w: 108, h: 106 }, { x: 3166, y: 1752, w: 136, h: 129 },
-  { x: 3766, y: 1752, w: 136, h: 129 }, { x: 4312, y: 1752, w: 136, h: 129 },
+  { x: 1029, y: 1752, w: 131, h: 130 }, { x: 1800, y: 1752, w: 131, h: 130 },
+  { x: 2775, y: 1752, w: 131, h: 130 }, { x: 3170, y: 1752, w: 129, h: 130 },
+  { x: 3770, y: 1752, w: 130, h: 130 }, { x: 4316, y: 1752, w: 129, h: 130 },
 ];
 const LOOP = { x: 100, y: 800, w: 4600, h: 1100 };
 
@@ -167,7 +167,7 @@ export default function UpgradeTimeline() {
           </svg>
 
           {/* labels */}
-          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(682) }}>consensus layer</span>
+          <span className="layer-label layer-label-cl" style={{ left: px(3808), top: py(674) }}>consensus layer</span>
           <span className="layer-label layer-label-el" style={{ left: px(1700), top: py(1080) }}>execution layer</span>
           {EL_YEARS.map(({ year, x }) => (
             <span key={year} className="year-label" style={{ left: px(x), top: py(862) }}>{year}</span>
@@ -264,7 +264,7 @@ export default function UpgradeTimeline() {
                 <b>{active.name}</b>
                 <span>{active.fullName} · {active.date}</span>
               </div>
-              <p className="fork-detail-caption">major feature shipped — not a full overview</p>
+              <p className="fork-detail-caption">major feature shipped</p>
               <p>{active.blurb}</p>
               <a href={active.href} target="_blank" rel="noopener noreferrer" className="link-blue">
                 {active.href.includes("forkcast.org") ? "Open on Forkcast ↗" : "Open on ethereum.org ↗"}
