@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from "react";
 import { preMergeEL, preMergeCL, mergeFork, postMerge, historyBase, type PreMergeFork } from "@/data/upgrades";
 import "./upgrades.css";
 
@@ -63,51 +64,57 @@ function Tip({ title, sub, detail }: { title: string; sub: string; detail?: stri
   );
 }
 
-function Legend() {
+function LegendDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <details className="legend-drawer">
-      <summary>
-        legend
-        <span className="legend-chevron" aria-hidden="true">⌄</span>
-      </summary>
-      <div className="legend-body">
-        <div className="legend-col">
-          <p className="legend-heading">Execution layer (pre-merge)</p>
-          <ol>
-            {preMergeEL.map((f, i) => (
-              <li key={f.name}><span>{i + 1}</span>{f.name}<small>{f.date}</small></li>
-            ))}
-          </ol>
+    <>
+      {open && <div className="legend-backdrop" onClick={onClose} aria-hidden="true" />}
+      <aside className={`legend-panel ${open ? "open" : ""}`} aria-hidden={!open} aria-label="Legend">
+        <div className="legend-panel-head">
+          <span>legend</span>
+          <button onClick={onClose} aria-label="Close legend">×</button>
         </div>
-        <div className="legend-col">
-          <p className="legend-heading">Consensus layer (pre-merge)</p>
-          <ol>
-            {preMergeCL.map((f, i) => (
-              <li key={f.name}><span>{i + 1}</span>{f.name}<small>{f.date}</small></li>
-            ))}
-            <li><span>m</span>{mergeFork.fullName} “The Merge”<small>{mergeFork.date}</small></li>
-          </ol>
+        <div className="legend-body">
+          <div className="legend-col">
+            <p className="legend-heading">Execution layer (pre-merge)</p>
+            <ol>
+              {preMergeEL.map((f, i) => (
+                <li key={f.name}><span>{i + 1}</span>{f.name}<small>{f.date}</small></li>
+              ))}
+            </ol>
+          </div>
+          <div className="legend-col">
+            <p className="legend-heading">Consensus layer (pre-merge)</p>
+            <ol>
+              {preMergeCL.map((f, i) => (
+                <li key={f.name}><span>{i + 1}</span>{f.name}<small>{f.date}</small></li>
+              ))}
+              <li><span>m</span>{mergeFork.fullName} “The Merge”<small>{mergeFork.date}</small></li>
+            </ol>
+          </div>
+          <div className="legend-col">
+            <p className="legend-heading">Post-merge (combined forks)</p>
+            <ol>
+              {postMerge.map((f) => (
+                <li key={f.n}><span>{f.n}</span>{f.fullName} “{f.nickname}”<small>{f.date}</small></li>
+              ))}
+            </ol>
+          </div>
         </div>
-        <div className="legend-col">
-          <p className="legend-heading">Post-merge (combined forks)</p>
-          <ol>
-            {postMerge.map((f) => (
-              <li key={f.n}><span>{f.n}</span>{f.fullName} “{f.nickname}”<small>{f.date}</small></li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </details>
+      </aside>
+    </>
   );
 }
 
 export default function UpgradeTimeline() {
+  const [legendOpen, setLegendOpen] = useState(false);
   return (
     <div className="upgrades-root">
-      <Legend />
+      <button className="legend-toggle" onClick={() => setLegendOpen(true)}>
+        legend
+      </button>
+      <LegendDrawer open={legendOpen} onClose={() => setLegendOpen(false)} />
 
-      <div className="timeline-scroll">
-        <div className="timeline" role="img" aria-label="Interactive timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
+      <div className="timeline" role="img" aria-label="Interactive timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
           {/* the loop (source artwork sprite) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/upgrades/loop.png" alt="" className="loop-sprite"
@@ -149,7 +156,6 @@ export default function UpgradeTimeline() {
                 aria-label={`${f.name}, ${f.date}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/el-${i + 1}.png`} alt="" />
-                <span className="pm-date pm-date-rotated" aria-hidden="true">{f.date}</span>
                 <Tip title={f.name} sub={f.date} />
               </a>
             );
@@ -165,7 +171,6 @@ export default function UpgradeTimeline() {
                 aria-label={`${f.name}, ${f.date}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={`/upgrades/cl-${i + 1}.png`} alt="" />
-                <span className="pm-date pm-date-rotated" aria-hidden="true">{f.date}</span>
                 <Tip title={f.name} sub={f.date} />
               </a>
             );
@@ -226,7 +231,6 @@ export default function UpgradeTimeline() {
             ))}
             <span className="feature-strip-label" style={{ left: px(200), top: py(2560) }}>major feature shipped</span>
           </div>
-        </div>
       </div>
 
       <p className="timeline-note">

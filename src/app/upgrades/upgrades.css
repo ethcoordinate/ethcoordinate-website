@@ -8,34 +8,74 @@
   color: var(--color-text-body);
 }
 
-/* ---------- legend drawer ---------- */
-.legend-drawer {
+/* ---------- legend: right-side drawer ---------- */
+.legend-toggle {
+  position: fixed;
+  right: 0;
+  top: 40%;
+  z-index: 45;
   border: 1px solid var(--color-border);
-  border-radius: 14px;
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
   background: var(--color-bg-surface);
-  margin-bottom: 2rem;
+  color: var(--color-text-muted);
+  padding: 0.7rem 0.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s, border-color 0.2s;
 }
-.legend-drawer summary {
-  list-style: none;
+.legend-toggle:hover { color: var(--color-blue); border-color: var(--color-border-hover); }
+.legend-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  background: rgba(0, 0, 4, 0.6);
+  backdrop-filter: blur(2px);
+}
+.legend-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  height: 100vh;
+  height: 100dvh;
+  width: min(360px, 92vw);
+  background: var(--color-bg-elevated);
+  border-left: 1px solid var(--color-border);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+.legend-panel.open { transform: translateX(0); }
+.legend-panel-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.9rem 1.4rem;
-  cursor: pointer;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--color-border);
   color: var(--color-text-bright);
   font-size: 0.85rem;
   letter-spacing: 0.04em;
+  position: sticky;
+  top: 0;
+  background: var(--color-bg-elevated);
 }
-.legend-drawer summary::-webkit-details-marker { display: none; }
-.legend-drawer summary:hover { color: var(--color-blue); }
-.legend-chevron { transition: transform 0.2s; color: var(--color-blue); }
-.legend-drawer[open] .legend-chevron { transform: rotate(180deg); }
+.legend-panel-head button {
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.2rem;
+}
+.legend-panel-head button:hover { color: var(--color-blue); }
 .legend-body {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
   padding: 0.25rem 1.4rem 1.4rem;
-  border-top: 1px solid var(--color-border);
 }
 .legend-heading {
   color: var(--color-blue);
@@ -60,15 +100,10 @@
 }
 .legend-body li small { margin-left: auto; color: var(--color-text-dim); font-size: 0.62rem; }
 
-/* ---------- timeline canvas ---------- */
-.timeline-scroll {
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-border) transparent;
-}
+/* ---------- timeline canvas (always fits viewport width, no scroll) ---------- */
 .timeline {
   position: relative;
-  min-width: 1000px;
+  width: 100%;
   aspect-ratio: 4700 / 2020;
 }
 .timeline svg {
@@ -135,14 +170,11 @@
 }
 
 /* per-badge dates: hidden until hover (years carry the timeline) */
-.pm-date-rotated,
 .merge-date-label,
 .fork-date {
   opacity: 0;
   transition: opacity 0.15s;
 }
-.badge-sprite:hover .pm-date-rotated,
-.badge-sprite:focus-visible .pm-date-rotated,
 .badge-sprite:hover .merge-date-label,
 .badge-sprite:focus-visible .merge-date-label,
 .badge-sprite:hover .fork-date,
@@ -150,20 +182,6 @@
   opacity: 1;
 }
 
-/* rotated date under pre-merge badges (like the source) */
-.pm-date-rotated {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform-origin: top center;
-  transform: translateX(-50%) rotate(-68deg);
-  font-size: 0.58rem;
-  letter-spacing: 0.05em;
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  text-transform: uppercase;
-  pointer-events: none;
-}
 .merge-date-label {
   position: absolute;
   top: calc(100% + 8px);
@@ -291,7 +309,7 @@
 
 /* ---------- responsive ---------- */
 @media (max-width: 640px) {
-  .legend-body { grid-template-columns: 1fr; }
+  .legend-panel { width: 92vw; }
 }
 
 @media (prefers-reduced-motion: reduce) {
