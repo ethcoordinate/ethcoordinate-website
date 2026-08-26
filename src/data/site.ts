@@ -2,14 +2,16 @@ export type Initiative = {
   id: string;
   title: string;
   color: string;
+  href?: string;
 };
 
 export const initiatives: readonly Initiative[] = [
-  { id: "staker-support", title: "Staker support", color: "var(--coord-green)" },
-  { id: "protocol-coordination", title: "Protocol coordination", color: "var(--coord-cyan)" },
-  { id: "forkcast", title: "Forkcast", color: "var(--coord-purple)" },
-  { id: "protocol-economics", title: "Protocol economics", color: "var(--coord-yellow)" },
-  { id: "open-source-tooling", title: "Open-source tooling", color: "var(--coord-orange)" },
+  { id: "staker-support", title: "Staking support", color: "var(--coord-green)", href: "/ethstaker" },
+  { id: "protocol-coordination", title: "Protocol coordination", color: "var(--coord-cyan)", href: "/protocol-coordination" },
+  { id: "forkcast", title: "Forkcast", color: "var(--coord-purple)", href: "/forkcast" },
+  { id: "protocol-economics", title: "Stakeholder engagement", color: "var(--coord-yellow)" },
+  { id: "open-source-tooling", title: "Open-source tooling", color: "var(--coord-orange)", href: "https://ethstaker.org/staking-software" },
+  { id: "navigator", title: "Governance navigation", color: "var(--coord-pink)", href: "/navigator" },
 ];
 
 export const communityLinks = [

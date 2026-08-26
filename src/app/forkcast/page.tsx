@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
@@ -28,6 +29,9 @@ export default function ForkcastPage() {
               Visit forkcast.org <span>{"\u2197"}</span>
             </a>
           </div>
+          <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem", marginTop: "1rem" }}>
+            New to the process? Start with the <Link href="/navigator" className="link-blue">ACD Navigator</Link> — Forkcast tracks the live record.
+          </p>
         </div>
         <div className="page-divider" />
 

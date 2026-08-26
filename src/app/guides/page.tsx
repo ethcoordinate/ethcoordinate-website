@@ -3,7 +3,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FloatingOcto from "@/components/FloatingOcto";
 import Link from "next/link";
-import { MapIcon, UsersIcon } from "@/components/Icons";
+import { BookIcon, MapIcon, UsersIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "Guides",
@@ -27,8 +27,66 @@ export default function GuidesPage() {
         <div className="page-divider" />
 
         <section className="section">
+          {/* ACD Navigator */}
           <Link
-            href="/guides/champion"
+            href="/navigator"
+            className="card"
+            style={{
+              marginBottom: "1rem",
+              textDecoration: "none",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "flex-start",
+              gap: "1.25rem",
+            }}
+          >
+            <div
+              style={{
+                width: 52,
+                height: 52,
+                borderRadius: 10,
+                border: "1.5px solid var(--coord-pink)",
+                background: "rgba(244,114,182,0.06)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <BookIcon size={26} color="var(--coord-pink)" />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div className="flex justify-between items-start mb-2">
+                <h2
+                  style={{
+                    fontSize: "1.4rem",
+                    fontWeight: 700,
+                    color: "var(--color-text-bright)",
+                  }}
+                >
+                  ACD Navigator
+                </h2>
+              </div>
+              <p
+                style={{
+                  fontSize: "0.95rem",
+                  color: "var(--color-text-body)",
+                  lineHeight: 1.7,
+                  marginBottom: "1.25rem",
+                }}
+              >
+                An interactive, plain-language guide to the EIP process,
+                AllCoreDevs, and network upgrades. Start with your goal — no
+                process vocabulary required.
+              </p>
+              <span className="card-btn">
+                Open the Navigator <span>&rarr;</span>
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/champion"
             className="card card-featured"
             style={{
               textDecoration: "none",
@@ -86,7 +144,7 @@ export default function GuidesPage() {
 
           {/* Running a Breakout Call */}
           <Link
-            href="/guides/breakout"
+            href="/breakouts"
             className="card"
             style={{
               marginTop: "1rem",

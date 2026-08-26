@@ -1,0 +1,102 @@
+/* =============================================================
+   FORK HISTORY - sortable table of every network upgrade.
+   Scoped under .upgrades-root.
+   ============================================================= */
+
+.upgrades-root {
+  color: var(--color-text-body);
+}
+
+/* ---------- compact page chrome (fits a 13" laptop without scrolling) ---------- */
+.upgrades-page .page-header { padding-top: 4.5rem; padding-bottom: 1rem; }
+
+.timeline-export {
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  margin: 0 0 1.25rem;
+}
+.timeline-export a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+.timeline-export a:hover { color: var(--color-blue); }
+
+/* ---------- fork table ---------- */
+.fork-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.fork-table thead th {
+  padding: 0 4px 0.5rem;
+  border-bottom: 1px solid var(--color-border-hover);
+  color: var(--color-text-muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+.fork-sort {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.fork-sort:hover { color: var(--color-blue); }
+.fork-sort span { color: var(--color-blue); }
+
+.fork-table tbody tr { border-bottom: 1px solid var(--color-border); }
+.fork-table tbody tr:last-child { border-bottom: 0; }
+.fork-table tbody th,
+.fork-table tbody td {
+  padding: 9px 4px;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: baseline;
+}
+.fork-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fork-name b { color: var(--color-text-bright); font-weight: 600; }
+/* Cells carrying content use --color-text-body: --color-text-dim is the border
+   colour (1.8:1) and --color-text-muted misses AA in the light theme at this
+   size. Hierarchy comes from size and weight instead. */
+.fork-name small { color: var(--color-text-body); font-size: 0.68rem; }
+.fork-col-track { color: var(--color-text-muted); font-size: 0.7rem; white-space: nowrap; }
+.fork-col-date { color: var(--color-text-body); font-size: 0.75rem; white-space: nowrap; }
+.fork-col-eips { color: var(--color-text-body); font-size: 0.68rem; white-space: nowrap; }
+.fork-col-link { white-space: nowrap; }
+.fork-col-link a {
+  color: var(--color-blue);
+  font-size: 0.68rem;
+  text-decoration: none;
+}
+.fork-col-link a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 620px) {
+  .fork-col-track { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .upgrades-root *, .upgrades-root *::before, .upgrades-root *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
