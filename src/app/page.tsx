@@ -118,7 +118,7 @@ export default async function Home() {
                 <a href="https://ethstaker.org/support" target="_blank" rel="noopener noreferrer">Staking support <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>{"↗"}</span></a>
                 <a href="https://ethstaker.org/staking-software" target="_blank" rel="noopener noreferrer">Staking software <span style={{ fontSize: "0.75rem", opacity: 0.5 }}>{"↗"}</span></a>
               </div>
-              <Link href="/initiatives/staker-support" className="card-btn">Explore EthStaker <span>&rarr;</span></Link>
+              <Link href="/ethstaker" className="card-btn">Explore EthStaker <span>&rarr;</span></Link>
             </div>
 
             {/* Open-source tooling */}

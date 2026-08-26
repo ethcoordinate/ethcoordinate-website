@@ -8,7 +8,7 @@ const footerGroups = [
     links: [
       { label: "ACD navigator", href: "/navigator" },
       { label: "Forkcast", href: "/forkcast" },
-      { label: "Staking support", href: "/initiatives/staker-support" },
+      { label: "Staking support", href: "/ethstaker" },
     ],
   },
   {

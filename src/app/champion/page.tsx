@@ -222,7 +222,7 @@ export default function ChampionGuidePage() {
           <h2 className="section-title">Deep Dives</h2>
           <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(380px, 100%), 1fr))" }}>
             <Link
-              href="/guides/champion/process"
+              href="/champion/process"
               className="card"
               style={{ textDecoration: "none" }}
             >
@@ -257,7 +257,7 @@ export default function ChampionGuidePage() {
             </Link>
 
             <Link
-              href="/guides/champion/strengthen"
+              href="/champion/strengthen"
               className="card"
               style={{ textDecoration: "none" }}
             >

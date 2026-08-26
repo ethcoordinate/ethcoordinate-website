@@ -27,7 +27,12 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/our-work/staker-support",
-        destination: "/initiatives/staker-support",
+        destination: "/ethstaker",
+        permanent: true,
+      },
+      {
+        source: "/initiatives/staker-support",
+        destination: "/ethstaker",
         permanent: true,
       },
       {
@@ -37,12 +42,22 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/pm-repo",
-        destination: "/initiatives/protocol-coordination",
+        destination: "/protocol-coordination",
+        permanent: true,
+      },
+      {
+        source: "/initiatives/protocol-coordination",
+        destination: "/protocol-coordination",
         permanent: true,
       },
       {
         source: "/guides/breakout",
         destination: "/breakouts",
+        permanent: true,
+      },
+      {
+        source: "/guides/champion/:path*",
+        destination: "/champion/:path*",
         permanent: true,
       },
     ];

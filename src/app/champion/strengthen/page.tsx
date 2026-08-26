@@ -68,7 +68,7 @@ export default function StrengthenPage() {
           <div className="guide-breadcrumb">
             <Link href="/guides" className="link-muted">Guides</Link>
             <span style={{ color: "var(--color-text-dim)" }}>/</span>
-            <Link href="/guides/champion" className="link-muted">Champion&apos;s Handbook</Link>
+            <Link href="/champion" className="link-muted">Champion&apos;s Handbook</Link>
             <span style={{ color: "var(--color-text-dim)" }}>/</span>
             <span style={{ color: "var(--color-text-bright)" }}>Strengthening Your Proposal</span>
           </div>
@@ -355,11 +355,11 @@ export default function StrengthenPage() {
 
         {/* Nav */}
         <div className="guide-nav">
-          <Link href="/guides/champion/process" className="guide-nav-link">
+          <Link href="/champion/process" className="guide-nav-link">
             <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>← Previous</span>
             <span>Navigating the Process</span>
           </Link>
-          <Link href="/guides/champion" className="guide-nav-link" style={{ textAlign: "right", marginLeft: "auto" }}>
+          <Link href="/champion" className="guide-nav-link" style={{ textAlign: "right", marginLeft: "auto" }}>
             <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>Back to →</span>
             <span>Champion&apos;s Handbook</span>
           </Link>

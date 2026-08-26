@@ -86,7 +86,7 @@ export default function GuidesPage() {
           </Link>
 
           <Link
-            href="/guides/champion"
+            href="/champion"
             className="card card-featured"
             style={{
               textDecoration: "none",

@@ -9,52 +9,11 @@
   --nav-accent-2: var(--coord-purple);
   color: var(--color-text-body);
   font-size: 0.95rem;
+  /* clears the fixed site nav */
+  padding-top: 4.5rem;
 }
 .navigator-root h1, .navigator-root h2, .navigator-root h3, .navigator-root p { margin-top: 0; }
 .navigator-root button { font-family: inherit; }
-
-/* ---------- in-app navigation ---------- */
-.nav-topbar {
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
-  padding: 1rem 0; margin-bottom: 1rem;
-  border-bottom: 1px solid var(--color-border);
-}
-.nav-wordmark {
-  display: flex; align-items: center; gap: 8px;
-  border: 0; background: none; padding: 0; cursor: pointer;
-  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--color-text-bright);
-}
-.nav-wordmark-glyph {
-  font-size: 1.2rem;
-  background: linear-gradient(135deg, var(--coord-cyan), var(--coord-purple));
-  background-clip: text; -webkit-background-clip: text; color: transparent;
-}
-.nav-topbar nav { display: flex; flex-wrap: wrap; }
-.nav-topbar nav button {
-  border: 1px solid transparent; border-radius: 6px; background: none;
-  padding: 0.45rem 0.8rem; font-size: 0.8rem; cursor: pointer;
-  color: var(--color-text-muted); transition: color .2s, border-color .2s;
-  white-space: nowrap;
-}
-.nav-topbar nav button:hover { color: var(--color-blue); }
-.nav-topbar nav button.active { color: var(--color-blue); border-color: var(--color-border); background: var(--color-bg-surface); }
-.guides-menu { position: relative; display: flex; }
-.guides-dropdown {
-  position: fixed; z-index: 60; width: 310px; padding: 7px;
-  border: 1px solid var(--color-border); border-radius: 10px;
-  background: var(--color-bg-elevated);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .5);
-}
-.guides-dropdown button {
-  width: 100%; display: block; padding: 11px 12px !important;
-  border: 0 !important; border-radius: 7px; text-align: left; white-space: normal !important;
-  background: none; cursor: pointer;
-}
-.guides-dropdown button:hover { background: var(--color-bg-surface) !important; }
-.guides-dropdown b, .guides-dropdown small { display: block; }
-.guides-dropdown b { color: var(--color-text-bright); font-size: 0.8rem; }
-.guides-dropdown small { margin-top: 3px; color: var(--color-text-muted); font-size: 0.68rem; line-height: 1.4; }
 
 /* ---------- shared bits ---------- */
 .navigator-root .eyebrow, .navigator-root .tiny-label {
@@ -83,7 +42,7 @@
 }
 
 /* ---------- home ---------- */
-.home-page { padding: 3rem 0 4rem; }
+.home-page { padding: 1.5rem 0 4rem; }
 .home-centerfold { max-width: 1050px; margin: 0 auto; }
 .home-centerfold .section-heading { margin: 0 auto 2.5rem; text-align: center; }
 .intent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
@@ -112,7 +71,7 @@
 .home-reference-links button:hover { border-color: var(--color-border-hover); }
 
 /* ---------- reference pages ---------- */
-.reference-header { max-width: 848px; margin: 0 auto; padding: 2.5rem 0 1.25rem; }
+.reference-header { max-width: 848px; margin: 0 auto; padding: 1.5rem 0 1.25rem; }
 .reference-header h1 { color: var(--color-text-bright); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.02em; margin: 0.5rem 0 0.9rem; }
 .reference-header > p:last-child { max-width: 680px; color: var(--color-text-body); line-height: 1.7; }
 .reference-page .process-explorer .explorer-intro,
@@ -522,8 +481,6 @@
   .contact-caveat { grid-column: 1; }
 }
 @media (max-width: 640px) {
-  .nav-topbar nav { width: 100%; overflow-x: auto; scrollbar-width: none; }
-  .nav-topbar nav::-webkit-scrollbar { display: none; }
   .intent-grid, .client-columns, .layer-explainer, .handoff-grid, .decision-tools,
   .participation-grid, .option-list.compact, .evidence-grid, .readiness-grid,
   .delivery-timeline, .status-exits, .testing-teams { grid-template-columns: 1fr; }

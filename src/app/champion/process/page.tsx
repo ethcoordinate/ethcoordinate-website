@@ -20,7 +20,7 @@ export default function ProcessPage() {
           <div className="guide-breadcrumb">
             <Link href="/guides" className="link-muted">Guides</Link>
             <span style={{ color: "var(--color-text-dim)" }}>/</span>
-            <Link href="/guides/champion" className="link-muted">Champion&apos;s Handbook</Link>
+            <Link href="/champion" className="link-muted">Champion&apos;s Handbook</Link>
             <span style={{ color: "var(--color-text-dim)" }}>/</span>
             <span style={{ color: "var(--color-text-bright)" }}>Navigating the Process</span>
           </div>
@@ -336,11 +336,11 @@ export default function ProcessPage() {
 
         {/* Nav */}
         <div className="guide-nav">
-          <Link href="/guides/champion" className="guide-nav-link">
+          <Link href="/champion" className="guide-nav-link">
             <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>← Back</span>
             <span>Champion&apos;s Handbook</span>
           </Link>
-          <Link href="/guides/champion/strengthen" className="guide-nav-link" style={{ textAlign: "right", marginLeft: "auto" }}>
+          <Link href="/champion/strengthen" className="guide-nav-link" style={{ textAlign: "right", marginLeft: "auto" }}>
             <span style={{ fontSize: "0.7rem", color: "var(--color-text-muted)" }}>Next →</span>
             <span>Strengthening Your Proposal</span>
           </Link>

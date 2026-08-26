@@ -21,15 +21,15 @@ type NavItem = {
 
 const navLinks: readonly NavItem[] = [
   {
-    href: "/initiatives/protocol-coordination",
+    href: "/protocol-coordination",
     label: "Protocol coordination",
-    activePrefixes: ["/initiatives/protocol-coordination", "/navigator", "/upgrades", "/breakouts", "/guides"],
+    activePrefixes: ["/protocol-coordination", "/navigator", "/upgrades", "/breakouts", "/guides", "/champion"],
     children: [
-      { href: "/initiatives/protocol-coordination", label: "EthCoordinate's role", note: "Calls, breakouts, and EIP support" },
+      { href: "/protocol-coordination", label: "EthCoordinate's role", note: "Calls, breakouts, and EIP support" },
       { href: "/navigator", label: "ACD navigator", note: "Learn the EIP and ACD process" },
       { href: "/upgrades", label: "Fork history", note: "Every fork from Frontier to today" },
       { href: "/breakouts", label: "Breakout calls", note: "Focused protocol discussions" },
-      { href: "/guides/champion", label: "Champion an EIP", note: "A practical author journey" },
+      { href: "/champion", label: "Champion an EIP", note: "A practical author journey" },
     ],
   },
   {
@@ -38,9 +38,9 @@ const navLinks: readonly NavItem[] = [
     activePrefixes: ["/forkcast", "/products/forkcast"],
   },
   {
-    href: "/initiatives/staker-support",
-    label: "Solo staking",
-    activePrefixes: ["/initiatives/staker-support"],
+    href: "/ethstaker",
+    label: "EthStaker",
+    activePrefixes: ["/ethstaker"],
   },
   {
     href: "/about",

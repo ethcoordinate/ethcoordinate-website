@@ -12,7 +12,7 @@ import {
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Protocol coordination",
+  title: "EthCoordinate's role",
   description:
     "How EthCoordinate helps coordinate Ethereum core protocol development: AllCoreDevs calls, breakout rooms, EIP championing, and Forkcast.",
 };
@@ -58,7 +58,7 @@ const getInvolved = [
   {
     title: "Championing an EIP",
     description: "How to guide a proposal through the process and make a convincing case for including it in an upgrade.",
-    href: "/guides/champion",
+    href: "/champion",
     external: false,
     icon: <FileTextIcon color="var(--coord-green)" />,
   },
@@ -83,7 +83,7 @@ export default async function ProtocolCoordinationPage() {
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container">
         <div className="page-header">
-          <h1 className="page-title">Protocol coordination</h1>
+          <h1 className="page-title">EthCoordinate&apos;s role</h1>
           <p className="page-desc">
             We help coordinate core protocol development and related work. ACD
             Calls, breakout rooms, the proposals discussed on them, and the

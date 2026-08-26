@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { buildOptions, clientTeams, evidenceOptions, inclusionStages, intents, processNodes, roles, scopeOptions, type EipRecord } from './data'
+import { screenFromPath, screenPath, type Screen } from './screens'
 import './navigator.css'
 
-type Screen = 'home' | 'guide' | 'inclusion' | 'decisions' | 'participate' | 'process' | 'people' | 'resources'
 type EipAnswer = 'yes' | 'no' | 'unknown' | null
 
 function Arrow() {
@@ -20,11 +21,19 @@ const forkcastStageLinks: Record<string, { href: string, label: string, detail: 
   activation: { href: 'https://forkcast.org/upgrades', label: 'View live upgrade timelines', detail: 'Follow testnet and mainnet milestones.' },
 }
 
-export default function NavigatorApp() {
-  const [screen, setScreen] = useState<Screen>('home')
-  const [guidesOpen, setGuidesOpen] = useState(false)
-  const [startMenuPosition, setStartMenuPosition] = useState({ top: 0, left: 0 })
-  const startMenuButton = useRef<HTMLButtonElement>(null)
+export default function NavigatorApp({ initialScreen = 'home' }: { initialScreen?: Screen }) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const [screen, setScreen] = useState<Screen>(initialScreen)
+  const [lastPathname, setLastPathname] = useState(pathname)
+
+  // A route change re-renders this component without remounting it, so state
+  // seeded from initialScreen would keep showing the previous screen. The path
+  // is the source of truth: follow it whenever it changes under us.
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname)
+    setScreen(screenFromPath(pathname))
+  }
   const [step, setStep] = useState(0)
   const [scope, setScope] = useState<string | null>(null)
   const [eipAnswer, setEipAnswer] = useState<EipAnswer>(null)
@@ -34,28 +43,14 @@ export default function NavigatorApp() {
   const [inclusionEip, setInclusionEip] = useState<EipRecord | null>(null)
   const [peopleRole, setPeopleRole] = useState('author')
 
-  const startGuide = () => {
-    setScreen('guide')
-    setGuidesOpen(false)
-    setStep(0)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const goHome = () => {
-    setScreen('home')
-    setGuidesOpen(false)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const startInclusion = () => {
-    setScreen('inclusion')
-    setGuidesOpen(false)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
+  // Show the screen at once, and move the router with it so the path stays
+  // linkable and back/forward work. router.push, not history.pushState: the
+  // site navigation links here too, and only the router keeps both in step.
   const navigate = (next: Screen) => {
     setScreen(next)
-    setGuidesOpen(false)
+    // the guide starts from the top each time it is opened from the home screen
+    if (next === 'guide') setStep(0)
+    router.push(screenPath(next), { scroll: false })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -74,42 +69,8 @@ export default function NavigatorApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const toggleStartMenu = () => {
-    if (!guidesOpen && startMenuButton.current) {
-      const trigger = startMenuButton.current.getBoundingClientRect()
-      const menuWidth = 310
-      setStartMenuPosition({
-        top: trigger.bottom + 8,
-        left: Math.min(trigger.left, window.innerWidth - menuWidth - 8),
-      })
-    }
-    setGuidesOpen(open => !open)
-  }
-
   return (
     <div className="navigator-root">
-      <div className="nav-topbar">
-        <button className="nav-wordmark" onClick={goHome} aria-label="ACD Navigator home">
-          <span className="nav-wordmark-glyph" aria-hidden="true">⎇</span>
-          <span>ACD Navigator</span>
-        </button>
-        <nav aria-label="Navigator sections">
-          <button className={screen === 'home' ? 'active' : ''} onClick={goHome}>Home</button>
-          <div className="guides-menu">
-            <button ref={startMenuButton} className={['guide', 'inclusion', 'decisions', 'participate'].includes(screen) ? 'active' : ''} onClick={toggleStartMenu} aria-expanded={guidesOpen} aria-haspopup="menu">Start here <span aria-hidden="true">⌄</span></button>
-          </div>
-          <button className={screen === 'process' ? 'active' : ''} onClick={() => navigate('process')}>How changes happen</button>
-          <button className={screen === 'people' ? 'active' : ''} onClick={() => openPeople()}>Who’s involved</button>
-          <button className={screen === 'resources' ? 'active' : ''} onClick={() => navigate('resources')}>Useful links</button>
-        </nav>
-        {guidesOpen && <div className="guides-dropdown" role="menu" style={{ top: startMenuPosition.top, left: startMenuPosition.left }}>
-          <button role="menuitem" onClick={startGuide}><b>Propose a feature for Ethereum</b><small>Start with an idea, with or without an EIP</small></button>
-          <button role="menuitem" onClick={startInclusion}><b>Understand fork inclusion</b><small>How proposals reach a network upgrade</small></button>
-          <button role="menuitem" onClick={() => navigate('decisions')}><b>Trace a decision</b><small>Find the evidence behind an outcome</small></button>
-          <button role="menuitem" onClick={() => navigate('participate')}><b>Join the process</b><small>Find a useful place to contribute</small></button>
-        </div>}
-      </div>
-
       {screen === 'home' && <Home onNavigate={navigate} />}
       {screen === 'inclusion' && <InclusionGuide selectedEip={inclusionEip} setSelectedEip={setInclusionEip} />}
       {screen === 'guide' && (
@@ -131,9 +92,9 @@ export default function NavigatorApp() {
       )}
       {screen === 'decisions' && <DecisionGuide />}
       {screen === 'participate' && <ParticipationGuide onOpenClient={() => openPeople('client')} />}
-      {screen === 'process' && <ReferencePage eyebrow="Reference" title="How a proposal reaches mainnet" intro="Explore the route from a problem to mainnet activation. This map describes common coordination practice, not a guaranteed pipeline."><ProcessExplorer /></ReferencePage>}
-      {screen === 'people' && <ReferencePage eyebrow="People" title="Who’s involved" intro="Meet the roles and teams involved in proposing, reviewing, implementing, and testing protocol changes."><RoleExplorer initialRole={peopleRole} /></ReferencePage>}
-      {screen === 'resources' && <ReferencePage eyebrow="Live resources" title="Continue with primary and live sources" intro="Use ACD Navigator for orientation, then verify changing facts in Forkcast and the canonical process documents."><ForkcastHandoffs /><SourceLinks /></ReferencePage>}
+      {screen === 'process' && <ReferencePage title="How a proposal reaches mainnet" intro="Explore the route from a problem to mainnet activation. This map describes common coordination practice, not a guaranteed pipeline."><ProcessExplorer /></ReferencePage>}
+      {screen === 'people' && <ReferencePage title="Who’s involved" intro="Meet the roles and teams involved in proposing, reviewing, implementing, and testing protocol changes."><RoleExplorer initialRole={peopleRole} /></ReferencePage>}
+      {screen === 'resources' && <ReferencePage title="Continue with primary and live sources" intro="Use ACD Navigator for orientation, then verify changing facts in Forkcast and the canonical process documents."><ForkcastHandoffs /><SourceLinks /></ReferencePage>}
     </div>
   )
 }
@@ -141,10 +102,9 @@ export default function NavigatorApp() {
 function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
   const destinations: Record<string, Screen> = { champion: 'guide', fork: 'inclusion', decision: 'decisions', participate: 'participate' }
   return (
-    <main className="home-page">
+    <div className="home-page">
       <section className="home-centerfold">
         <div className="section-heading">
-          <p className="eyebrow">AllCoreDevs navigator</p>
           <h1>What are you trying to do?</h1>
           <p>Start with your goal. You do not need to know whether it belongs to the EIP process, AllCoreDevs, or fork planning.</p>
         </div>
@@ -160,15 +120,15 @@ function Home({ onNavigate }: { onNavigate: (screen: Screen) => void }) {
         </div>
         <div className="home-reference-links"><span>Looking for reference material?</span><button onClick={() => onNavigate('process')}>Process map</button><button onClick={() => onNavigate('people')}>People and clients</button><button onClick={() => onNavigate('resources')}>Live resources</button></div>
       </section>
-    </main>
+    </div>
   )
 }
 
-function ReferencePage({ eyebrow, title, intro, children }: { eyebrow: string, title: string, intro: string, children: React.ReactNode }) {
-  return <main className="reference-page">
-    <header className="reference-header"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{intro}</p></header>
+function ReferencePage({ title, intro, children }: { title: string, intro: string, children: React.ReactNode }) {
+  return <div className="reference-page">
+    <header className="reference-header"><h1>{title}</h1><p>{intro}</p></header>
     {children}
-  </main>
+  </div>
 }
 
 function SourceLinks() {
@@ -185,7 +145,7 @@ function SourceLinks() {
 }
 
 function DecisionGuide() {
-  return <ReferencePage eyebrow="Trace a decision" title="Find the evidence behind an outcome" intro="Do not stop at “ACD approved it.” Identify the exact question, participants, reasoning, and resulting artifact.">
+  return <ReferencePage title="Find the evidence behind an outcome" intro="Do not stop at “ACD approved it.” Identify the exact question, participants, reasoning, and resulting artifact.">
     <section className="decision-page-content">
       <div className="decision-sequence">
         <article><span>1</span><div><b>Start with the claimed outcome</b><p>Write the narrowest possible statement: which EIP, which fork, which inclusion stage, or which technical question?</p></div></article>
@@ -213,7 +173,7 @@ function ParticipationGuide({ onOpenClient }: { onOpenClient: () => void }) {
     ['Help test upgrades', 'Follow devnets and testnets, reproduce failures, and contribute test coverage.', 'https://forkcast.org/networks'],
     ['Champion a proposal', 'Coordinate specification, evidence, stakeholders, implementation, and follow-through.', 'https://forkcast.org/champions/'],
   ] as const
-  return <ReferencePage eyebrow="Join the process" title="Participate through useful work" intro="There is no application form for “core developer.” Start with a concrete contribution in a public working area and build context over time.">
+  return <ReferencePage title="Participate through useful work" intro="There is no application form for “core developer.” Start with a concrete contribution in a public working area and build context over time.">
     <section className="participation-content">
       <div className="participation-grid">{entries.map(([title, detail, href], index) => href ? <a href={href} target="_blank" rel="noreferrer" key={title}><span>0{index + 1}</span><b>{title}</b><p>{detail}</p><Arrow /></a> : <button key={title} onClick={onOpenClient}><span>0{index + 1}</span><b>{title}</b><p>{detail}</p><Arrow /></button>)}</div>
       <div className="meeting-prep"><div><p className="eyebrow">Before joining an ACD call</p><h2>Earn synchronous time.</h2></div><ol><li><span>1</span><p>Read the agenda and linked material before the call.</p></li><li><span>2</span><p>Know the exact question that needs synchronous discussion.</p></li><li><span>3</span><p>Bring relevant evidence and affected implementers.</p></li><li><span>4</span><p>State objections, commitments, and follow-up owners clearly.</p></li></ol></div>
@@ -351,8 +311,8 @@ function ForkcastHandoffs() {
 }
 
 function InclusionGuide({ selectedEip, setSelectedEip }: { selectedEip: EipRecord | null, setSelectedEip: (eip: EipRecord | null) => void }) {
-  return <main className="inclusion-article">
-    <header className="reference-header"><p className="eyebrow">Guide</p><h1>Understand fork inclusion</h1><p>How an EIP becomes proposed, considered, scheduled, or included in one network upgrade, and how client teams coordinate those outcomes.</p></header>
+  return <div className="inclusion-article">
+    <header className="reference-header"><h1>Understand fork inclusion</h1><p>How an EIP becomes proposed, considered, scheduled, or included in one network upgrade, and how client teams coordinate those outcomes.</p></header>
     <div className="inclusion-article-layout">
       <nav className="article-contents" aria-label="On this page">
         <span>On this page</span>
@@ -374,7 +334,7 @@ function InclusionGuide({ selectedEip, setSelectedEip }: { selectedEip: EipRecor
         <section id="check-proposal"><InclusionLookup selected={selectedEip} setSelected={setSelectedEip} /></section>
       </div>
     </div>
-  </main>
+  </div>
 }
 
 function EipStatusLifecycle() {
@@ -526,7 +486,7 @@ type GuideProps = {
 function Guide(props: GuideProps) {
   const labels = ['Boundary', 'Find the EIP', 'Try it in code', 'Build the case', 'Your route']
   return (
-    <main className="guide-page">
+    <div className="guide-page">
       <div className="guide-progress" aria-label={`Step ${props.step + 1} of 5`}>
         <span>Propose a feature</span>
         <div className="progress-track"><i style={{ width: `${((props.step + 1) / 5) * 100}%` }} /></div>
@@ -550,7 +510,7 @@ function Guide(props: GuideProps) {
           <GuideControls {...props} />
         </section>
       </div>
-    </main>
+    </div>
   )
 }
 

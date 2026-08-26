@@ -6,8 +6,8 @@ export type Initiative = {
 };
 
 export const initiatives: readonly Initiative[] = [
-  { id: "staker-support", title: "Staking support", color: "var(--coord-green)", href: "/initiatives/staker-support" },
-  { id: "protocol-coordination", title: "Protocol coordination", color: "var(--coord-cyan)", href: "/initiatives/protocol-coordination" },
+  { id: "staker-support", title: "Staking support", color: "var(--coord-green)", href: "/ethstaker" },
+  { id: "protocol-coordination", title: "Protocol coordination", color: "var(--coord-cyan)", href: "/protocol-coordination" },
   { id: "forkcast", title: "Forkcast", color: "var(--coord-purple)", href: "/forkcast" },
   { id: "protocol-economics", title: "Stakeholder engagement", color: "var(--coord-yellow)" },
   { id: "open-source-tooling", title: "Open-source tooling", color: "var(--coord-orange)", href: "https://ethstaker.org/staking-software" },
