@@ -75,7 +75,8 @@ export default function InitiativesDiagram() {
             </>
           );
           return initiative.href ? (
-            <a key={initiative.id} href={initiative.href} className="coord-arm-link">
+            <a key={initiative.id} href={initiative.href} className="coord-arm-link"
+              {...(initiative.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
               <g>{labelEls}</g>
             </a>
           ) : (
@@ -88,7 +89,11 @@ export default function InitiativesDiagram() {
       <ul className="coord-mobile-list">
         {initiatives.map((initiative) => (
           <li key={initiative.id} style={{ "--initiative-color": initiative.color } as React.CSSProperties}>
-            {initiative.href ? <a href={initiative.href}>{initiative.title}</a> : initiative.title}
+            {initiative.href ? (
+              <a href={initiative.href} {...(initiative.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                {initiative.title}
+              </a>
+            ) : initiative.title}
           </li>
         ))}
       </ul>

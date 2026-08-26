@@ -184,23 +184,24 @@
   cursor: pointer;
   font-family: inherit;
 }
-.badge-sprite img {
-  width: 100%;
-  height: auto;
+.badge-bg {
   display: block;
+  width: 100%;
+  background-image: url("/upgrades/badges.webp");
+  background-repeat: no-repeat;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
 .badge-sprite:hover,
 .badge-sprite:focus-visible {
   z-index: 100; /* hovered badge (and its tooltip) above all others */
 }
-.badge-sprite:hover img,
-.badge-sprite:focus-visible img {
+.badge-sprite:hover .badge-bg,
+.badge-sprite:focus-visible .badge-bg {
   transform: scale(1.12) rotate(-3deg);
   filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.4));
 }
-.fork-sprite:hover img,
-.fork-sprite:focus-visible img {
+.fork-sprite:hover .badge-bg,
+.fork-sprite:focus-visible .badge-bg {
   transform: scale(1.12) rotate(2deg);
 }
 
@@ -335,7 +336,7 @@
 .fork-detail-close:hover { color: var(--color-blue); }
 
 /* selected badge state */
-.badge-sprite.selected img {
+.badge-sprite.selected .badge-bg {
   transform: scale(1.12) rotate(-3deg);
   filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.4));
 }

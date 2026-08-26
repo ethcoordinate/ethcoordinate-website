@@ -12,8 +12,9 @@ export const metadata: Metadata = {
 export default function UpgradesPage() {
   return (
     <>
-      {/* the loop is the largest above-fold image; start it before first paint */}
+      {/* the loop and the badge sheet are the only above-fold images; start them early */}
       <link rel="preload" as="image" href="/upgrades/loop.webp" />
+      <link rel="preload" as="image" href="/upgrades/badges.webp" />
       <Navigation />
       <main id="main-content" tabIndex={-1} className="relative z-10 max-w-[1100px] mx-auto page-container upgrades-page">
         <div className="page-header">

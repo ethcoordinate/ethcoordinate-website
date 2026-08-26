@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { preMergeEL, preMergeCL, mergeFork, postMerge, historyBase, type PreMergeFork } from "@/data/upgrades";
+import { badgeSheet } from "@/data/badge-sprites";
 import "./upgrades.css";
 
 /* Faithful interactive rebuild of the upgrades illustration.
@@ -94,6 +95,23 @@ const POST_LINEAR = POST_BADGES.map((b) => {
 const POST_LINEAR_YEARS = POST_YEARS.map(({ year, x }) => ({ year, x: Math.round(x + LINEAR_SHIFT) }));
 const POST_TRACK_Y = 890; // merged line height = merge pill center
 const POST_LINEAR_DOTS = dotRow(MERGE_R.x + MERGE_R.w + 12, 8120, POST_LINEAR.map((b) => [b.x - 12, b.x + b.w + 12]));
+
+/* All badges/pills come from one sprite sheet (single request); the
+   background-size/position percentage math keeps crops sharp at any scale. */
+function BadgeBg({ id }: { id: string }) {
+  const s = badgeSheet.sprites[id as keyof typeof badgeSheet.sprites];
+  return (
+    <span
+      aria-hidden="true"
+      className="badge-bg"
+      style={{
+        aspectRatio: `${s.w} / ${s.h}`,
+        backgroundSize: `${((badgeSheet.width / s.w) * 100).toFixed(3)}% ${((badgeSheet.height / s.h) * 100).toFixed(3)}%`,
+        backgroundPosition: `${((s.x / (badgeSheet.width - s.w)) * 100).toFixed(3)}% ${((s.y / (badgeSheet.height - s.h)) * 100).toFixed(3)}%`,
+      }}
+    />
+  );
+}
 
 function Tip({ title, sub, date }: { title: string; sub?: string; date?: string }) {
   return (
@@ -236,8 +254,7 @@ export default function UpgradeTimeline() {
                 onClick={() => toggle(7 + i)}
                 aria-label={`${f.name}, ${f.date}`}
                 aria-expanded={selected === 7 + i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/el-${i + 1}.webp`} alt="" />
+                <BadgeBg id={`el-${i + 1}`} />
                 <Tip title={f.name} date={f.date} />
               </button>
             );
@@ -252,8 +269,7 @@ export default function UpgradeTimeline() {
                 onClick={() => toggle(21 + i)}
                 aria-label={`${f.name}, ${f.date}`}
                 aria-expanded={selected === 21 + i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/cl-${i + 1}.webp`} alt="" />
+                <BadgeBg id={`cl-${i + 1}`} />
                 <Tip title={f.name} date={f.date} />
               </button>
             );
@@ -266,7 +282,7 @@ export default function UpgradeTimeline() {
             aria-label={`${mergeFork.name}, ${mergeFork.date}`}
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/upgrades/merge-pill.webp" alt="" />
+            <BadgeBg id="merge-pill" />
             <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
           <button className={`badge-sprite merge-sprite tip-left ${selected === 0 ? "selected" : ""}`}
@@ -275,7 +291,7 @@ export default function UpgradeTimeline() {
             aria-label={`${mergeFork.name}, ${mergeFork.date}`}
             aria-expanded={selected === 0}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/upgrades/merge-pill-left.webp" alt="" />
+            <BadgeBg id="merge-pill-left" />
             <Tip title={mergeFork.name} sub={mergeFork.fullName} date={mergeFork.date} />
           </button>
 
@@ -288,8 +304,7 @@ export default function UpgradeTimeline() {
                 onClick={() => toggle(i + 1)}
                 aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
                 aria-expanded={selected === i + 1}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/upgrades/post-${i + 1}.webp`} alt="" />
+                <BadgeBg id={`post-${i + 1}`} />
                 <span className="fork-nickname">{f.nickname}</span>
                 <Tip title={f.nickname} sub={f.fullName} date={f.date} />
               </button>
@@ -337,8 +352,7 @@ export default function UpgradeTimeline() {
                     onClick={() => toggle(7 + i)}
                     aria-label={`${f.name}, ${f.date}`}
                     aria-expanded={selected === 7 + i}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/upgrades/el-${i + 1}.webp`} alt="" />
+                    <BadgeBg id={`el-${i + 1}`} />
                   </button>
                 );
               })}
@@ -350,8 +364,7 @@ export default function UpgradeTimeline() {
                     onClick={() => toggle(21 + i)}
                     aria-label={`${f.name}, ${f.date}`}
                     aria-expanded={selected === 21 + i}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/upgrades/cl-${i + 1}.webp`} alt="" />
+                    <BadgeBg id={`cl-${i + 1}`} />
                   </button>
                 );
               })}
@@ -362,8 +375,7 @@ export default function UpgradeTimeline() {
                 onClick={() => toggle(0)}
                 aria-label={`${mergeFork.name}, ${mergeFork.date}`}
                 aria-expanded={selected === 0}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/upgrades/merge-pill.webp" alt="" />
+                <BadgeBg id="merge-pill" />
               </button>
 
               {postMerge.map((f, i) => {
@@ -374,8 +386,7 @@ export default function UpgradeTimeline() {
                     onClick={() => toggle(i + 1)}
                     aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
                     aria-expanded={selected === i + 1}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/upgrades/post-${i + 1}.webp`} alt="" />
+                    <BadgeBg id={`post-${i + 1}`} />
                     <span className="fork-nickname">{f.nickname}</span>
                   </button>
                 );
