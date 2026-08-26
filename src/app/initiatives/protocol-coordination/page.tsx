@@ -8,7 +8,7 @@ import { getRecentArtifactCalls } from "@/lib/github";
 import type { ArtifactCall } from "@/lib/github";
 import {
   CalendarIcon, UsersIcon, FileTextIcon,
-  YouTubeIcon, GitHubIcon, DiscordIcon,
+  YouTubeIcon, GitHubIcon, DiscordIcon, BookIcon,
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
@@ -61,6 +61,13 @@ const getInvolved = [
     href: "/guides/champion",
     external: false,
     icon: <FileTextIcon color="var(--coord-green)" />,
+  },
+  {
+    title: "Ethereum Protocol Fellowship",
+    description: "A permissionless fellowship for people who want to become core protocol contributors.",
+    href: "https://epf.wiki/",
+    external: true,
+    icon: <BookIcon color="var(--coord-yellow)" />,
   },
 ];
 
