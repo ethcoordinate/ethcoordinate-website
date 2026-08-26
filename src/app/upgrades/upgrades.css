@@ -342,6 +342,39 @@
 
 /* ---------- footnote ---------- */
 
+/* ---------- mobile: view toggle + linear scrolling timeline ---------- */
+.mobile-view-toggle { display: none; }
+.timeline-scroll { display: none; }
+
+.timeline-scroll-wrap { position: relative; }
+.timeline-scroll-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 36px;
+  background: linear-gradient(90deg, transparent, var(--color-bg-void));
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.timeline-scroll-wrap.at-end::after { opacity: 0; }
+.timeline-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* the clipped content + fade signal scrollability */
+  padding-bottom: 0.25rem;
+}
+.timeline-scroll::-webkit-scrollbar { display: none; }
+.timeline-linear {
+  position: relative;
+  width: 4350px;
+  aspect-ratio: 7970 / 480;
+}
+.timeline-linear svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.timeline-linear .pm-tip { display: none; } /* tap opens the detail panel instead */
+.timeline-linear .year-label { font-size: 12px; }
+.timeline-linear .layer-label { font-size: 13px; }
+.timeline-linear .fork-nickname { font-size: 14px; }
+
 /* ---------- mobile: vertical list replaces the timeline ---------- */
 .timeline-mobile { display: none; }
 
@@ -385,6 +418,31 @@
   .timeline { display: none; }
   .timeline-hint { display: none; } /* no hover on touch; the list below is self-explanatory */
   .timeline-mobile { display: block; }
+  .timeline-scroll { display: block; }
+  .mobile-view-toggle {
+    display: flex;
+    margin: 0 0 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mobile-view-toggle button {
+    flex: 1;
+    padding: 0.55rem 0;
+    background: none;
+    border: 0;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .mobile-view-toggle button.active {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-bright);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

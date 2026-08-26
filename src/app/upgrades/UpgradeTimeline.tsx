@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { preMergeEL, preMergeCL, mergeFork, postMerge, historyBase, type PreMergeFork } from "@/data/upgrades";
 import "./upgrades.css";
 
@@ -74,6 +74,27 @@ const POST_YEARS = [
 
 const tipAlign = (x: number) => (x < 500 ? "tip-left" : x > CW - 500 ? "tip-right" : "");
 
+/* --- mobile "timeline view": one long horizontal strip -------------------
+   EL + CL rows converge into the merge pill, then post-merge continues
+   rightward on the merged line. No loop artwork, no second merge pill.
+   Pre-merge keeps source coordinates (shifted by XOFF/YOFF); post-merge
+   badges keep their desktop relative spacing, re-anchored so Shapella
+   (12 Apr 2023) sits 209 days x 2.2376 px/day right of the merge pill. */
+const LW = 7970, LH = 480, XOFF = 280, YOFF = 640;
+const lpx = (x: number) => `${((x - XOFF) / LW) * 100}%`;
+const lpw = (w: number) => `${(w / LW) * 100}%`;
+const lpy = (y: number) => `${((y - YOFF) / LH) * 100}%`;
+const POST_SCALE = 2.2376; // px/day, from the shipped-fork date fit (see POST_YEARS)
+const MERGE_CX = MERGE_R.x + MERGE_R.w / 2;
+const LINEAR_SHIFT = MERGE_CX + 209 * POST_SCALE - (POST_BADGES[0].x + POST_BADGES[0].w / 2);
+const POST_LINEAR = POST_BADGES.map((b) => {
+  const cx = b.x + b.w / 2 + LINEAR_SHIFT;
+  return { x: Math.round(cx - 65), w: b.w };
+});
+const POST_LINEAR_YEARS = POST_YEARS.map(({ year, x }) => ({ year, x: Math.round(x + LINEAR_SHIFT) }));
+const POST_TRACK_Y = 890; // merged line height = merge pill center
+const POST_LINEAR_DOTS = dotRow(MERGE_R.x + MERGE_R.w + 12, 8120, POST_LINEAR.map((b) => [b.x - 12, b.x + b.w + 12]));
+
 function Tip({ title, sub, date }: { title: string; sub?: string; date?: string }) {
   return (
     <span className="pm-tip" role="tooltip">
@@ -128,6 +149,20 @@ function LegendDrawer({ open, onClose }: { open: boolean; onClose: () => void })
 export default function UpgradeTimeline() {
   const [legendOpen, setLegendOpen] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
+  const [mobileView, setMobileView] = useState<"list" | "timeline">("list");
+  const [scrollAtEnd, setScrollAtEnd] = useState(false);
+
+  // initial mobile view: ?view= param wins, then the saved choice
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("view");
+    const saved = localStorage.getItem("upgrades-mobile-view");
+    const initial = fromUrl === "timeline" || fromUrl === "list" ? fromUrl : saved;
+    if (initial === "list" || initial === "timeline") setMobileView(initial);
+  }, []);
+  const switchView = (v: "list" | "timeline") => {
+    setMobileView(v);
+    try { localStorage.setItem("upgrades-mobile-view", v); } catch { /* private mode */ }
+  };
 
   // detail items: 0 = merge, 1..6 = post-merge forks, 7..20 = pre-merge EL, 21..22 = pre-merge CL
   const detailItems = [
@@ -151,6 +186,12 @@ export default function UpgradeTimeline() {
         legend
       </button>
       <LegendDrawer open={legendOpen} onClose={() => setLegendOpen(false)} />
+
+      {/* mobile view switch (hidden on desktop) */}
+      <div className="mobile-view-toggle" role="group" aria-label="Choose how to browse forks">
+        <button className={mobileView === "list" ? "active" : ""} aria-pressed={mobileView === "list"} onClick={() => switchView("list")}>List</button>
+        <button className={mobileView === "timeline" ? "active" : ""} aria-pressed={mobileView === "timeline"} onClick={() => switchView("timeline")}>Timeline</button>
+      </div>
 
       <div className="timeline" role="img" aria-label="Interactive timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
           {/* the loop (source artwork sprite) */}
@@ -256,7 +297,93 @@ export default function UpgradeTimeline() {
           })}
         </div>
 
-      {/* mobile fallback: vertical list (the timeline is desktop-scale) */}
+      {/* mobile: vertical list (default) or horizontally scrolling timeline */}
+      {mobileView === "timeline" ? (
+        <div className={`timeline-scroll-wrap ${scrollAtEnd ? "at-end" : ""}`}>
+          <div className="timeline-scroll"
+            onScroll={(e) => {
+              const el = e.currentTarget;
+              setScrollAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 30);
+            }}>
+            <div className="timeline-linear" role="img" aria-label="Scrollable timeline of Ethereum upgrades from Frontier in 2015 to Hegota">
+              <svg viewBox={`0 0 ${LW} ${LH}`} preserveAspectRatio="none" aria-hidden="true">
+                {CL_TRACK_DOTS.map((x) => (
+                  <rect key={`lcl-${x}`} x={x - XOFF - 7} y={816 - YOFF - 9} width="14" height="18" rx="7" className="track-dot" />
+                ))}
+                <path d={`M ${4040 - XOFF} ${816 - YOFF} C ${4100 - XOFF} ${816 - YOFF}, ${4130 - XOFF} ${845 - YOFF}, ${4165 - XOFF} ${902 - YOFF}`} className="track-dotted" />
+                {EL_TRACK_DOTS.map((x) => (
+                  <rect key={`lel-${x}`} x={x - XOFF - 7} y={975 - YOFF - 9} width="14" height="18" rx="7" className="track-dot" />
+                ))}
+                <path d={`M ${4040 - XOFF} ${975 - YOFF} C ${4100 - XOFF} ${975 - YOFF}, ${4130 - XOFF} ${950 - YOFF}, ${4165 - XOFF} ${908 - YOFF}`} className="track-dotted" />
+                {POST_LINEAR_DOTS.map((x) => (
+                  <rect key={`lpost-${x}`} x={x - XOFF - 7} y={POST_TRACK_Y - YOFF - 9} width="14" height="18" rx="7" className="track-dot" />
+                ))}
+              </svg>
+
+              <span className="layer-label layer-label-cl" style={{ left: lpx(3808), top: lpy(674) }}>consensus layer</span>
+              <span className="layer-label layer-label-el" style={{ left: lpx(1700), top: lpy(1080) }}>execution layer</span>
+              {EL_YEARS.map(({ year, x }) => (
+                <span key={`ly-${year}`} className="year-label" style={{ left: lpx(x), top: lpy(870) }}>{year}</span>
+              ))}
+              {POST_LINEAR_YEARS.map(({ year, x }) => (
+                <span key={`lpy-${year}`} className="year-label" style={{ left: lpx(x), top: lpy(760) }}>{year}</span>
+              ))}
+
+              {preMergeEL.map((f, i) => {
+                const b = EL_BADGES[i];
+                return (
+                  <button key={`lin-${f.name}`} className={`badge-sprite ${selected === 7 + i ? "selected" : ""}`}
+                    style={{ left: lpx(b.x), top: lpy(b.y), width: lpw(b.w) }}
+                    onClick={() => toggle(7 + i)}
+                    aria-label={`${f.name}, ${f.date}`}
+                    aria-expanded={selected === 7 + i}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/upgrades/el-${i + 1}.webp`} alt="" />
+                  </button>
+                );
+              })}
+              {preMergeCL.map((f, i) => {
+                const b = CL_BADGES[i];
+                return (
+                  <button key={`lin-${f.name}`} className={`badge-sprite ${selected === 21 + i ? "selected" : ""}`}
+                    style={{ left: lpx(b.x), top: lpy(b.y), width: lpw(b.w) }}
+                    onClick={() => toggle(21 + i)}
+                    aria-label={`${f.name}, ${f.date}`}
+                    aria-expanded={selected === 21 + i}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/upgrades/cl-${i + 1}.webp`} alt="" />
+                  </button>
+                );
+              })}
+
+              {/* the single merge pill: both tracks converge here, post-merge continues right */}
+              <button className={`badge-sprite merge-sprite ${selected === 0 ? "selected" : ""}`}
+                style={{ left: lpx(MERGE_R.x), top: lpy(MERGE_R.y), width: lpw(MERGE_R.w) }}
+                onClick={() => toggle(0)}
+                aria-label={`${mergeFork.name}, ${mergeFork.date}`}
+                aria-expanded={selected === 0}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/upgrades/merge-pill.webp" alt="" />
+              </button>
+
+              {postMerge.map((f, i) => {
+                const b = POST_LINEAR[i];
+                return (
+                  <button key={`lin-${f.n}`} className={`badge-sprite fork-sprite ${selected === i + 1 ? "selected" : ""}`}
+                    style={{ left: lpx(b.x), top: lpy(825), width: lpw(b.w) }}
+                    onClick={() => toggle(i + 1)}
+                    aria-label={`${f.nickname} (${f.fullName}), ${f.date}`}
+                    aria-expanded={selected === i + 1}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/upgrades/post-${i + 1}.webp`} alt="" />
+                    <span className="fork-nickname">{f.nickname}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ) : (
       <div className="timeline-mobile">
         <p className="legend-heading">Pre-merge — execution layer</p>
         {preMergeEL.map((f, i) => (
@@ -288,6 +415,7 @@ export default function UpgradeTimeline() {
           </button>
         ))}
       </div>
+      )}
 
       <p className="timeline-hint">Hover over any fork for its name and date — click for more info.</p>
       <p className="timeline-export">
